@@ -4,7 +4,7 @@ var GameEngine = new function() {
     this.connected = false;
     
     this._doFBLogin = function() {
-        this.parseInput("Facebook not authorized. Asking for permission.");
+        this.parseInput("Facebook not authorized. Asking for permission..");
         FB.login(function(response) {
             if (response.authResponse) {
                 // connected
