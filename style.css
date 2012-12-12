@@ -1,37 +1,25 @@
-/* Generic
-body { margin: 0; overflow: hidden; }
-input:focus { outline: none; }
-/* Wrappers
-div#wrapSidebar { height:100%; width: 15%; float: left; }
-div#wrapGameArea { height: 100%; width: 85%; float: left; }
-/* Frames
-div#framePlayerList { background-color: #0e0f0f; width: 100%; height: 65%; padding: 8px; color: #fff; font-family: 'Paprika', serif; font-size: 12px; }
-div#frameStats { background-color: #0e0f0f; width: 100%; height: 35%; padding: 8px; color: #fff; font-family: 'Paprika', serif; font-size: 12px; }
-div#frameGame { overflow: scroll; background-color: #0e0f0f; width: 100%; height: 98%; padding: 8px; color: #fff; font-family: 'Paprika', serif; font-size: 12px; }
-div#frameInput { background-color: #0e0f0f; width: 85%; height: 30px; position: absolute; bottom: 0; right: 0; }
-/* Frame: Input
-div#frameInput input#inputGameCommands { background-color: #0e0f0f; color: #fff; font-weight: bold; font-family: 'Verdana', serif; font-size: 14px; border: 0; width: 100%; height: 100%; padding-left: 5px; }
-div#frameInput input#inputGameCommands::-webkit-input-placeholder { color: #383738; }
-div#frameInput input#inputGameCommands::-moz-placeholder { color: #383738; }
-/* Links
-a { color: #faad28; text-decoration: none; }
-a:hover { color: #f7c46c; }
-/* Colors
-span.yellow { color: #f5f567; }
-span.byellow { color: #f5f567; font-weight: bold; } */
-
 /* Generic */
-body { margin: 0; overflow: hidden; background-color: #333; background-image: url('http://ethryx.net/mud/images/bg2.png'); font-family: 'Paprika', serif; font-size: 12px; color: #fff; }
+body { margin: 0; overflow: hidden; background-color: #333; background-image: url('http://ethryx.net/mud/images/bg2.png'); font-family: "Inconsolata", "Monaco", "Consolas", "Andale Mono", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace; font-size: 12px; color: #fff; }
 input { font-family: 'Paprika', serif; font-size: 12px; color: #fff; }
 input:focus { outline: none; border: solid thin #333; }
 /* Wrappers */
 #wrapSidebar { height:100%; width: 15%; float: left; }
 #wrapGameArea { height: 100%; width: 85%; float: right; }
 /* Left Frames */
-#frameLogo { width: 320px; height: 40px; background-image: url('images/logo.png'); background-repeat: no-repeat; text-indent: -9999px; background-position: 5px 5px;}
+#frameLogo { width: 320px; height: 40px; background-image: url('images/logo.png'); background-repeat: no-repeat; text-indent: -9999px; direction: ltr; background-position: 5px 5px;}
 #outerFrameStats, #outerFramePlayerList { padding: 5px; }
 #outerFramePlayerList { height: 65%; margin-bottom: 5px; }
-#frameStats, #framePlayerList { padding-left: 5px; padding-top: 5px; background-color: rgba(255, 255, 255, 0.1); height: 100%; border: solid thin #333; border-top: solid thin #666; border-radius: 5px; }
+#outerFrameStats { height: 25%; }
+#frameStats, #framePlayerList { background-color: rgba(255, 255, 255, 0.1); height: 100%; border: solid thin #333; border-top: solid thin #666; border-radius: 5px; }
+#frameStats { padding-left: 5px; padding-top: 5px; }
+#framePlayerList { padding-left: 0; padding-top: 0; }
+/* PlayerList */
+#playerList { list-style-type: none; padding: 0; height: 100%; overflow-y: auto; overflow-x: hidden; }
+#roomTitle { margin: 0; margin-bottom: 5px; padding: 0; text-align: center; font-family: 'Paprika', serif; font-size: 14px; }
+.player { height: 53px; margin-bottom: 1px; border: solid thin #333; border-top: solid thin #222; border-bottom: solid thin #666; background-color: rgba(0,0,0,0.3); text-align: left; }
+.player:hover { background-color: rgba(0,0,0,0.2); }
+.player img { padding: 3px; float: left; margin: 2px; margin-right: 10px; margin-left: 3px; border: solid thin #444; border-top: solid thin #222; border-bottom: solid thin #888; background-color: rgba(0,0,0,0.7); }
+.player p { line-height: 53px; margin: 0; padding: 0; }
 /* Right Frames */
 #outerFrameGame { height: 90%; padding: 5px; margin-bottom: 13px; }
 #frameGame { padding: 8px; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.3); }
@@ -51,3 +39,12 @@ span.byellow { color: #f5f567; font-weight: bold; }
 .shadow2 { -moz-box-shadow: 0px 0px 5px #000; -webkit-box-shadow: 0px 0px 5px #000; box-shadow: 0px 0px 5px #000; }
 .border222 { border: solid thin #222; border-top: solid thin #444; border-radius: 5px; }
 .border333 { border: solid thin #333; }
+
+/* Tooltip Testing */
+.tooltip{
+position:absolute;
+border:1px solid #ccc;
+background:#333;
+padding:5px;
+color:#fff;
+}
