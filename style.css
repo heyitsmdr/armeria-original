@@ -40,11 +40,4 @@ span.byellow { color: #f5f567; font-weight: bold; }
 .border222 { border: solid thin #222; border-top: solid thin #444; border-radius: 5px; }
 .border333 { border: solid thin #333; }
 
-/* Tooltip Testing */
-.tooltip{
-position:absolute;
-border:1px solid #ccc;
-background:#333;
-padding:5px;
-color:#fff;
-}
+/*Test Commit*/
