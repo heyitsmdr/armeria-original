@@ -10,15 +10,15 @@ input:focus { outline: none; border: solid thin #333; }
 #outerFrameStats, #outerFramePlayerList { padding: 5px; }
 #outerFramePlayerList { height: 65%; margin-bottom: 5px; }
 #outerFrameStats { height: 25%; }
-#frameStats, #framePlayerList { background-color: rgba(255, 255, 255, 0.1); height: 100%; border: solid thin #333; border-top: solid thin #666; border-radius: 5px; }
+#frameStats, #framePlayerList { background-color: rgba(255, 255, 255, 0.1); height: 100%; border: solid thin #333; border-top: solid thin #666; }
 #frameStats { padding-left: 5px; padding-top: 5px; }
 #framePlayerList { padding-left: 0; padding-top: 0; }
 /* PlayerList */
 #playerList { list-style-type: none; padding: 0; height: 100%; overflow-y: auto; overflow-x: hidden; }
-#roomTitle { margin: 0; margin-bottom: 5px; padding: 0; text-align: center; font-family: 'Paprika', serif; font-size: 14px; }
+#roomTitle { margin: 0; margin-bottom: 5px; padding: 2px; text-align: center; font-family: 'Paprika', serif; font-size: 13px; border: solid thin #555; border-top: solid thin #777; border-bottom: solid thin #333; background-color: rgba(255,255,255,0.1); }
 .player { height: 53px; margin-bottom: 1px; border: solid thin #333; border-top: solid thin #222; border-bottom: solid thin #666; background-color: rgba(0,0,0,0.3); text-align: left; }
 .player:hover { background-color: rgba(0,0,0,0.2); }
-.player img { padding: 3px; float: left; margin: 2px; margin-right: 10px; margin-left: 3px; border: solid thin #444; border-top: solid thin #222; border-bottom: solid thin #888; background-color: rgba(0,0,0,0.7); }
+.player img { padding: 3px; float: left; margin: 2px; margin-right: 10px; margin-left: 3px; border: solid thin #444; border-top: solid thin #222; border-bottom: solid thin #888; background-color: rgba(0,0,0,0.7);  -moz-box-shadow: 0px 0px 5px #000; -webkit-box-shadow: 0px 0px 5px #000; box-shadow: 0px 0px 5px #000; }
 .player p { line-height: 53px; margin: 0; padding: 0; }
 /* Right Frames */
 #outerFrameGame { height: 90%; padding: 5px; margin-bottom: 13px; }
@@ -37,7 +37,6 @@ span.byellow { color: #f5f567; font-weight: bold; }
 /* Special Styles */
 .shadow { -moz-box-shadow: 0px 1px 7px #000; -webkit-box-shadow: 0px 1px 7px #000; box-shadow: 0px 1px 7px #000; }
 .shadow2 { -moz-box-shadow: 0px 0px 5px #000; -webkit-box-shadow: 0px 0px 5px #000; box-shadow: 0px 0px 5px #000; }
-.border222 { border: solid thin #222; border-top: solid thin #444; border-radius: 5px; }
+.border222 { border: solid thin #222; border-top: solid thin #444; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
 .border333 { border: solid thin #333; }
-
-/*Test Commit*/
+.borderRadTop10 { -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; border-top-left-radius: 5px; border-top-right-radius: 5px; }
