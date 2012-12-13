@@ -24,7 +24,16 @@ var Characters = function() {
     
     self.create = function(charid, charname) {
         if(self.getCharacterById(charid)) return false;
-        var char = new Character({id: charid, name: charname});
+        var char = new Character({
+            id: charid,
+            name: charname,
+            location: {
+                map: 'Test Area',
+                x: 0,
+                y: 0,
+                z: 0
+            }
+        });
         self.objects.push(char);
         char.save();
         return char;
@@ -48,16 +57,19 @@ var Character = function(config) {
     self.name;      // string
     self.htmlname;  // string
     self.location;  // array (map, x, y, z)
+    self.picture    // string
     
     // not saved
     self.online = false;    // boolean
     self.player;            // object (Player)
+    self.room;              // object (Room)
     
     self.init = function(config) {
         self.id = config.id || 0;
         self.name = config.name || 'Someone';
         self.htmlname = config.htmlname || "<span class='yellow'>" + self.name + "</span>";
         self.location = config.location || {map: 'somemap', x: 0, y: 0, z: 0};
+        self.picture = config.picture || '';
     }
     
     self.stringify = function() {
@@ -65,12 +77,47 @@ var Character = function(config) {
             id: self.id,
             name: self.name,
             htmlname: self.htmlname,
-            location: self.location
+            location: self.location,
+            picture: self.picture
         }, null, '\t');    
     }
     
     self.save = function() {
         fs.writeFileSync(data_path + self.id + '.json', self.stringify(), 'utf8');
+    }
+    
+    self.getMapObj = function() {
+        return WORLD.getMap(self.location.map);
+    }
+    
+    self.getRoomObj = function() {
+        return self.getMapObj().getRoom(self.location.x, self.location.y, self.location.z);
+    }
+    
+    self.login = function() {
+        // store room
+        self.room = self.getRoomObj();
+        // add player to room
+        self.room.addPlayer(self.player);
+        // update players (including yourself)
+        self.room.eachPlayer(function(p){
+            p.update({plist: 1});
+        });
+        // announce to room
+        self.room.announce(self.htmlname + " has just logged in to Armeria!");
+    }
+    
+    self.logout = function() {
+        // announce to room
+        self.room.announce(self.htmlname + " has just logged out of Armeria!");
+        // remove player from room
+        self.room.removePlayer(self.player);
+        // update players
+        self.room.eachPlayer(function(p){
+            p.update({plist: 1});
+        });
+        // save
+        self.save();
     }
     
     self.init(config);

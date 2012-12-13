@@ -1,5 +1,5 @@
 var fs        = require('fs');
-var data_path = __dirname + '/../data/maps';
+var data_path = __dirname + '/../data/maps/';
 
 var World = function() {
     var self = this;
@@ -7,19 +7,26 @@ var World = function() {
     self.maps = [];     // array of objects (Map)
     
     self.init = function() {
-        server_log('init', 'loading world..');
+        console.log('[init] loading world..');
         self.maps = [];
         fs.readdir(data_path, function (err, files) {
             // load all maps
             for(i in files) {
                 var map_file = data_path + files[i];
                 if(!fs.statSync(map_file).isFile()) {
-                    server_log('init', 'error: invalid map file (' + map_file + ')');
+                    console.log('[init] error: invalid map file (' + map_file + ')');
                     continue;
                 }
                 self.maps.push(new Map(JSON.parse(fs.readFileSync(map_file).toString('utf8')), files[i]));
             }
         });
+    }
+    
+    self.getMap = function(mapname) {
+        for(var i = 0; i < self.maps.length; i++) {
+            if(self.maps[i].name.toLowerCase()==mapname.toString().toLowerCase()) return self.maps[i];
+        }
+        return false;
     }
     
     self.init();
@@ -43,7 +50,7 @@ var Map = function(config, fn) {
         config.rooms.forEach(function(r){
             self.rooms.push(new Room(r, self));
         });
-        server_log('init', 'map loaded: ' + self.name);
+        console.log('[init] map loaded: ' + self.name);
     }
     
     self.stringify = function() {
@@ -61,6 +68,13 @@ var Map = function(config, fn) {
         });
         return stringify;
     }
+    
+    self.getRoom = function(x, y, z) {
+        for(var i = 0; i < self.rooms.length; i++) {
+            if(self.rooms[i].x == x && self.rooms[i].y == y && self.rooms[i].z == z) return self.rooms[i];
+        }
+        return false;
+    };
     
     self.init(config, fn);
 };
@@ -97,6 +111,44 @@ var Room = function(config, mapobj) {
             z: self.z
         };    
     }
+    
+    self.addPlayer = function(player) {
+        self.players.push(player);
+    };
+    
+    self.removePlayer = function(player) {
+        var i = self.players.indexOf(player);
+        self.players.splice(i, 1);
+    };
+    
+    self.eachPlayer = function(callback) {
+        self.players.forEach(function(p){
+            callback(p);
+        });
+    };
+    
+    self.eachPlayerExcept = function(player, callback) {
+        self.players.forEach(function(p){
+            if(p !== player) callback(p);
+        });
+    };
+    
+    self.getPlayerListData = function() {
+        var plist = [];
+        self.eachPlayer(function(player){
+            plist.push({
+                name: player.character.name,
+                picture: player.character.picture
+            });
+        });
+        return plist;
+    };
+    
+    self.announce = function(data) {
+        self.eachPlayer(function(p){
+            p.msg(data);
+        });
+    };
     
     self.init(config, mapobj);
 };

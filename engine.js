@@ -22,7 +22,10 @@ var GameEngine = new function() {
     this._getFBInfo = function(callback) {
         FB.api('/me', function(resp){
             GameEngine.fbinfo = resp;
-            callback();
+            FB.api('/' + GameEngine.fbinfo.id + '?fields=picture', function(resp){
+                GameEngine.fbinfo.picture = resp.picture.data.url;
+                callback();
+            });
         });    
     }
     
@@ -58,7 +61,8 @@ var GameEngine = new function() {
             GameEngine.parseInput("Connected! Sending login data..");
             GameEngine.socket.emit('login', {
                 id: GameEngine.fbinfo.id,
-                name: GameEngine.fbinfo.name
+                name: GameEngine.fbinfo.name,
+                picture: GameEngine.fbinfo.picture
             });
         });
         this.socket.on('disconnect', function(){
@@ -68,6 +72,13 @@ var GameEngine = new function() {
         /* Custom Events */
         this.socket.on('txt', function(data){
             GameEngine.parseInput(data.msg);
+        });
+        this.socket.on('plist', function(data){
+            // clear current list
+            $('#playerList').html('');
+            data.forEach(function(listdata){
+                $('#playerList').html("<li class='player'><img src='" + listdata.picture + "' width='40px' height='40px'><p>" + listdata.name + "</p></li>" + $('#playerList').html());
+            });
         });
     }
     
