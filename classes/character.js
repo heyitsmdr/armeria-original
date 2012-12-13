@@ -47,6 +47,7 @@ var Character = function(config) {
     self.id;        // int
     self.name;      // string
     self.htmlname;  // string
+    self.location;  // array (map, x, y, z)
     
     // not saved
     self.online = false;    // boolean
@@ -56,13 +57,15 @@ var Character = function(config) {
         self.id = config.id || 0;
         self.name = config.name || 'Someone';
         self.htmlname = config.htmlname || "<span class='yellow'>" + self.name + "</span>";
+        self.location = config.location || {map: 'somemap', x: 0, y: 0, z: 0};
     }
     
     self.stringify = function() {
         return JSON.stringify({
             id: self.id,
             name: self.name,
-            htmlname: self.htmlname
+            htmlname: self.htmlname,
+            location: self.location
         }, null, '\t');    
     }
     

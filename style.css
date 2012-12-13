@@ -7,24 +7,28 @@ input:focus { outline: none; border: solid thin #333; }
 #wrapGameArea { height: 100%; width: 85%; float: right; }
 /* Left Frames */
 #frameLogo { width: 320px; height: 40px; background-image: url('images/logo.png'); background-repeat: no-repeat; text-indent: -9999px; direction: ltr; background-position: 5px 5px;}
-#outerFrameStats, #outerFramePlayerList { padding: 5px; }
-#outerFramePlayerList { height: 65%; margin-bottom: 5px; }
+#outerFrameStats, #outerFramePlayerList { padding: 0px; margin-left: 5px; margin-right: 3px; }
+#outerFramePlayerList { height: 65%; margin-bottom: 15px; }
 #outerFrameStats { height: 25%; }
 #frameStats, #framePlayerList { background-color: rgba(255, 255, 255, 0.1); height: 100%; border: solid thin #333; border-top: solid thin #666; }
 #frameStats { padding-left: 5px; padding-top: 5px; }
-#framePlayerList { padding-left: 0; padding-top: 0; }
+#framePlayerList { padding-left: 0; padding-top: 0; padding: 2px; }
 /* PlayerList */
-#playerList { list-style-type: none; padding: 0; height: 100%; overflow-y: auto; overflow-x: hidden; }
 #roomTitle { margin: 0; margin-bottom: 5px; padding: 2px; text-align: center; font-family: 'Paprika', serif; font-size: 13px; border: solid thin #555; border-top: solid thin #777; border-bottom: solid thin #333; background-color: rgba(255,255,255,0.1); }
-.player { height: 53px; margin-bottom: 1px; border: solid thin #333; border-top: solid thin #222; border-bottom: solid thin #666; background-color: rgba(0,0,0,0.3); text-align: left; }
+#playerList { list-style-type: none; padding: 0; margin-top: 0; height: 100%; overflow-y: auto; overflow-x: hidden; }
+.player { height: 53px; margin-bottom: 1px; border: solid thin #555; border-top: solid thin #222; border-bottom: solid thin #666; background-color: rgba(0,0,0,0.3); text-align: left; overflow: hidden; }
 .player:hover { background-color: rgba(0,0,0,0.2); }
 .player img { padding: 3px; float: left; margin: 2px; margin-right: 10px; margin-left: 3px; border: solid thin #444; border-top: solid thin #222; border-bottom: solid thin #888; background-color: rgba(0,0,0,0.7);  -moz-box-shadow: 0px 0px 5px #000; -webkit-box-shadow: 0px 0px 5px #000; box-shadow: 0px 0px 5px #000; }
 .player p { line-height: 53px; margin: 0; padding: 0; }
 /* Right Frames */
 #outerFrameGame { height: 90%; padding: 5px; margin-bottom: 13px; }
 #frameGame { padding: 8px; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.3); }
+#frameGameMap { width: 150px; height: 170px; float: right; position: absolute; top: 20px; right: 20px; border: solid thin #222; border-top: solid thin #555; background-color: rgba(0,0,0,0.2); }
 #outerFrameInput { height: 10%; padding: 5px; }
 #frameInput { padding: 5px; background-color: rgba(0, 0, 0, 0.3); }
+/* Game Area */
+#gameMap { width: 142px; height: 142px; margin: 3px; border: solid thin #222; border-top: solid thin #111; border-bottom: solid thin #444; background-color: rgba(0,0,0,0.1); }
+#frameGameMap p { text-align: center; line-height: 16px; vertical-align: middle; font-family: 'Paprika', serif; }
 /* Input Frames */
 #inputGameCommands { width: 94%; padding: 5px; background-color: rgba(0, 0, 0, 0.3); }
 #inputButton { width: 5%; height: 29px; background-color: rgba(0, 0, 0, 0.3); }

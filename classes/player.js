@@ -13,6 +13,13 @@ var Player = function(socket) {
         self.emit('txt', {msg: m});
     }
     
+    self.update = function(what) {
+        // Update Player List
+    }
+    
+    // test
+    self.update({'plist': true});
+    
     self.socket = socket;
 };
 
