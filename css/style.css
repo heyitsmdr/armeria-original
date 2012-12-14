@@ -1,0 +1,319 @@
+/* Generic */
+body {
+    overflow: hidden;
+    background-color: #333;
+    background-image: url('../images/layout/bg.png');
+    font-family: "Paprika", "Inconsolata", "Monaco", "Consolas", "Andale Mono", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
+    font-size: 12px;
+    color: #fff;
+}
+input {
+    font-family: 'Paprika', serif;
+    font-size: 12px;
+    color: #fff;
+}
+input:focus {
+    outline: none;
+    border: solid thin #333;
+}
+/* Wrappers */
+#wrapSidebar {
+    height:100%;
+    width: 15%;
+    float: left;
+}
+#wrapGameArea {
+    height: 100%;
+    width: 85%;
+    float: right;
+}
+/* Left Frames */
+#frameLogo {
+    width: 320px;
+    height: 40px;
+    background-image: url('../images/layout/logo.png');
+    background-repeat: no-repeat;
+    text-indent: -9999px;
+    direction: ltr;
+    background-position: 5px 5px;
+}
+#outerFrameStats, #outerFramePlayerList {
+    padding: 0px;
+    margin-left: 5px;
+    margin-right: 3px;
+    min-width: 62px;
+}
+#outerFramePlayerList {
+    height: 65%;
+    margin-bottom: 15px;
+}
+#outerFrameStats {
+    height: 25%;
+}
+#frameStats, #framePlayerList {
+    background-color: rgba(255, 255, 255, 0.1);
+    height: 100%;
+    border: solid thin #333;
+    border-top: solid thin #666;
+}
+#frameStats {
+    padding-left: 5px;
+    padding-top: 5px;
+}
+#framePlayerList {
+    padding-left: 0;
+    padding-top: 0;
+    padding: 2px;
+}
+/* PlayerList */
+#roomTitle {
+    margin: 0;
+    margin-bottom: 5px;
+    padding: 2px;
+    text-align: center;
+    font-family: 'Paprika', serif;
+    font-size: 13px;
+    border: solid thin #555;
+    border-top: solid thin #777;
+    border-bottom: solid thin #333;
+    background-color: rgba(255,255,255,0.1);
+}
+#playerList {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 0;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.player {
+    height: 53px;
+    margin-bottom: 1px;
+    border: solid thin #555;
+    border-top: solid thin #222;
+    border-bottom: solid thin #666;
+    background-color: rgba(0,0,0,0.3);
+    text-align: left;
+    overflow: hidden;
+}
+.player:hover {
+    background-color: rgba(0,0,0,0.2);
+}
+.player img {
+    padding: 3px;
+    float: left;
+    margin: 2px;
+    margin-right: 10px;
+    margin-left: 3px;
+    border: solid thin #444;
+    border-top: solid thin #222;
+    border-bottom: solid thin #888;
+    background-color: rgba(0,0,0,0.7);
+    -moz-box-shadow: 0px 0px 5px #000;
+    -webkit-box-shadow: 0px 0px 5px #000;
+    box-shadow: 0px 0px 5px #000;
+}
+.player p {
+    line-height: 53px;
+}
+/* Right Frames */
+#outerFrameGame {
+    height: 90%;
+    padding: 5px;
+    margin-bottom: 13px;
+}
+#innerframeGame {
+    padding: 8px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+#frameGame {
+    margin: 1px;
+    padding-left: 3px;
+    overflow: auto;
+    height: 100%;
+    border: solid thin #333;
+    background-color: rgba(0,0,0,0.2);
+}
+#frameGameMap {
+    visibility: visible;
+    width: 228px;
+    height: 248px;
+    float: right;
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    border: solid thin #222;
+    border-top: solid thin #555;
+    background-color: rgba(52,52,52,0.8);
+}
+#outerFrameInput {
+    height: 10%;
+    padding: 5px;
+}
+#frameInput {
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+#status {
+    float: right;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: auto;
+    height: 16px;
+    background-color: rgba(64, 64, 64, 0.7);
+    padding: 3px;
+}
+#networkStatus {
+    float: right;
+    width: 16px;
+    height: 16px;
+    background-image: url('../images/layout/circle-green.png');
+}
+#networkStatus:hover {
+    background-image: url('../images/layout/circle-red.png');
+}
+#updateStatus {
+    display: none;
+    float: left;
+    width: 16px;
+    height: 16px;
+    background-image: url('../images/layout/update.png');
+}
+#updateStatus:hover {
+    background-image: url('../images/layout/update2.png');
+}
+/* Game Area */
+#frameGameMap p {
+    text-align: center;
+    line-height: 16px;
+    vertical-align: middle;
+    font-family: 'Paprika', serif;
+}
+#gameMap {
+    width: 220px;
+    height: 220px;
+    margin: 3px;
+    border: solid thin #222;
+    border-top: solid thin #111;
+    border-bottom: solid thin #444;
+    background-color: rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+#playerMark {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    background-image: url('../images/tiles/playerMark.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    box-shadow:inset 0 0 10px #000;
+    -moz-box-shadow:inset 0px 0px 10px #000;
+    -webkit-box-shadow:inset 0px 0px 10px #000;
+    z-index: 998;
+}
+#mapShadow {
+    position: relative;
+    top: -220px;
+    width: 220px;
+    height: 220px;
+    box-shadow:inset 0 0 10px #000;
+    -moz-box-shadow:inset 0px 0px 10px #000;
+    -webkit-box-shadow:inset 0px 0px 10px #000;
+    /*background-image: url('../images/layout/mapTexture.png');*/
+}
+/* Input Frames */
+#inputGameCommands {
+    width: 100%;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+#inputButton {
+    width: 5%;
+    height: 29px;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+/* Links */
+a {
+    color: #faad28;
+    text-decoration: none;
+}
+a:hover {
+    color: #f7c46c;
+}
+/* Colors */
+span.yellow {
+    color: #f5f567;
+}
+span.byellow {
+    color: #f5f567;
+    font-weight: bold;
+}
+span.red {
+    color: #f74848;
+}
+span.bred {
+    color: #f74848;
+    font-weight: bold;
+}
+/* Special Styles */
+.shadow {
+    -moz-box-shadow: 0px 1px 7px #000;
+    -webkit-box-shadow: 0px 1px 7px #000;
+    box-shadow: 0px 1px 7px #000;
+}
+.shadow2 {
+    -moz-box-shadow: 0px 0px 5px #000;
+    -webkit-box-shadow: 0px 0px 5px #000;
+    box-shadow: 0px 0px 5px #000;
+}
+.border222 {
+    border: solid thin #222;
+    border-top: solid thin #444;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+.border333 {
+    border: solid thin #333;
+}
+.borderRadTop10 {
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+@media screen and (max-width: 720px) {
+    #frameGameMap {
+        display: none;
+    }
+}
+@media screen and (min-device-width : 320px) and (max-width : 480px) {
+    body {
+        overflow: hidden;
+        background-color: #333;
+        background-image: url('../images/layout/bg.png');
+        font-family: "Paprika", "Inconsolata", "Monaco", "Consolas", "Andale Mono", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
+        font-size: 12px;
+        color: #fff;
+    }
+    #wrapSidebar {
+        display: none;
+    }
+    #wrapGameArea {
+        width: 100%;
+    }
+}
+@media screen and (max-height: 740px) and (min-width : 481px) {
+    #outerFrameInput {
+        float: right;
+        position: absolute;
+        bottom: -10px;
+        right: 5px;
+        width: 82%;
+    }
+}

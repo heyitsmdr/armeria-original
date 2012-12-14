@@ -1,0 +1,92 @@
+<html>
+    <head>
+        <title>Armeria: Social MUD</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+        <!-- Stylesheets -->
+        <link id="cssReset" rel="stylesheet" type="text/css" href="css/reset.css">
+        <link id="cssStandard" rel="stylesheet" type="text/css" href="css/style.css">
+        <link id="cssStandard" rel="stylesheet" type="text/css" href="css/minimap.css">
+        
+        <link href='http://fonts.googleapis.com/css?family=Paprika' rel='stylesheet' type='text/css'>
+        <!-- Scripts -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script src="engine.js"></script>
+        <script src="http://ethryx.net:2772/socket.io/socket.io.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                GameEngine.parseInput("Welcome to Armeria! <a href='#' onclick='GameEngine.showIntro()'>What is Armeria?</a><br><br>Please <a href='#' onclick='GameEngine.FBLogin()'>Login</a> with Facebook.<br>");
+                $('#inputGameCommands').keypress(function(e){
+                    if(e.which == 13) GameEngine.parseCommand();
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <!-- Facebook Integration -->
+        <div id="fb-root"></div>
+        <script>
+          window.fbAsyncInit = function() {
+            FB.init({
+              appId      : '388221831260979', // App ID
+              channelUrl : '//ethryx.net/channel.html', // Channel File
+              status     : true, // check login status
+              cookie     : true, // enable cookies to allow the server to access the session
+              xfbml      : true  // parse XFBML
+            });
+
+          };
+        
+          // Load the SDK Asynchronously
+          (function(d){
+             var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+             if (d.getElementById(id)) {return;}
+             js = d.createElement('script'); js.id = id; js.async = true;
+             js.src = "//connect.facebook.net/en_US/all.js";
+             ref.parentNode.insertBefore(js, ref);
+           }(document));
+        </script>
+        
+        
+        <!-- Game Client -->
+        <div id="status" class="shadow border222">
+                            <div id="updateStatus"></div>
+                          <div id="networkStatus"></div>
+                      </div>
+        <div id="wrapSidebar">
+            <div id="frameLogo">Logo</div>
+            <div id="outerFramePlayerList">
+                <div id="framePlayerList" class="shadow border222">
+                    <ul id="playerList"></ul>
+                </div>
+            </div>
+            <div id="outerFrameStats">
+                <div id="frameStats" class="shadow border222">
+                    No stats to show..
+                </div>
+            </div>
+        </div>
+        <div id="wrapGameArea">
+            <div id="outerFrameGame">
+                <div id="innerFrameGame" class="shadow border222">
+                    <div id="frameGame" class="shadow2">
+                        
+                    </div>
+                    <div id="frameGameMap" class="shadow border222">
+                        <div id="gameMap">
+                            <div id="gameMapCanvas"></div>
+                            <div id="playerMark"></div>
+                            <div id="mapShadow" class="shadow2"></div>
+                        </div>
+                        <p id="mapName"></p>
+                    </div>
+                  </div>
+              </div>
+              <div id="outerFrameInput">
+                  <div id="frameInput" class="shadow border222">
+                      <input type="text" id="inputGameCommands" placeholder="Type commands here.." class="shadow2 border333" />
+                      
+                  </div>
+              </div>
+          </div>
+    </body>
+</html>
