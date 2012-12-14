@@ -32,6 +32,10 @@ var GameEngine = new function() {
     }
     
     this.FBLogin = function() {
+        if(this.connected) {
+            GameEngine.parseInput("You're already connected.");
+            return false;   
+        }
         FB.getLoginStatus(function(response) {
             if (response.status === 'connected') {
                 // authorized
@@ -113,7 +117,17 @@ var GameEngine = new function() {
     }
     
     this.parseCommand = function() {
-        if(this.connected) this.socket.emit('cmd', {cmd: $('#inputGameCommands').val()});
+        if(this.connected) {
+            var command = $('#inputGameCommands').val();
+            var directions = new Array('n','s','e','w','u','d');
+            if(command.substr(0, 1) == '/') {
+                this.socket.emit('cmd', {cmd: command.substr(1)});
+            } else if(directions.indexOf(command.toLowerCase()) >= 0) {
+                this.socket.emit('cmd', {cmd: 'move ' + command.substr(1)});
+            } else {
+                this.socket.emit('cmd', {cmd: 'say ' + command});
+            }
+        }
         $('#inputGameCommands').val('');
     }
     
