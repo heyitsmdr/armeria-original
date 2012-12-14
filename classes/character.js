@@ -106,7 +106,7 @@ var Character = function(config) {
         // update local player
         self.player.update({minimap: 1, maploc: 1});
         // announce to room
-        self.room.announce(self.htmlname + " has just logged in to Armeria!");
+        self.room.announceExcept(self.player, self.htmlname + " has just logged in to Armeria!");
     }
     
     self.logout = function() {
@@ -120,6 +120,40 @@ var Character = function(config) {
         });
         // save
         self.save();
+    }
+    
+    self.switchRooms = function(m, x, y, z) {
+        var map = WORLD.getMap(m);
+        if(!map) return false;
+        var room = map.getRoom(x, y, z);
+        if(!room) return false;
+        
+        var old_room = self.room;
+        
+        old_room.removePlayer(self.player);
+        room.addPlayer(self.player);
+        
+        self.room = room;
+        self.location.map = map.name;
+        self.location.x = x;
+        self.location.y = y;
+        self.location.z = z;
+        
+        // update players in old room
+        old_room.eachPlayer(function(p){
+            p.update({plist: 1});
+        });
+        
+        // update players in new room
+        room.eachPlayer(function(p){
+            p.update({plist: 1});
+        });
+        
+        // update local player
+        // TODO: update minimap if the old_map != new_map
+        self.player.update({maploc: 1});
+        
+        return true;
     }
     
     self.init(config);

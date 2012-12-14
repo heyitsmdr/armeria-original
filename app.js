@@ -77,7 +77,7 @@ io.sockets.on('connection', function(socket){
     socket.on('cmd', function(data){
         // get base command
         var sections = data.cmd.split(' ');
-        var cmd = matchcmd(sections[0], new Array('say'));
+        var cmd = matchcmd(sections[0], new Array('say', 'move'));
         sections.shift();
         var cmd_args = sections.join(' ');
         
@@ -85,8 +85,11 @@ io.sockets.on('connection', function(socket){
             case 'say':
                 LOGIC.say(player, cmd_args);
                 break;
+            case 'move':
+                LOGIC.move(player, cmd_args);
+                break;
             default:
-                player.msg('That command is not recognized. Are you trying to <span class="yellow">say something</span>?');
+                player.msg('That command is not recognized. Try again.');
         }
     });
 });

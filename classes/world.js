@@ -158,6 +158,12 @@ var Room = function(config, mapobj) {
         });
     };
     
+    self.announceExcept = function(player, data) {
+        self.eachPlayer(function(p){
+            if(p !== player) p.msg(data);
+        });
+    };
+    
     self.init(config, mapobj);
 };
 

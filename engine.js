@@ -93,6 +93,10 @@ var GameEngine = new function() {
         this.socket.on('maploc', function(data){
             GameEngine.mapPosition(data.x, data.y, data.z);
         });
+        this.socket.on('mapnomove', function(){
+            GameEngine.parseInput("Alas, you cannot go that way.");
+            $('#gameMapCanvas').effect("shake", { times:3 , distance: 1}, 500);
+        });
     }
     
     this.parseInput = function(newString){
@@ -123,7 +127,7 @@ var GameEngine = new function() {
             if(command.substr(0, 1) == '/') {
                 this.socket.emit('cmd', {cmd: command.substr(1)});
             } else if(directions.indexOf(command.toLowerCase()) >= 0) {
-                this.socket.emit('cmd', {cmd: 'move ' + command.substr(1)});
+                this.socket.emit('cmd', {cmd: 'move ' + command});
             } else {
                 this.socket.emit('cmd', {cmd: 'say ' + command});
             }
@@ -171,7 +175,7 @@ var GameEngine = new function() {
         if(!this.mapdata) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - local map cache empty'); return;}
         if(!this.mapGridAt(x, y)) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - destination doesnt exist in local map cache'); return;}
         if(this.mapz != z) this.mapRender(false);
-        $('#gameMapCanvas').animate({left: (80 + (-20 * (x - 1))) + 'px'}, 500);
-        $('#gameMapCanvas').animate({top: (80 + (-20 * (y - 1))) + 'px'}, 500);
+        $('#gameMapCanvas').animate({left: (80 + (-20 * (x - 1))) + 'px'}, 250);
+        $('#gameMapCanvas').animate({top: (80 + (-20 * (y - 1))) + 'px'}, 250);
     }
 };

@@ -55,7 +55,7 @@ var Player = function(socket) {
         }
         // Update Map Location
         if(what.maploc) {
-            self.emit('maploc', {x: self.character.room.x, y: self.character.room.y, z: self.character.room.z});
+            self.emit('maploc', {x: self.character.location.x, y: self.character.location.y, z: self.character.location.z});
         }
     }
     
