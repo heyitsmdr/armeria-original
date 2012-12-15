@@ -107,7 +107,7 @@ var GameEngine = new function() {
     
     this.parseInput = function(newString){
         $('#frameGame').html($('#frameGame').html() + newString + '<br>');
-        $('#frameGame').scrollTop($('#frameGame').height());
+        $('#frameGame').scrollTop(999999);
     }
     
     this.newLine = function(count) {
@@ -135,7 +135,8 @@ var GameEngine = new function() {
             } else if(directions.indexOf(command.toLowerCase()) >= 0) {
                 this.socket.emit('cmd', {cmd: 'move ' + command});
             } else {
-                this.socket.emit('cmd', {cmd: 'say ' + command});
+                if(command)
+                    this.socket.emit('cmd', {cmd: 'say ' + command});
             }
         }
         $('#inputGameCommands').val('');

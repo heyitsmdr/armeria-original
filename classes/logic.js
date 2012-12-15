@@ -2,6 +2,7 @@ var Logic = function() {
     var self = this;
     
     self.say = function(player, what) {
+        if(what.length == 0) return;
         
         //Customize output depending on sentence punctuation.
         var isQuestion = false;
