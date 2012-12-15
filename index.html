@@ -50,9 +50,9 @@
         
         <!-- Game Client -->
         <div id="status" class="shadow border222">
-                            <div id="updateStatus"></div>
-                          <div id="networkStatus"></div>
-                      </div>
+            <div id="updateStatus"></div>
+            <div id="networkStatus"></div>
+        </div>
         <div id="wrapSidebar">
             <div id="frameLogo">Logo</div>
             <div id="outerFramePlayerList">
@@ -80,24 +80,31 @@
                         </div>
                         <p id="mapName"></p>
                     </div>
-                  </div>
-              </div>
-              <div id="outerFrameInput">
-                  <div id="frameInput" class="shadow border222">
-                      <input type="text" id="inputGameCommands" placeholder="Type commands here.." class="shadow2 border333" />
-                      
-                  </div>
-              </div>
-              <div id="movementControlsY">
-                  <input type="button" class="movementButton shadow2 border333" value="n"/>
-                  <input type="button" class="movementButton shadow2 border333" value="s"/>
-                  <input type="button" class="movementButton shadow2 border333" value="Look"/>
-                  <input type="button" class="movementButton shadow2 border333" value="w"/>
-                  <input type="button" class="movementButton shadow2 border333" value="e"/>
-                  <input type="button" class="movementButton shadow2 border333" value="u"/>
-                  <input type="button" class="movementButton shadow2 border333" value="d"/>
-                  Will looklike a d-pad at some point today.
-              </div>
-          </div>
+                </div>
+            </div>
+            <div id="outerFrameInput">
+                <div id="frameInput" class="shadow border222">
+                    <input type="text" id="inputGameCommands" placeholder="Type commands here.." class="shadow2 border333" />
+                </div>
+            </div>
+
+            <table border="0" bordercolor="#ff0000" frame="void" id="movementControls">
+            <tr>
+                <td></td>
+                <td><input type="button" class="movementButton shadow2 border333" value="n"/></td>
+                <td><input type="button" class="movementButton shadow2 border333" value="u"/></td>
+            </tr>
+            <tr>
+                <td><input type="button" class="movementButton shadow2 border333" value="w"/></td>
+                <td><input type="button" class="movementButton shadow2 border333" value="Look"/></td>
+                <td><input type="button" class="movementButton shadow2 border333" value="e"/></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="button" class="movementButton shadow2 border333" value="s"/></td>
+                <td><input type="button" class="movementButton shadow2 border333" value="d"/></td>
+            </tr>
+            </table>
+        </div>
     </body>
 </html>

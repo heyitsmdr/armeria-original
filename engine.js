@@ -74,6 +74,8 @@ var GameEngine = new function() {
             $(window).on('beforeunload', function(){
                 return 'You are currently connected to the game, and this action will cause you be disconnected.';
             });
+            
+            $('#inputGameCommands').focus();
         });
         this.socket.on('disconnect', function(){
             GameEngine.connected = false;

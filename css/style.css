@@ -235,17 +235,23 @@ input:focus {
     height: 29px;
     background-color: rgba(0, 0, 0, 0.3);
 }
-#movementControlsY {
+#movementControls {
     position: absolute;
-    right: 25px;
+    right: 35px;
     bottom: 105px;
-    width: 150px;
-    height: 150px;
-    border: solid thin green;
+    width: 200px;
+    height: 200px;
     z-index: 999;
+}
+#movementControls td {
+    width: 50px;
+    height: 50px;
+    text-align: center;
 }
 .movementButton {
     background-color: rgba(0, 0, 0, 0.3);
+    height: 50px;
+    width: 50px;
 }
 .movementButton:hover {
     background-color: rgba(30, 30, 30, 0.3);
@@ -323,6 +329,14 @@ span.bred {
     #wrapGameArea {
         width: 100%;
     }
+    #movementControls {
+        position: absolute;
+        right: 5%;
+        bottom: 5%;
+        width: 200px;
+        height: 200px;
+        z-index: 999;
+}
 }
 @media screen and (max-height: 740px) and (min-width : 481px) {
     #outerFrameInput {
