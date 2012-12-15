@@ -77,7 +77,7 @@ io.sockets.on('connection', function(socket){
     socket.on('cmd', function(data){
         // get base command
         var sections = data.cmd.split(' ');
-        var cmd = matchcmd(sections[0], new Array('say', 'move'));
+        var cmd = matchcmd(sections[0], new Array('say', 'move', 'look'));
         sections.shift();
         var cmd_args = sections.join(' ');
         
@@ -87,6 +87,9 @@ io.sockets.on('connection', function(socket){
                 break;
             case 'move':
                 LOGIC.move(player, cmd_args);
+                break;
+            case 'look':
+                LOGIC.look(player);
                 break;
             default:
                 player.msg('That command is not recognized. Try again.');

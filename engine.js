@@ -5,6 +5,22 @@ var GameEngine = new function() {
     this.mapdata = false;
     this.mapz = 0;
     
+    this.init = function() {
+        // intro
+        GameEngine.parseInput("Welcome to Armeria! <a href='#' onclick='GameEngine.showIntro()'>What is Armeria?</a><br><br>Please <a href='#' onclick='GameEngine.FBLogin()'>Login</a> with Facebook.<br>");
+        // bind ENTER to input box
+        $('#inputGameCommands').keypress(function(e){
+            if(e.which == 13) GameEngine.parseCommand();
+        });
+        // stops player from leaving page if connected.
+        $(window).on('beforeunload', function(){
+            if(GameEngine.connected)
+                return 'You are currently connected to the game, and this action will cause you be disconnected.';
+        });
+        // focus input box
+        $('#inputGameCommands').focus();
+    }
+    
     this._doFBLogin = function() {
         this.parseInput("Facebook not authorized. Asking for permission..");
         FB.login(function(response) {
@@ -70,12 +86,6 @@ var GameEngine = new function() {
                 name: GameEngine.fbinfo.name,
                 picture: GameEngine.fbinfo.picture
             });
-            // Stops player from leaving page if connected.
-            $(window).on('beforeunload', function(){
-                return 'You are currently connected to the game, and this action will cause you be disconnected.';
-            });
-            
-            $('#inputGameCommands').focus();
         });
         this.socket.on('disconnect', function(){
             GameEngine.connected = false;
@@ -137,6 +147,8 @@ var GameEngine = new function() {
             } else {
                 if(command)
                     this.socket.emit('cmd', {cmd: 'say ' + command});
+                else
+                    this.socket.emit('cmd', {cmd: 'look'});
             }
         }
         $('#inputGameCommands').val('');

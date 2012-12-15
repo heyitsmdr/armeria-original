@@ -15,10 +15,7 @@
         <script src="http://ethryx.net:2772/socket.io/socket.io.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
-                GameEngine.parseInput("Welcome to Armeria! <a href='#' onclick='GameEngine.showIntro()'>What is Armeria?</a><br><br>Please <a href='#' onclick='GameEngine.FBLogin()'>Login</a> with Facebook.<br>");
-                $('#inputGameCommands').keypress(function(e){
-                    if(e.which == 13) GameEngine.parseCommand();
-                });
+                GameEngine.init();
             });
         </script>
     </head>
@@ -49,7 +46,6 @@
            function movementButtonClick(c){
                $('#inputGameCommands').val(c);
                GameEngine.parseCommand();
-               $('#inputGameCommands').focus();
            }
         </script>
         
@@ -102,7 +98,7 @@
             </tr>
             <tr>
                 <td><input type="button" class="movementButton shadow2 border333" value="w" onClick="movementButtonClick('w')"/></td>
-                <td><input type="button" class="movementButton shadow2 border333" value="Look" onClick="movementButtonClick('look')"/></td>
+                <td><input type="button" class="movementButton shadow2 border333" value="Look" onClick="movementButtonClick('/look')"/></td>
                 <td><input type="button" class="movementButton shadow2 border333" value="e" onClick="movementButtonClick('e')"/></td>
             </tr>
             <tr>

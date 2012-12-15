@@ -2,7 +2,7 @@ var Logic = function() {
     var self = this;
     
     self.say = function(player, what) {
-        if(what.length == 0) return;
+        if(what.length == 0) self.look(player);
         
         //Customize output depending on sentence punctuation.
         var isQuestion = false;
@@ -120,7 +120,15 @@ var Logic = function() {
                 p.msg(msg_new);
             });
             player.msg(msg_self);
+            self.look(player);
         }
+    }
+    
+    self.look = function(player) {
+        player.msg('<br/><span class="yellow">' + player.character.room.name + '</span><br/>' + player.character.room.desc);
+        player.character.room.eachPlayerExcept(player, function(p){
+                player.msg(p.character.htmlname + ' is here.<br/>');
+            });
     }
 };
 
