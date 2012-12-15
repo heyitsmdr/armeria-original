@@ -197,7 +197,12 @@ var GameEngine = new function() {
         if(!this.mapdata) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - local map cache empty'); return;}
         if(!this.mapGridAt(x, y)) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - destination doesnt exist in local map cache'); return;}
         if(this.mapz != z) this.mapRender(false);
-        $('#gameMapCanvas').animate({left: (80 + (-20 * (x - 1))) + 'px'}, 250);
-        $('#gameMapCanvas').animate({top: (80 + (-20 * (y - 1))) + 'px'}, 250);
+        var new_left = (80 + (-20 * (x - 1))) + 'px';
+        var new_top =  (80 + (-20 * (y - 1))) + 'px';
+        $('#gameMapCanvas').stop();
+        if($('#gameMapCanvas').css('left') != new_left)
+            $('#gameMapCanvas').animate({left: new_left}, 250);
+        if($('#gameMapCanvas').css('top') != new_top)
+            $('#gameMapCanvas').animate({top: new_top}, 250);
     }
 };
