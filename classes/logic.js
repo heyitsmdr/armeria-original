@@ -35,8 +35,6 @@ var Logic = function() {
             msgStart = " exclaims, '";
             msgStart_self = "You exclaim, '"
         }
-        
-        
             player.character.room.eachPlayerExcept(player, function(p){
                 p.msg(player.character.htmlname + msgStart + what + "'");
             });

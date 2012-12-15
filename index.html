@@ -45,6 +45,12 @@
              js.src = "//connect.facebook.net/en_US/all.js";
              ref.parentNode.insertBefore(js, ref);
            }(document));
+           
+           function movementButtonClick(c){
+               $('#inputGameCommands').val(c);
+               GameEngine.parseCommand();
+               $('#inputGameCommands').focus();
+           }
         </script>
         
         
@@ -91,18 +97,18 @@
             <table border="0" bordercolor="#ff0000" frame="void" id="movementControls">
             <tr>
                 <td></td>
-                <td><input type="button" class="movementButton shadow2 border333" value="n"/></td>
-                <td><input type="button" class="movementButton shadow2 border333" value="u"/></td>
+                <td><input type="button" class="movementButton shadow2 border333" value="n" onClick="movementButtonClick('n')"/></td>
+                <td><input type="button" class="movementButton shadow2 border333" value="u" onClick="movementButtonClick('u')"/></td>
             </tr>
             <tr>
-                <td><input type="button" class="movementButton shadow2 border333" value="w"/></td>
-                <td><input type="button" class="movementButton shadow2 border333" value="Look"/></td>
-                <td><input type="button" class="movementButton shadow2 border333" value="e"/></td>
+                <td><input type="button" class="movementButton shadow2 border333" value="w" onClick="movementButtonClick('w')"/></td>
+                <td><input type="button" class="movementButton shadow2 border333" value="Look" onClick="movementButtonClick('look')"/></td>
+                <td><input type="button" class="movementButton shadow2 border333" value="e" onClick="movementButtonClick('e')"/></td>
             </tr>
             <tr>
                 <td></td>
-                <td><input type="button" class="movementButton shadow2 border333" value="s"/></td>
-                <td><input type="button" class="movementButton shadow2 border333" value="d"/></td>
+                <td><input type="button" class="movementButton shadow2 border333" value="s" onClick="movementButtonClick('s')"/></td>
+                <td><input type="button" class="movementButton shadow2 border333" value="d" onClick="movementButtonClick('d')"/></td>
             </tr>
             </table>
         </div>
