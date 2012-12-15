@@ -38,7 +38,7 @@ input:focus {
     background-position: 5px 5px;
 }
 #outerFrameStats, #outerFramePlayerList {
-    padding: 0px;
+    padding: 0;
     margin-left: 5px;
     margin-right: 3px;
     min-width: 62px;
@@ -109,9 +109,9 @@ input:focus {
     border-top: solid thin #222;
     border-bottom: solid thin #888;
     background-color: rgba(0,0,0,0.7);
-    -moz-box-shadow: 0px 0px 5px #000;
-    -webkit-box-shadow: 0px 0px 5px #000;
-    box-shadow: 0px 0px 5px #000;
+    -moz-box-shadow: 0 0 5px #000;
+    -webkit-box-shadow: 0 0 5px #000;
+    box-shadow: 0 0 5px #000;
 }
 .player p {
     line-height: 53px;
@@ -146,6 +146,7 @@ input:focus {
     border: solid thin #222;
     border-top: solid thin #555;
     background-color: rgba(52,52,52,0.8);
+    background-image: url('../images/layout/bg.png');
 }
 #outerFrameInput {
     height: 10%;
@@ -209,8 +210,8 @@ input:focus {
     background-repeat: no-repeat;
     background-position: center;
     box-shadow:inset 0 0 10px #000;
-    -moz-box-shadow:inset 0px 0px 10px #000;
-    -webkit-box-shadow:inset 0px 0px 10px #000;
+    -moz-box-shadow:inset 0 0 10px #000;
+    -webkit-box-shadow:inset 0 0 10px #000;
     z-index: 998;
 }
 #mapShadow {
@@ -219,8 +220,8 @@ input:focus {
     width: 220px;
     height: 220px;
     box-shadow:inset 0 0 10px #000;
-    -moz-box-shadow:inset 0px 0px 10px #000;
-    -webkit-box-shadow:inset 0px 0px 10px #000;
+    -moz-box-shadow:inset 0 0 10px #000;
+    -webkit-box-shadow:inset 0 0 10px #000;
     /*background-image: url('../images/layout/mapTexture.png');*/
 }
 /* Input Frames */
@@ -233,6 +234,21 @@ input:focus {
     width: 5%;
     height: 29px;
     background-color: rgba(0, 0, 0, 0.3);
+}
+#movementControlsY {
+    position: absolute;
+    right: 25px;
+    bottom: 105px;
+    width: 150px;
+    height: 150px;
+    border: solid thin green;
+    z-index: 999;
+}
+.movementButton {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+.movementButton:hover {
+    background-color: rgba(30, 30, 30, 0.3);
 }
 /* Links */
 a {
@@ -259,14 +275,14 @@ span.bred {
 }
 /* Special Styles */
 .shadow {
-    -moz-box-shadow: 0px 1px 7px #000;
-    -webkit-box-shadow: 0px 1px 7px #000;
-    box-shadow: 0px 1px 7px #000;
+    -moz-box-shadow: 0 1px 7px #000;
+    -webkit-box-shadow: 0 1px 7px #000;
+    box-shadow: 0 1px 7px #000;
 }
 .shadow2 {
-    -moz-box-shadow: 0px 0px 5px #000;
-    -webkit-box-shadow: 0px 0px 5px #000;
-    box-shadow: 0px 0px 5px #000;
+    -moz-box-shadow: 0 0 5px #000;
+    -webkit-box-shadow: 0 0 5px #000;
+    box-shadow: 0 0 5px #000;
 }
 .border222 {
     border: solid thin #222;

@@ -2,10 +2,44 @@ var Logic = function() {
     var self = this;
     
     self.say = function(player, what) {
+        
+        //Customize output depending on sentence punctuation.
+        var isQuestion = false;
+        var isExcited = false;
+        var msgStart = " says, '";
+        var msgStart_self = "You say, '";
+        if (what.substr(what.length - 1, 1) === '?' || what.substr(what.length - 2, 1) === '?') { isQuestion = true; }
+        if (what.substr(what.length - 1, 1) === '!' || what.substr(what.length - 2, 1) === '!') { isExcited = true; }
+        if (isQuestion) {
+            msgStart = " asks, '";
+            msgStart_self = "You ask, '";
+            if (isExcited) {
+                var r = Math.floor(Math.random()*3)
+                switch(r){
+                    case 0 :
+                        msgStart = " asks excitedly, '"
+                        msgStart_self = "You ask excitedly, '"
+                        break;
+                    case 1 :
+                        msgStart = " asks loudly, '"
+                        msgStart_self = "You ask loudly, '"
+                        break;
+                    case 2 :
+                        msgStart = " asks uncontrollably, '"
+                        msgStart_self = "You ask uncontrollably, '"
+                        break;
+                }
+            }
+        } else if (isExcited) {
+            msgStart = " exclaims, '";
+            msgStart_self = "You exclaim, '"
+        }
+        
+        
             player.character.room.eachPlayerExcept(player, function(p){
-                p.msg(player.character.htmlname + " says, '" + what + "'");
+                p.msg(player.character.htmlname + msgStart + what + "'");
             });
-            player.msg("You say, '" + what + "'.");
+            player.msg(msgStart_self + what + "'.");
     }
     
     self.move = function(player, dir) {

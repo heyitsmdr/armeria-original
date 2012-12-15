@@ -70,6 +70,10 @@ var GameEngine = new function() {
                 name: GameEngine.fbinfo.name,
                 picture: GameEngine.fbinfo.picture
             });
+            // Stops player from leaving page if connected.
+            $(window).on('beforeunload', function(){
+                return 'You are currently connected to the game, and this action will cause you be disconnected.';
+            });
         });
         this.socket.on('disconnect', function(){
             GameEngine.connected = false;
@@ -95,7 +99,7 @@ var GameEngine = new function() {
         });
         this.socket.on('mapnomove', function(){
             GameEngine.parseInput("Alas, you cannot go that way.");
-            $('#gameMapCanvas').effect("shake", { times:3 , distance: 1}, 500);
+            $('#gameMapCanvas').effect("shake", { times:3 , distance: 1}, 250);
         });
     }
     
@@ -154,12 +158,15 @@ var GameEngine = new function() {
             var top = y * 20;
             // calculate borders
             var border_class = '';
-            if(!GameEngine.mapGridAt(x, y - 1)) border_class += ' bordertop';
-            if(!GameEngine.mapGridAt(x, y + 1)) border_class += ' borderbottom';
-            if(!GameEngine.mapGridAt(x - 1, y)) border_class += ' borderleft';
-            if(!GameEngine.mapGridAt(x + 1, y)) border_class += ' borderright';
+            if(!GameEngine.mapGridAt(x, y - 1)) border_class += 't';
+            if(!GameEngine.mapGridAt(x + 1, y)) border_class += 'r';
+            if(!GameEngine.mapGridAt(x, y + 1)) border_class += 'b';
+            if(!GameEngine.mapGridAt(x - 1, y)) border_class += 'l';
+            if(border_class) border_class = ' border' + border_class;
             $('#gameMapCanvas').html($('#gameMapCanvas').html() + "<div class='grid " + next_type + border_class + "' style='top: " + top + "px; left: " + left + "px'></div>");
-            if(next_type == 'type_grass') { next_type = 'type_dirt'; } else { next_type = 'type_grass'; }
+            
+            //if(next_type == 'type_grass') { next_type = 'type_dirt'; } else { next_type = 'type_grass'; }
+            if(next_type == 'type_grass') { next_type = 'type_dirt'; } else if (next_type == 'type_dirt') {    next_type = 'type_water'; } else if (next_type == 'type_water') { next_type = 'type_grass'; }
         });
     }
     
