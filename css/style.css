@@ -252,9 +252,32 @@ input:focus {
     background-color: rgba(0, 0, 0, 0.3);
     height: 50px;
     width: 50px;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 .movementButton:hover {
     background-color: rgba(30, 30, 30, 0.3);
+}
+#dir_N {
+    background-image: url('../images/layout/dir_N.png');
+}
+#dir_U {
+    background-image: url('../images/layout/dir_U.png');
+}
+#dir_W {
+    background-image: url('../images/layout/dir_W.png');
+}
+#dir_L {
+    background-image: url('../images/layout/dir_L.png');
+}
+#dir_E {
+    background-image: url('../images/layout/dir_E.png');
+}
+#dir_S {
+    background-image: url('../images/layout/dir_S.png');
+}
+#dir_D {
+    background-image: url('../images/layout/dir_D.png');
 }
 /* Links */
 a {

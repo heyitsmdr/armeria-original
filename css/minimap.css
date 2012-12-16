@@ -8,21 +8,27 @@
     width: 20px;
     height: 20px;
     position: absolute;
+    background-image: url('../images/tiles/tileset.jpg');
+
 }
 
 #gameMapCanvas div.type_grass {
     background-color: rgba(44, 102, 24, 1);
-    background-image: url('../images/tiles/grass.jpg');
 }
 
 #gameMapCanvas div.type_dirt {
     background-color: rgba(133, 109, 66, 1);
-    background-image: url('../images/tiles/dirt.jpg');
+    background-position: -20px 0;
 }
 
 #gameMapCanvas div.type_water {
     background-color: rgba(54, 133, 217, 1);
-    background-image: url('../images/tiles/water.jpg');
+    background-position: -40px 0;
+}
+
+#gameMapCanvas div.type_weapon {
+    background-color: rgba(94, 94, 94, 1);
+    background-position: -60px 0;
 }
 
 #gameMapCanvas div.bordertrbl, #gameMapCanvas div.bordertrl, #gameMapCanvas div.bordertl, #gameMapCanvas div.borderl, #gameMapCanvas div.bordertrb, #gameMapCanvas div.bordertr, #gameMapCanvas div.bordert, #gameMapCanvas div.borderrb, #gameMapCanvas div.borderr, #gameMapCanvas div.borderb, #gameMapCanvas div.borderrl, #gameMapCanvas div.bordertb, #gameMapCanvas div.bordertbl, #gameMapCanvas div.borderrl, #gameMapCanvas div.borderrbl,#gameMapCanvas div.borderbl {
@@ -128,22 +134,22 @@
     border: 2px solid #fff;
     border-right: 0;
     -webkit-border-top-left-radius: 2px;
--webkit-border-bottom-left-radius: 2px;
--moz-border-radius-topleft: 2px;
--moz-border-radius-bottomleft: 2px;
-border-top-left-radius: 2px;
-border-bottom-left-radius: 2px;
+    -webkit-border-bottom-left-radius: 2px;
+    -moz-border-radius-topleft: 2px;
+    -moz-border-radius-bottomleft: 2px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
 }
 
 #gameMapCanvas div.borderrbl {
     border: 2px solid #fff;
     border-top: 0;
     -webkit-border-bottom-right-radius: 2px;
--webkit-border-bottom-left-radius: 2px;
--moz-border-radius-bottomright: 2px;
--moz-border-radius-bottomleft: 2px;
-border-bottom-right-radius: 2px;
-border-bottom-left-radius: 2px;
+    -webkit-border-bottom-left-radius: 2px;
+    -moz-border-radius-bottomright: 2px;
+    -moz-border-radius-bottomleft: 2px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
 }
 
 #gameMapCanvas div.borderbl {

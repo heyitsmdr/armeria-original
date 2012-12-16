@@ -12,10 +12,53 @@ var GameEngine = new function() {
         $('#inputGameCommands').keypress(function(e){
             if(e.which == 13) GameEngine.parseCommand();
         });
+        
+        //Test NumPad move
+        //The parseCommand() function SHOULD be clearing out the text box, but it isn't. 
+        //Think it is related to keydown, instead of keypress, but Chrome/IE do not recognize
+        //keypress for NumPad.
+        //I tried using keyup, but that would fill inputGameCommands with the number you press until you let go.
+        //Just to get it working, I forced focus on a button (using divs didn't seem to work. Does it have to be an input?),
+        //but I know that is not the best way to do this. Leave it for now, and correct it when you feel like it, or take it out.
+        //Entirely up to you. I am just playing with this stuff and trying to add whatever I think I can to see if I can. JS,
+        //not a language I ever bothered to learn/use regularly.
+        $(document).keydown(function(e){
+            if(e.which == 104) {
+                $('#dir_L').focus();
+                $('#inputGameCommands').val('n');
+                GameEngine.parseCommand();
+            }
+            if(e.which == 102) {
+                $('#dir_L').focus();
+                $('#inputGameCommands').val('e');
+                GameEngine.parseCommand();
+            }
+            if(e.which == 98) {
+                $('#dir_L').focus();
+                $('#inputGameCommands').val('s');
+                GameEngine.parseCommand();
+            }
+            if(e.which == 100) {
+                $('#dir_L').focus();
+                $('#inputGameCommands').val('w');
+                GameEngine.parseCommand();
+            }
+            if(e.which == 105) {
+                $('#dir_L').focus();
+                $('#inputGameCommands').val('u');
+                GameEngine.parseCommand();
+            }
+            if(e.which == 99) {
+                $('#dir_L').focus();
+                $('#inputGameCommands').val('d');
+                GameEngine.parseCommand();
+            }
+        });
+        
         // stops player from leaving page if connected.
         $(window).on('beforeunload', function(){
             if(GameEngine.connected)
-                return 'You are currently connected to the game, and this action will cause you be disconnected.';
+                return 'You are currently connected to the game, and this action will cause you to be disconnected.';
         });
         // focus input box
         $('#inputGameCommands').focus();
@@ -181,7 +224,8 @@ var GameEngine = new function() {
             $('#gameMapCanvas').html($('#gameMapCanvas').html() + "<div class='grid " + next_type + border_class + "' style='top: " + top + "px; left: " + left + "px'></div>");
             
             //if(next_type == 'type_grass') { next_type = 'type_dirt'; } else { next_type = 'type_grass'; }
-            if(next_type == 'type_grass') { next_type = 'type_dirt'; } else if (next_type == 'type_dirt') {    next_type = 'type_water'; } else if (next_type == 'type_water') { next_type = 'type_grass'; }
+            //if(next_type == 'type_grass') { next_type = 'type_dirt'; } else if (next_type == 'type_dirt') { next_type = 'type_water'; } else if (next_type == 'type_water') { next_type = 'type_grass'; }
+            if(next_type == 'type_grass'){ next_type = 'type_dirt'; } else if (next_type == 'type_dirt'){ next_type = 'type_water'; } else if (next_type == 'type_water'){ next_type = 'type_weapon'; } else if (next_type == 'type_weapon'){ next_type = 'type_grass'; }
         });
     }
     
