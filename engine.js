@@ -207,8 +207,8 @@ var GameEngine = new function() {
             var y = parseInt(maproom.y);
             var z = parseInt(maproom.z);
             if(z != GameEngine.mapz) return true; // skip
-            var left = x * 20;
-            var top = y * 20;
+            var left = x * 30;
+            var top = y * 30;
             // calculate borders
             var border_class = '';
             if(!GameEngine.mapGridAt(x, y - 1)) border_class += 't';
@@ -218,8 +218,6 @@ var GameEngine = new function() {
             if(border_class) border_class = ' border' + border_class;
             $('#gameMapCanvas').html($('#gameMapCanvas').html() + "<div class='grid " + next_type + border_class + "' style='top: " + top + "px; left: " + left + "px'></div>");
             
-            //if(next_type == 'type_grass') { next_type = 'type_dirt'; } else { next_type = 'type_grass'; }
-            //if(next_type == 'type_grass') { next_type = 'type_dirt'; } else if (next_type == 'type_dirt') { next_type = 'type_water'; } else if (next_type == 'type_water') { next_type = 'type_grass'; }
             if(next_type == 'type_grass'){ next_type = 'type_dirt'; } else if (next_type == 'type_dirt'){ next_type = 'type_water'; } else if (next_type == 'type_water'){ next_type = 'type_weapon'; } else if (next_type == 'type_weapon'){ next_type = 'type_grass'; }
         });
     }
@@ -236,12 +234,12 @@ var GameEngine = new function() {
         if(!this.mapdata) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - local map cache empty'); return;}
         if(!this.mapGridAt(x, y)) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - destination doesnt exist in local map cache'); return;}
         if(this.mapz != z) this.mapRender(false);
-        var new_left = (80 + (-20 * (x - 1))) + 'px';
-        var new_top =  (80 + (-20 * (y - 1))) + 'px';
+        var new_left = (75 + (-30 * (x - 1))) + 'px';
+        var new_top =  (75 + (-30 * (y - 1))) + 'px';
         $('#gameMapCanvas').stop();
         if($('#gameMapCanvas').css('left') != new_left)
-            $('#gameMapCanvas').animate({left: new_left}, 250);
+            $('#gameMapCanvas').animate({left: new_left}, 375);
         if($('#gameMapCanvas').css('top') != new_top)
-            $('#gameMapCanvas').animate({top: new_top}, 250);
+            $('#gameMapCanvas').animate({top: new_top}, 375);
     }
 };

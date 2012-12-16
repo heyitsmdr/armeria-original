@@ -5,7 +5,7 @@
         <!-- Stylesheets -->
         <link id="cssReset" rel="stylesheet" type="text/css" href="css/reset.css">
         <link id="cssStandard" rel="stylesheet" type="text/css" href="css/style.css">
-        <link id="cssStandard" rel="stylesheet" type="text/css" href="css/minimap.css">
+        <link rel="stylesheet" type="text/css" href="css/minimap.css">
         
         <link href='http://fonts.googleapis.com/css?family=Paprika' rel='stylesheet' type='text/css'>
         <!-- Scripts -->
@@ -108,13 +108,13 @@
 
             <table border="0" bordercolor="#ff0000" frame="void" id="movementControls">
             <tr>
-                <td></td>
+                <td><input type="button" id="act_Attack" class="movementButton shadow2 border333" onClick="movementButtonClick('/attack')"/></td>
                 <td><input type="button" id="dir_N" class="movementButton shadow2 border333" onClick="movementButtonClick('n')"/></td>
                 <td><input type="button" id="dir_U" class="movementButton shadow2 border333" onClick="movementButtonClick('u')"/></td>
             </tr>
             <tr>
                 <td><input type="button" id="dir_W" class="movementButton shadow2 border333" onClick="movementButtonClick('w')"/></td>
-                <td><input type="button" id="dir_L" class="movementButton shadow2 border333" onClick="movementButtonClick('/look')"/></td>
+                <td><input type="button" id="act_Look" class="movementButton shadow2 border333" onClick="movementButtonClick('/look')"/></td>
                 <td><input type="button" id="dir_E" class="movementButton shadow2 border333" onClick="movementButtonClick('e')"/></td>
             </tr>
             <tr>

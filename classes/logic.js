@@ -158,8 +158,15 @@ var Logic = function() {
         self.whisper(player, player.character.replyto + ' ' + what);
     }
     
+    self.attack = function(player, target) {
+        player.character.room.eachPlayer(function(p){
+            p.msg("Attack Attack Attack!!!");
+        }); 
+    }
+    
     self.me = function(player, emote) {
-        if (emote.substr(emote.length - 1, 1) != '!' || emote.substr(emote.length - 1, 1) != '?' || emote.substr(emote.length - 1, 1) != '.') emote += '.';
+        console.log(emote.substr(emote.length - 1, 1));
+        if (emote.substr(emote.length - 1, 1) != '!' && emote.substr(emote.length - 1, 1) != '?' && emote.substr(emote.length - 1, 1) != '.') emote += '.';
         player.character.room.eachPlayer(function(p){
             p.msg(player.character.htmlname + ' ' + emote);
         });
