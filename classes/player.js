@@ -24,7 +24,7 @@ var Players = function()
     
     self.eachOnline = function(callback) {
         self.players.forEach(function(p){
-            if(p.character) callback(p);
+            if(p.character.online) callback(p);
         });
     }
 };

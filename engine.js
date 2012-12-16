@@ -12,54 +12,40 @@ var GameEngine = new function() {
         $('#inputGameCommands').keypress(function(e){
             if(e.which == 13) GameEngine.parseCommand();
         });
-        
-        //Test NumPad move
-        //The parseCommand() function SHOULD be clearing out the text box, but it isn't. 
-        //Think it is related to keydown, instead of keypress, but Chrome/IE do not recognize
-        //keypress for NumPad.
-        //I tried using keyup, but that would fill inputGameCommands with the number you press until you let go.
-        //Just to get it working, I forced focus on a button (using divs didn't seem to work. Does it have to be an input?),
-        //but I know that is not the best way to do this. Leave it for now, and correct it when you feel like it, or take it out.
-        //Entirely up to you. I am just playing with this stuff and trying to add whatever I think I can to see if I can. JS,
-        //not a language I ever bothered to learn/use regularly.
+        // numpad macros
         $(document).keydown(function(e){
-            if(e.which == 104) {
-                $('#dir_L').focus();
-                $('#inputGameCommands').val('n');
-                GameEngine.parseCommand();
+            switch(e.which) {
+                case 104:
+                    $('#inputGameCommands').val('n');
+                    break;
+                case 102:
+                    $('#inputGameCommands').val('e');
+                    break;
+                case 98:
+                    $('#inputGameCommands').val('s');
+                    break;
+                case 100:
+                    $('#inputGameCommands').val('w');
+                    break;
+                case 105:
+                    $('#inputGameCommands').val('u');
+                    break;
+                case 99:
+                    $('#inputGameCommands').val('d');
+                    break;
+                default:
+                    return;
             }
-            if(e.which == 102) {
-                $('#dir_L').focus();
-                $('#inputGameCommands').val('e');
-                GameEngine.parseCommand();
-            }
-            if(e.which == 98) {
-                $('#dir_L').focus();
-                $('#inputGameCommands').val('s');
-                GameEngine.parseCommand();
-            }
-            if(e.which == 100) {
-                $('#dir_L').focus();
-                $('#inputGameCommands').val('w');
-                GameEngine.parseCommand();
-            }
-            if(e.which == 105) {
-                $('#dir_L').focus();
-                $('#inputGameCommands').val('u');
-                GameEngine.parseCommand();
-            }
-            if(e.which == 99) {
-                $('#dir_L').focus();
-                $('#inputGameCommands').val('d');
-                GameEngine.parseCommand();
-            }
+            GameEngine.parseCommand();
+            return false;
         });
-        
         // stops player from leaving page if connected.
         $(window).on('beforeunload', function(){
             if(GameEngine.connected)
                 return 'You are currently connected to the game, and this action will cause you to be disconnected.';
         });
+        // setup soundmanager2
+        soundManager.setup({url: '/libraries/soundmanager2/swf/', ontimeout: function(){ console.log('SoundManager timed out.'); }});
         // focus input box
         $('#inputGameCommands').focus();
     }
@@ -156,6 +142,14 @@ var GameEngine = new function() {
             GameEngine.parseInput("Alas, you cannot go that way.");
             $('#gameMapCanvas').effect("shake", { times:3 , distance: 1}, 250);
         });
+        this.socket.on('sound', function(data){
+            if(!soundManager.play(data.sfx, {volume: data.volume})) {
+                // load sound
+                soundManager.createSound({id: data.sfx, url: 'sfx/' + data.sfx + '.wav'});
+                // now play it
+                soundManager.play(data.sfx, {volume: data.volume});
+            }
+        });
     }
     
     this.parseInput = function(newString){
@@ -195,6 +189,7 @@ var GameEngine = new function() {
             }
         }
         $('#inputGameCommands').val('');
+        $('#inputGameCommands').focus();
     }
     
     this.mapRender = function(mapdata) {

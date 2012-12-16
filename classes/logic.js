@@ -3,6 +3,7 @@ var Logic = function() {
     
     self.say = function(player, what) {
         if(what.length == 0) self.look(player);
+        if(what === "lol") { self.lol(player); return; }
         
         //Customize output depending on sentence punctuation.
         var isQuestion = false;
@@ -38,7 +39,7 @@ var Logic = function() {
             player.character.room.eachPlayerExcept(player, function(p){
                 p.msg(player.character.htmlname + msgStart + what + "'");
             });
-            player.msg(msgStart_self + what + "'.");
+            player.msg(msgStart_self + what + "'");
     }
     
     self.move = function(player, dir) {
@@ -127,8 +128,70 @@ var Logic = function() {
     self.look = function(player) {
         player.msg('<br/><span class="yellow">' + player.character.room.name + '</span><br/>' + player.character.room.desc);
         player.character.room.eachPlayerExcept(player, function(p){
-                player.msg(p.character.htmlname + ' is here.<br/>');
+                player.msg(p.character.htmlname + ' is here.');
             });
+    }
+    
+    self.whisper = function(player, args) {
+        var who = args.split(' ')[0];
+        var what = args.split(' ').splice(1).join(' ');
+        
+        who = who.replace('.', ' ');
+        
+        var target = CHARACTERS.getCharacterByName(who, true);
+        if(target) {
+            player.msg("<span class='purple'>You whisper to " + target.htmlname + ", '" + what + "'</span>");
+            target.player.msg("<span class='purple'>" + player.character.htmlname + " whispers, '" + what + "'</span>");
+            target.player.emit("sound", {sfx: 'whisper', volume: 25});
+            target.player.character.replyto = player.character.name.replace(' ', '.');
+        } else {
+            player.msg("No character found with that name.");
+        }
+    }
+    
+    self.reply = function(player, what) {
+        if(!player.character.replyto) {
+            player.msg("Noone has sent you a whisper yet.");
+            return;
+        } 
+        
+        self.whisper(player, player.character.replyto + ' ' + what);
+    }
+    
+    self.me = function(player, emote) {
+        if (emote.substr(emote.length - 1, 1) != '!' || emote.substr(emote.length - 1, 1) != '?' || emote.substr(emote.length - 1, 1) != '.') emote += '.';
+        player.character.room.eachPlayer(function(p){
+            p.msg(player.character.htmlname + ' ' + emote);
+        });
+    }
+    
+    self.emote = function(player, emote) {
+        switch(emote){
+            case 'lol':
+                self.lol(player);
+                break;
+            case 'sit':
+                self.sit(player);
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+    
+    self.lol = function(player) {
+        player.msg('You laugh.');
+        player.character.room.eachPlayerExcept(player, function(p){
+            p.msg(player.character.htmlname + ' laughs.');
+        });
+    }
+    
+    self.sit = function(player) {
+        player.msg('You sit on the ground.');
+        //Trigger sitting state.
+        player.character.room.eachPlayerExcept(player, function(p){
+            p.msg(player.character.htmlname + ' sits on the ground.');
+        });
     }
 };
 

@@ -77,7 +77,7 @@ io.sockets.on('connection', function(socket){
     socket.on('cmd', function(data){
         // get base command
         var sections = data.cmd.split(' ');
-        var cmd = matchcmd(sections[0], new Array('say', 'move', 'look'));
+        var cmd = matchcmd(sections[0], new Array('say', 'move', 'look', 'me', 'whisper', 'reply'));
         sections.shift();
         var cmd_args = sections.join(' ');
         
@@ -91,8 +91,18 @@ io.sockets.on('connection', function(socket){
             case 'look':
                 LOGIC.look(player);
                 break;
+            case 'me':
+                LOGIC.me(player, cmd_args);
+                break;
+            case 'whisper':
+                LOGIC.whisper(player, cmd_args);
+                break;
+            case 'reply':
+                LOGIC.reply(player, cmd_args);
+                break;
             default:
-                player.msg('That command is not recognized. Try again.');
+                if(!LOGIC.emote(player, cmd.toLowerCase()))
+                    player.msg('That command is not recognized. Try again.');
         }
     });
 });

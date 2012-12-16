@@ -46,6 +46,22 @@ var Characters = function() {
         return false;
     }
     
+    self.getCharacterByName = function(name, isonline) {
+        for(var i = 0; i < self.objects.length; i++) {
+            if(self.objects[i].name.toLowerCase() == name.toLowerCase()) {
+                if(isonline) {
+                    if(self.objects[i].online)
+                        return self.objects[i];
+                    else
+                        return false;
+                } else {
+                    return self.objects[i];
+                }
+            }
+        }
+        return false;
+    }
+    
     self.init();
 };
 
@@ -63,6 +79,7 @@ var Character = function(config) {
     self.online = false;    // boolean
     self.player;            // object (Player)
     self.room;              // object (Room)
+    self.replyto;           // string
     
     self.init = function(config) {
         self.id = config.id || 0;
@@ -95,6 +112,8 @@ var Character = function(config) {
     }
     
     self.login = function() {
+        // set online
+        self.online = true;
         // store room
         self.room = self.getRoomObj();
         // add player to room
@@ -118,6 +137,8 @@ var Character = function(config) {
         self.room.eachPlayer(function(p){
             p.update({plist: 1});
         });
+        // set offline
+        self.online = false;
         // save
         self.save();
     }
