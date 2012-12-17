@@ -122,7 +122,7 @@ var Logic = function() {
             });
             player.msg(msg_self);
             self.look(player);
-            player.emit("sound", {sfx: 'walk_grass_1.mp3', volume: 25});
+            player.emit("sound", {sfx: 'walk_grass_1.mp3', volume: 75});
         }
     }
     

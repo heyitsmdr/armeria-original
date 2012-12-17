@@ -214,12 +214,10 @@ var GameEngine = new function() {
         }
         // draw rooms
         $('#gameMapCanvas').html('');
-        var next_type = "type_grass";
         mapdata.forEach(function(maproom){
             var x = parseInt(maproom.x);
             var y = parseInt(maproom.y);
             var z = parseInt(maproom.z);
-            var roomType = maproom.type;
             if(z != GameEngine.mapz) return true; // skip
             var left = x * 30;
             var top = y * 30;
@@ -230,9 +228,7 @@ var GameEngine = new function() {
             if(!GameEngine.mapGridAt(x, y + 1)) border_class += 'b';
             if(!GameEngine.mapGridAt(x - 1, y)) border_class += 'l';
             if(border_class) border_class = ' border' + border_class;
-            $('#gameMapCanvas').html($('#gameMapCanvas').html() + "<div class='grid " + roomType + border_class + "' style='top: " + top + "px; left: " + left + "px'></div>");
-            
-            //if(next_type == 'type_grass'){ next_type = 'type_dirt'; } else if (next_type == 'type_dirt'){ next_type = 'type_water'; } else if (next_type == 'type_water'){ next_type = 'type_weapon'; } else if (next_type == 'type_weapon'){ next_type = 'type_grass'; }
+            $('#gameMapCanvas').html($('#gameMapCanvas').html() + "<div class='grid " + maproom.terrain + border_class + "' style='top: " + top + "px; left: " + left + "px'></div>");
         });
     }
     
