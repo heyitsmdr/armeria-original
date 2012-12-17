@@ -251,7 +251,11 @@ var GameEngine = new function() {
         if(!this.mapGridAt(x, y)) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - destination doesnt exist in local map cache'); return;}
         if(this.mapz != z) {
             this.mapz = z;
-            this.mapRender(false);
+            $('#gameMapCanvas').fadeOut(250, function(){
+                GameEngine.mapRender(false);
+                $('#gameMapCanvas').fadeIn(250);
+            });
+            return; // don't need to reposition since only Z is changing
         }
         var new_left = (75 + (-30 * (x - 1))) + 'px';
         var new_top =  (75 + (-30 * (y - 1))) + 'px';
