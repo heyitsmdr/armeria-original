@@ -1,5 +1,6 @@
 /* Generic */
 body {
+    -webkit-text-size-adjust: none;
     overflow: hidden;
     background-color: #333;
     background-image: url('../images/layout/bg.png');
