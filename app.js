@@ -16,14 +16,21 @@ WORLD      = new World();
 // socket.io logging (options: 0 = error, 1 = warn, 2 = info, 3 = debug [default])
 io.set('log level', 1);
 
-var matchcmd = function(cmd, cmdlist) {
+matchcmd = function(cmd, cmdlist) {
     var cmd_real = cmd;
-    cmdlist.forEach(function(C){
-        if(C.length >= cmd.length && C.substr(0,cmd.length) == cmd.toLowerCase()) {
-            cmd_real = C;
-            return;
+    for(var i = 0; i < cmdlist.length; i++) {
+        if(typeof cmdlist[i] == 'object') {
+            for(var j = 0; j < cmdlist[i].length; j++) {
+                if(cmdlist[i][j].length >= cmd.length && cmdlist[i][j].substr(0,cmd.length) == cmd.toLowerCase()) {
+                    return cmdlist[i][0];
+                }
+            }
         }
-    });
+        else if(cmdlist[i].length >= cmd.length && cmdlist[i].substr(0,cmd.length) == cmd.toLowerCase()) {
+            return cmdlist[i];
+        }
+    }
+
     return cmd_real;
 }
 
@@ -77,7 +84,7 @@ io.sockets.on('connection', function(socket){
     socket.on('cmd', function(data){
         // get base command
         var sections = data.cmd.split(' ');
-        var cmd = matchcmd(sections[0], new Array('say', 'move', 'look', 'me', 'whisper', 'reply', 'attack'));
+        var cmd = matchcmd(sections[0], new Array('say', 'move', ['look', 'examine'], 'me', 'whisper', 'reply', 'attack', 'create', 'destroy', 'modify', 'builder', 'gossip'));
         sections.shift();
         var cmd_args = sections.join(' ');
         
@@ -102,6 +109,21 @@ io.sockets.on('connection', function(socket){
                 break;
             case 'attack':
                 LOGIC.attack(player, cmd_args);
+                break;
+            case 'create':
+                LOGIC.create(player, cmd_args);
+                break;
+            case 'destroy':
+                LOGIC.destroy(player, cmd_args);
+                break;
+            case 'modify':
+                LOGIC.modify(player, cmd_args);
+                break;
+            case 'builder':
+                LOGIC.channel(player, 'builder', cmd_args);
+                break;
+            case 'gossip':
+                LOGIC.channel(player, 'gossip', cmd_args);
                 break;
             default:
                 if(!LOGIC.emote(player, cmd.toLowerCase()))

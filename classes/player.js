@@ -27,6 +27,23 @@ var Players = function()
             if(p.character.online) callback(p);
         });
     }
+
+    self.eachOnlineExcept = function(player, callback) {
+        self.players.forEach(function(p){
+            if(p.character.online && player !== p) callback(p);
+        });
+    }
+
+    self.eachOnlineInChannel = function(channel, callback) {
+        self.players.forEach(function(p){
+            if(p.character.online && p.character.channels.indexOf(channel) >= 0) callback(p);
+        });
+    }
+    self.eachOnlineInChannelExcept = function(player, channel, callback) {
+        self.players.forEach(function(p){
+            if(p.character.online && player !== p && p.character.channels.indexOf(channel) >= 0) callback(p);
+        });
+    }
 };
 
 var Player = function(socket) {

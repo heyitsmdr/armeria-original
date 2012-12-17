@@ -73,8 +73,10 @@ var Character = function(config) {
     self.name;      // string
     self.htmlname;  // string
     self.location;  // array (map, x, y, z)
-    self.picture    // string
-    
+    self.picture;   // string
+    self.builder;   // boolean
+    self.channels;  // array of strings
+
     // not saved
     self.online = false;    // boolean
     self.player;            // object (Player)
@@ -87,6 +89,8 @@ var Character = function(config) {
         self.htmlname = config.htmlname || "<span class='yellow'>" + self.name + "</span>";
         self.location = config.location || {map: 'somemap', x: 0, y: 0, z: 0};
         self.picture = config.picture || '';
+        self.builder = config.builder || false;
+        self.channels = config.channels || [];
     }
     
     self.stringify = function() {
@@ -95,7 +99,9 @@ var Character = function(config) {
             name: self.name,
             htmlname: self.htmlname,
             location: self.location,
-            picture: self.picture
+            picture: self.picture,
+            builder: self.builder,
+            channels: self.channels
         }, null, '\t');    
     }
     
@@ -121,6 +127,14 @@ var Character = function(config) {
         // update players (including yourself)
         self.room.eachPlayer(function(p){
             p.update({plist: 1});
+        });
+        // send notifications to everyone
+        PLAYERS.eachOnlineExcept(self.player, function(p){
+            p.emit('notify', {
+                title: self.name + ' logged in!',
+                text: 'This character has logged in to the world of Armeria. They are located at ' + self.room.name + '.',
+                image: self.picture
+            });
         });
         // update local player
         self.player.update({minimap: 1, maploc: 1});

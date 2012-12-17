@@ -1,10 +1,46 @@
 var Logic = function() {
     var self = this;
     
+    /* ## LOGIC HELPER FUNCTIONS ## */
+    self._invalidcmd = function(p) {
+        p.msg('That command is not recognized. Try again.');
+        return true;
+    }
+    self._createTable = function(title, data) {
+        var output = "<br><table class='embed'><tr><td colspan='2' class='title'>" + title + "</td>";
+        output += "<tr><td class='head'>Property</td><td class='head'>Value</td></tr>";
+        data.forEach(function(d){
+            output += "<tr><td class='prop'>" + d.property + "</td>";
+            output += "<td class='value'>" + d.value + "</td></tr>";
+        });
+        output += "</table>";
+        return output;
+    }
+    /* ## END: LOGIC HELPER FUNCTIONS ## */
+
+    /* ## BASIC ## */
     self.say = function(player, what) {
         if(what.length == 0) self.look(player);
-        if(what === "lol") { self.lol(player); return; }
+        if(what == "lol") { self.lol(player); return; }
         
+        // Check arguments
+        var args = what.split(' ');
+        if(args[0] == '-history') {
+            if(!player.character.room.sayhistory) {
+                player.msg('No history found.');
+                return;
+            }
+            var amount = parseInt(args[1]) || 10;
+            var start = player.character.room.sayhistory.length - amount;
+            if(start < 0)
+                start = 0;
+            player.msg('Showing last ' + amount + ' say messages (oldest to newest) in room:');
+            for(var i = start; i < player.character.room.sayhistory.length; i++) {
+                player.msg('[HISTORY] ' + player.character.room.sayhistory[i]);
+            }
+            return;
+        }
+
         //Customize output depending on sentence punctuation.
         var isQuestion = false;
         var isExcited = false;
@@ -36,10 +72,11 @@ var Logic = function() {
             msgStart = " exclaims, '";
             msgStart_self = "You exclaim, '"
         }
-            player.character.room.eachPlayerExcept(player, function(p){
-                p.msg(player.character.htmlname + msgStart + what + "'");
-            });
-            player.msg(msgStart_self + what + "'");
+        player.character.room.eachPlayerExcept(player, function(p){
+            p.msg(player.character.htmlname + msgStart + what + "'");
+        });
+        player.character.room.updateSaveHistory(player.character.htmlname + msgStart + what + "'");
+        player.msg(msgStart_self + what + "'");
     }
     
     self.move = function(player, dir) {
@@ -158,7 +195,7 @@ var Logic = function() {
         
         self.whisper(player, player.character.replyto + ' ' + what);
     }
-    
+
     self.attack = function(player, target) {
         //Target needs to be checked against players in room, so players can use abbr.
         if (target.length != 0)
@@ -170,7 +207,105 @@ var Logic = function() {
         }
         else { player.msg("You do not have a target!"); }
     }
-    
+
+    self.create = function(player, args) {
+        if(!player.character.builder) { return self._invalidcmd(player); }
+        var creation = args.split(' ')[0];
+        var argsremaining = args.split(' ').splice(1).join(' ');
+        creation = matchcmd(creation, new Array(['room', 'rm']));
+        switch(creation.toLowerCase()) {
+            case 'room':
+                player.character.room.map.createRoom(player, argsremaining);
+                break;
+            default:
+                player.msg("Unknown creation item.");
+        }
+    }
+
+    self.destroy = function(player, args) {
+        if(!player.character.builder) { return self._invalidcmd(player); }
+        var destruction = args.split(' ')[0];
+        var argsremaining = args.split(' ').splice(1).join(' ');
+        destruction = matchcmd(destruction, new Array(['room', 'rm']));
+        switch(destruction.toLowerCase()) {
+            case 'room':
+                player.character.room.map.destroyRoom(player, argsremaining);
+                break;
+            default:
+                player.msg("Unknown destruction item.");
+        }
+    }
+
+    self.modify = function(player, args) {
+        if(!player.character.builder) { return self._invalidcmd(player); }
+        var modification = args.split(' ')[0];
+        var argsremaining = args.split(' ').splice(1).join(' ');
+        modification = matchcmd(modification, new Array(['room', 'rm']));
+        switch(modification.toLowerCase()) {
+            case 'room':
+                player.character.room.map.modifyRoom(player, argsremaining);
+                break;
+            default:
+                player.msg("Unknown modification item.");
+        }
+    }
+
+    self.channel = function(player, channel, args) {
+        var chan_color;
+        switch(channel) {
+            case 'builder':
+                chan_color = 'orange';
+                break;
+            case 'gossip':
+                chan_color = 'pink';
+                break;
+            default:
+                chan_color = 'white';
+        }
+        if(!args) {
+            // join or leave channel
+            // special checks
+            switch(channel) {
+                case 'builder':
+                    if(!player.character.builder) {
+                        player.msg("You cannot join this channel.");
+                        return;
+                    }
+                    break;
+            }
+            // are you in this channel already?
+            if(player.character.channels.indexOf(channel) >= 0) {
+                var i = player.character.channels.indexOf(channel);
+                player.character.channels.splice(i, 1);
+                player.msg("You left the " + channel.toUpperCase() + " channel.");
+                PLAYERS.eachOnlineInChannel(channel, function(p){
+                    p.msg("<span class='" + chan_color + "'>(" + channel.substr(0, 1).toUpperCase() + channel.substr(1) + ") " + player.character.htmlname + " left the channel.</span>");
+                });
+            } else {
+                player.character.channels.push(channel);
+                player.msg("You join the " + channel.toUpperCase() + " channel.");
+                PLAYERS.eachOnlineInChannelExcept(player, channel, function(p){
+                    p.msg("<span class='" + chan_color + "'>(" + channel.substr(0, 1).toUpperCase() + channel.substr(1) + ") " + player.character.htmlname + " joined the channel.</span>");
+                });
+            }
+        } else {
+            // are you in the channel?
+            if(player.character.channels.indexOf(channel) == -1) {
+                player.msg("You are not in this channel. Use <span class='yellow'>/" + channel + "</span> to join it.");
+                return;
+            }
+            // say to channel
+            PLAYERS.eachOnlineExcept(player, function(p){
+                if(p.character.channels.indexOf(channel) >= 0) {
+                    p.msg("<span class='" + chan_color + "'>(" + channel.substr(0, 1).toUpperCase() + channel.substr(1) + ") " + player.character.htmlname + " says, '" + args + "'</span>");
+                }
+            });
+            player.msg("<span class='" + chan_color + "'>(" + channel.substr(0, 1).toUpperCase() + channel.substr(1) + ") You say, '" + args + "'</span>");
+        }
+    }
+    /* ## END: BASIC ## */
+
+    /*  ## EMOTES ## */
     self.me = function(player, emote) {
         console.log(emote.substr(emote.length - 1, 1));
         if (emote.substr(emote.length - 1, 1) != '!' && emote.substr(emote.length - 1, 1) != '?' && emote.substr(emote.length - 1, 1) != '.') emote += '.';
@@ -207,6 +342,7 @@ var Logic = function() {
             p.msg(player.character.htmlname + ' sits on the ground.');
         });
     }
+    /*  ## END: EMOTES ## */
 };
 
 exports.Logic = Logic;

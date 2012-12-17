@@ -163,6 +163,13 @@ var GameEngine = new function() {
                 soundManager.play(data.sfx, {volume: data.volume});
             }
         });
+        this.socket.on('notify', function(data){
+            $.gritter.add({
+                title: data.title,
+                text: data.text,
+                image: data.image
+            });
+        });
     }
     
     this.parseInput = function(newString){
@@ -210,7 +217,6 @@ var GameEngine = new function() {
             mapdata = this.mapdata;
         } else {
             this.mapdata = mapdata;
-            this.mapz = 0;
         }
         // draw rooms
         $('#gameMapCanvas').html('');
@@ -243,7 +249,10 @@ var GameEngine = new function() {
     this.mapPosition = function(x, y, z) {
         if(!this.mapdata) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - local map cache empty'); return;}
         if(!this.mapGridAt(x, y)) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - destination doesnt exist in local map cache'); return;}
-        if(this.mapz != z) this.mapRender(false);
+        if(this.mapz != z) {
+            this.mapz = z;
+            this.mapRender(false);
+        }
         var new_left = (75 + (-30 * (x - 1))) + 'px';
         var new_top =  (75 + (-30 * (y - 1))) + 'px';
         $('#gameMapCanvas').stop();

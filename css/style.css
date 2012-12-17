@@ -342,6 +342,43 @@ span.bpurple {
     color: #f736f1;
     font-weight: bold;
 }
+span.orange {
+    color: #fc0;    
+}
+span.borange {
+    color: #fc0;
+    font-weight: bold;
+}
+span.pink {
+    color: #f39;    
+}
+span.bpink {
+    color: #f39;
+    font-weight: bold;
+}
+/* In-Game Tables */
+table.embed {
+    width: 50%;
+}
+table.embed td {
+    padding: 3px;
+}
+table.embed td.title {
+    font-size: 14px;
+    background-color: rgba(255, 0, 0, 0.3);
+}
+table.embed td.head {
+    color:#f66;
+    background-color: rgba(255, 0, 0, 0.2);
+}
+table.embed td.prop {
+    color:#fff;
+    background-color: rgba(255, 0, 0, 0.1);
+}
+table.embed td.value {
+    color:#fff;
+    background-color: rgba(255, 0, 0, 0.1);
+}
 /* Special Styles */
 .shadow {
     -moz-box-shadow: 0 1px 7px #000;
