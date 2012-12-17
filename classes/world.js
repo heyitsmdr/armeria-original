@@ -41,7 +41,7 @@ var Map = function(config, fn) {
     // save
     self.name;          // string
     self.author;        // string
-    self.roomType;
+    self.roomType;      // string
     self.rooms = [];    // array of objects (Room)
     
     self.init = function(config, fn) {
