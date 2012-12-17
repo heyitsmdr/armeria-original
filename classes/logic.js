@@ -122,6 +122,7 @@ var Logic = function() {
             });
             player.msg(msg_self);
             self.look(player);
+            player.emit("sound", {sfx: 'walk_grass_1.mp3', volume: 25});
         }
     }
     
@@ -142,7 +143,7 @@ var Logic = function() {
         if(target) {
             player.msg("<span class='purple'>You whisper to " + target.htmlname + ", '" + what + "'</span>");
             target.player.msg("<span class='purple'>" + player.character.htmlname + " whispers, '" + what + "'</span>");
-            target.player.emit("sound", {sfx: 'whisper', volume: 25});
+            target.player.emit("sound", {sfx: 'whisper.wav', volume: 25});
             target.player.character.replyto = player.character.name.replace(' ', '.');
         } else {
             player.msg("No character found with that name.");
@@ -159,9 +160,15 @@ var Logic = function() {
     }
     
     self.attack = function(player, target) {
-        player.character.room.eachPlayer(function(p){
-            p.msg("Attack Attack Attack!!!");
-        }); 
+        //Target needs to be checked against players in room, so players can use abbr.
+        if (target.length != 0)
+        {
+            player.character.room.eachPlayerExcept(player, function(p){
+                p.msg(player.character.htmlname + " uses Attack Button O\' Doom on " + target);
+            });
+            player.msg("You use Attack Button O\' Doom on " + target);
+        }
+        else { player.msg("You do not have a target!"); }
     }
     
     self.me = function(player, emote) {

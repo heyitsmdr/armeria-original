@@ -118,7 +118,7 @@ input:focus {
 }
 /* Stats */
 #frameStats {
-    width: 93%;
+    margin-right: 5px;
     height: 92%;
     position: relative;
     background-color: rgba(0,0,0,0.4);
@@ -142,18 +142,18 @@ input:focus {
 
 /* Right Frames */
 #outerFrameGame {
-    height: 90%;
+    height: 85%;
     padding: 5px;
-    margin-bottom: 13px;
+    margin-bottom: 27px;
 }
 #innerframeGame {
     padding: 8px;
-    height: 100%;
+    /*height: 100%;*/
     background-color: rgba(0, 0, 0, 0.3);
 }
 #frameGame {
     margin: 1px;
-    padding-left: 3px;
+    padding: 5px;
     overflow: auto;
     height: 100%;
     border: solid thin #333;
@@ -173,7 +173,9 @@ input:focus {
     background-image: url('../images/layout/bg.png');
 }
 #outerFrameInput {
-    height: 10%;
+    position: absolute;
+    width: 84%;
+    height: 15%;
     padding: 5px;
 }
 #frameInput {
@@ -399,7 +401,7 @@ span.bpurple {
         z-index: 999;
 }
 }
-@media screen and (max-height: 740px) and (min-width : 481px) {
+/*@media screen and (max-height: 740px) and (min-width : 481px) {
     #outerFrameInput {
         float: right;
         position: absolute;
@@ -407,4 +409,4 @@ span.bpurple {
         right: 5px;
         width: 82%;
     }
-}
+}*/

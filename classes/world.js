@@ -41,6 +41,7 @@ var Map = function(config, fn) {
     // save
     self.name;          // string
     self.author;        // string
+    self.roomType;
     self.rooms = [];    // array of objects (Room)
     
     self.init = function(config, fn) {
@@ -79,7 +80,7 @@ var Map = function(config, fn) {
     self.getMinimapData = function() {
         var roomdata = [];
          self.rooms.forEach(function(r){
-             roomdata.push({x: r.x, y: r.y, z: r.z, terrain: 'grass'});
+             roomdata.push({x: r.x, y: r.y, z: r.z, terrain: r.type});
          });
          return roomdata;
     };
@@ -100,6 +101,7 @@ var Room = function(config, mapobj) {
     self.x;             // int
     self.y;             // int
     self.z;             // int
+    self.type;          // string
     
     self.init = function(config, mapobj) {
         self.map = mapobj;
@@ -108,6 +110,7 @@ var Room = function(config, mapobj) {
         self.x = config.x || 0;
         self.y = config.y || 0;
         self.z = config.z || 0;
+        self.type = config.type || '';
     }
     
     self.getSaveData = function() {
@@ -116,7 +119,8 @@ var Room = function(config, mapobj) {
             desc: self.desc,
             x: self.x,
             y: self.y,
-            z: self.z
+            z: self.z,
+            type: self.type
         };    
     }
     

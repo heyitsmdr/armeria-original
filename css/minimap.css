@@ -12,21 +12,21 @@
 
 }
 
-#gameMapCanvas div.type_grass {
+#gameMapCanvas div.type_grass01 {
     background-color: rgba(44, 102, 24, 1);
 }
 
-#gameMapCanvas div.type_dirt {
+#gameMapCanvas div.type_dirt01 {
     background-color: rgba(133, 109, 66, 1);
     background-position: -30px 0;
 }
 
-#gameMapCanvas div.type_water {
+#gameMapCanvas div.type_water01 {
     background-color: rgba(54, 133, 217, 1);
     background-position: -60px 0;
 }
 
-#gameMapCanvas div.type_weapon {
+#gameMapCanvas div.type_weapon01 {
     background-color: rgba(94, 94, 94, 1);
     background-position: -90px 0;
 }
@@ -39,27 +39,27 @@
 
 #gameMapCanvas div.bordertrbl {
     border: 2px solid #fff;
-    border-radius: 2px;
+    border-radius: 3px;
 }
 
 #gameMapCanvas div.bordertrl {
     border: 2px solid #fff;
     border-bottom: 0;
-    -webkit-border-top-left-radius: 2px;
-    -webkit-border-top-right-radius: 2px;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
     -moz-border-radius-topleft: 2px;
     -moz-border-radius-topright: 2px;
-    border-top-left-radius: 2px;
-    border-top-right-radius: 2px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
 }
 
 #gameMapCanvas div.bordertl {
     border: 2px solid #fff;
     border-bottom: 0;
     border-right: 0;
-    -webkit-border-top-left-radius: 2px;
+    -webkit-border-top-left-radius: 3px;
     -moz-border-radius-topleft: 2px;
-    border-top-left-radius: 2px;
+    border-top-left-radius: 3px;
 }
 
 #gameMapCanvas div.borderl {
@@ -72,21 +72,21 @@
 #gameMapCanvas div.bordertrb {
     border: 2px solid #fff;
     border-left: 0;
-    -webkit-border-top-right-radius: 2px;
-    -webkit-border-bottom-right-radius: 2px;
+    -webkit-border-top-right-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
     -moz-border-radius-topright: 2px;
     -moz-border-radius-bottomright: 2px;
-    border-top-right-radius: 2px;
-    border-bottom-right-radius: 2px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 #gameMapCanvas div.bordertr {
     border: 2px solid #fff;
     border-left: 0;
     border-bottom: 0;
-    -webkit-border-top-right-radius: 2px;
+    -webkit-border-top-right-radius: 3px;
     -moz-border-radius-topright: 2px;
-    border-top-right-radius: 2px;
+    border-top-right-radius: 3px;
 }
 
 #gameMapCanvas div.bordert {
@@ -100,9 +100,9 @@
     border: 2px solid #fff;
     border-left: 0;
     border-top: 0;
-    -webkit-border-bottom-right-radius: 2px;
+    -webkit-border-bottom-right-radius: 3px;
     -moz-border-radius-bottomright: 2px;
-    border-bottom-right-radius: 2px;
+    border-bottom-right-radius: 3px;
 }
 
 #gameMapCanvas div.borderr {
@@ -133,32 +133,32 @@
 #gameMapCanvas div.bordertbl {
     border: 2px solid #fff;
     border-right: 0;
-    -webkit-border-top-left-radius: 2px;
-    -webkit-border-bottom-left-radius: 2px;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
     -moz-border-radius-topleft: 2px;
     -moz-border-radius-bottomleft: 2px;
-    border-top-left-radius: 2px;
-    border-bottom-left-radius: 2px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
 }
 
 #gameMapCanvas div.borderrbl {
     border: 2px solid #fff;
     border-top: 0;
-    -webkit-border-bottom-right-radius: 2px;
-    -webkit-border-bottom-left-radius: 2px;
+    -webkit-border-bottom-right-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
     -moz-border-radius-bottomright: 2px;
     -moz-border-radius-bottomleft: 2px;
-    border-bottom-right-radius: 2px;
-    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
 }
 
 #gameMapCanvas div.borderbl {
     border: 2px solid #fff;
     border-top: 0;
     border-right: 0;
-    -webkit-border-bottom-left-radius: 2px;
+    -webkit-border-bottom-left-radius: 3px;
     -moz-border-radius-bottomleft: 2px;
-    border-bottom-left-radius: 2px;
+    border-bottom-left-radius: 3px;
 }
 /*
 ltrb

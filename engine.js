@@ -1,6 +1,7 @@
 var GameEngine = new function() {
     this.socket = false;
     this.fbinfo = false;
+    this.fbaccesstoken = false;
     this.connected = false;
     this.mapdata = false;
     this.mapz = 0;
@@ -54,6 +55,8 @@ var GameEngine = new function() {
         this.parseInput("Facebook not authorized. Asking for permission..");
         FB.login(function(response) {
             if (response.authResponse) {
+                // save access token
+                GameEngine.fbaccesstoken = response.authResponse.accessToken;
                 // connected
                 GameEngine._getFBInfo(function(){
                     GameEngine.parseInput("Permission granted.");
@@ -83,6 +86,8 @@ var GameEngine = new function() {
         }
         FB.getLoginStatus(function(response) {
             if (response.status === 'connected') {
+                // save access token
+                GameEngine.fbaccesstoken = response.authResponse.accessToken;
                 // authorized
                 GameEngine._getFBInfo(function(){
                     GameEngine.parseInput("Facebook authorized.");
@@ -100,8 +105,13 @@ var GameEngine = new function() {
     }
     
     this.connect = function() {
+        if(!this.fbinfo) return;
         this.parseInput("<br>Connecting to game server..");
-        this.socket = io.connect('http://ethryx.net:2772');
+        this.socket = io.connect('http://ethryx.net:2772', {
+            'reconnect': true,
+            'reconnection delay': 1000,
+            'max reconnection attempts': 10
+        });
         this._socketEvents();
     }
     
@@ -119,6 +129,9 @@ var GameEngine = new function() {
         this.socket.on('disconnect', function(){
             GameEngine.connected = false;
             GameEngine.parseInput("The connection has been lost!");
+        });
+        this.socket.on('reconnect_failed', function(){
+            GameEngine.parseInput("Failed to reconnect after ten attempts.");
         });
         /* Custom Events */
         this.socket.on('txt', function(data){
@@ -145,7 +158,7 @@ var GameEngine = new function() {
         this.socket.on('sound', function(data){
             if(!soundManager.play(data.sfx, {volume: data.volume})) {
                 // load sound
-                soundManager.createSound({id: data.sfx, url: 'sfx/' + data.sfx + '.wav'});
+                soundManager.createSound({id: data.sfx, url: 'sfx/' + data.sfx});
                 // now play it
                 soundManager.play(data.sfx, {volume: data.volume});
             }
@@ -206,6 +219,7 @@ var GameEngine = new function() {
             var x = parseInt(maproom.x);
             var y = parseInt(maproom.y);
             var z = parseInt(maproom.z);
+            var roomType = maproom.type;
             if(z != GameEngine.mapz) return true; // skip
             var left = x * 30;
             var top = y * 30;
@@ -216,9 +230,9 @@ var GameEngine = new function() {
             if(!GameEngine.mapGridAt(x, y + 1)) border_class += 'b';
             if(!GameEngine.mapGridAt(x - 1, y)) border_class += 'l';
             if(border_class) border_class = ' border' + border_class;
-            $('#gameMapCanvas').html($('#gameMapCanvas').html() + "<div class='grid " + next_type + border_class + "' style='top: " + top + "px; left: " + left + "px'></div>");
+            $('#gameMapCanvas').html($('#gameMapCanvas').html() + "<div class='grid " + roomType + border_class + "' style='top: " + top + "px; left: " + left + "px'></div>");
             
-            if(next_type == 'type_grass'){ next_type = 'type_dirt'; } else if (next_type == 'type_dirt'){ next_type = 'type_water'; } else if (next_type == 'type_water'){ next_type = 'type_weapon'; } else if (next_type == 'type_weapon'){ next_type = 'type_grass'; }
+            //if(next_type == 'type_grass'){ next_type = 'type_dirt'; } else if (next_type == 'type_dirt'){ next_type = 'type_water'; } else if (next_type == 'type_water'){ next_type = 'type_weapon'; } else if (next_type == 'type_weapon'){ next_type = 'type_grass'; }
         });
     }
     
@@ -238,8 +252,8 @@ var GameEngine = new function() {
         var new_top =  (75 + (-30 * (y - 1))) + 'px';
         $('#gameMapCanvas').stop();
         if($('#gameMapCanvas').css('left') != new_left)
-            $('#gameMapCanvas').animate({left: new_left}, 375);
+            $('#gameMapCanvas').animate({left: new_left}, 500, 'linear');
         if($('#gameMapCanvas').css('top') != new_top)
-            $('#gameMapCanvas').animate({top: new_top}, 375);
+            $('#gameMapCanvas').animate({top: new_top}, 500, 'linear');
     }
 };
