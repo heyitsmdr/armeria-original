@@ -16,7 +16,11 @@ if(@$_GET['action']) {
 			exec('git status 2>&1',$out);
 			break;
 		case 'reset':
-			exec('git reset --hard 2>&1',$out);
+			exec('git checkout -f 2>&1',$out);
+			break;
+		case 'resetfile':
+			$fn = $_GET['fn'];
+			exec("git checkout -- $fn 2>&1",$out);
 			break;
 		case 'mergelive':
 			exec('git merge origin/master 2>&1',$out);
@@ -35,6 +39,10 @@ if(@$_GET['action']) {
 		case 'add':
 			$fn = $_GET['fn'];
 			exec("git add $fn 2>&1",$out);
+			break;
+		case 'remove':
+			$fn = $_GET['fn'];
+			exec("git rm -r --cached $fn 2>&1",$out);
 			break;
 		default:
 			die('invalid cmd');
@@ -55,10 +63,12 @@ if(@$_GET['action']) {
 	<br>
 	<b>Repo Actions</b> <br>
 	<a href="?action=status">View Status</a> <br>
-	<a href="?action=reset">Reset Repository to HEAD</a> <br>
+	<a href="?action=reset" onclick="return confirm('Are you sure?');">Reset Repository to HEAD</a> <br>
+	<a href="#" onclick="var msg=prompt('File name?');if(msg){document.location='git.php?action=resetfile&fn='+msg}return false;">Reset Specific File to HEAD</a> <br>
 	<a href="?action=mergelive">Merge Changes From Master (Live)</a> <br>
 	<a href="#" onclick="var msg=prompt('Commit message?');if(msg){document.location='git.php?action=commit&message='+msg}return false;">Commit & Automatically Stage Changed Files</a> <br>
 	<a href="#" onclick="var msg=prompt('File name?');if(msg){document.location='git.php?action=add&fn='+msg}return false;">Add File to Repo</a> <br>
+	<a href="#" onclick="var msg=prompt('File name?');if(msg){document.location='git.php?action=remove&fn='+msg}return false;">Remove File to Repo</a> (Cached: Will remain in file system)<br>
 	<br>
 	<b>Deploying</b> <br>
 	<a href="?action=pushlive">Push Changes To Master (Live)</a> <br>
