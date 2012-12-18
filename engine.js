@@ -1,4 +1,5 @@
 var GameEngine = new function() {
+    this.port = 2772;
     this.socket = false;
     this.fbinfo = false;
     this.fbaccesstoken = false;
@@ -6,7 +7,9 @@ var GameEngine = new function() {
     this.mapdata = false;
     this.mapz = 0;
     
-    this.init = function() {
+    this.init = function(port) {
+        // set port
+        GameEngine.port = port;
         // intro
         GameEngine.parseInput("Welcome to Armeria! <a href='#' onclick='GameEngine.showIntro()'>What is Armeria?</a><br><br>Please <a href='#' onclick='GameEngine.FBLogin()'>Login</a> with Facebook.<br>");
         // bind ENTER to input box
@@ -107,7 +110,7 @@ var GameEngine = new function() {
     this.connect = function() {
         if(!this.fbinfo) return;
         this.parseInput("<br>Connecting to game server..");
-        this.socket = io.connect('http://ethryx.net:2772', {
+        this.socket = io.connect('http://ethryx.net:' + GameEngine.port, {
             'reconnect': true,
             'reconnection delay': 1000,
             'max reconnection attempts': 10

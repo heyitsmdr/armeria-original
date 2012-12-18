@@ -1,5 +1,5 @@
 // require built-ins
-var io            = require('socket.io').listen(2772);
+var fs            = require('fs');
 // require custom
 var Players       = require('./classes/player').Players;
 var Player        = require('./classes/player').Player;
@@ -12,6 +12,11 @@ PLAYERS    = new Players();
 CHARACTERS = new Characters();
 LOGIC      = new Logic();
 WORLD      = new World();
+
+// listen
+var port = parseInt(fs.readFileSync('./port').toString('utf8'));
+console.log('server listening on ' + port);
+var io = require('socket.io').listen(port);
 
 // socket.io logging (options: 0 = error, 1 = warn, 2 = info, 3 = debug [default])
 io.set('log level', 1);
@@ -84,7 +89,7 @@ io.sockets.on('connection', function(socket){
     socket.on('cmd', function(data){
         // get base command
         var sections = data.cmd.split(' ');
-        var cmd = matchcmd(sections[0], new Array('say', 'move', ['look', 'examine'], 'me', 'whisper', 'reply', 'attack', 'create', 'destroy', 'modify', 'builder', 'gossip', 'editmode'));
+        var cmd = matchcmd(sections[0], new Array('say', 'move', ['look', 'examine'], 'me', 'whisper', 'reply', 'attack', 'create', 'destroy', 'modify', 'builder', 'gossip'));
         sections.shift();
         var cmd_args = sections.join(' ');
         
@@ -124,9 +129,6 @@ io.sockets.on('connection', function(socket){
                 break;
             case 'gossip':
                 LOGIC.channel(player, 'gossip', cmd_args);
-                break;
-            case 'editmode':
-                LOGIC.editmode(player, cmd_args);
                 break;
             default:
                 if(!LOGIC.emote(player, cmd.toLowerCase()))

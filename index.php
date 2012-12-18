@@ -17,7 +17,7 @@
         <script src="http://ethryx.net:2772/socket.io/socket.io.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
-                GameEngine.init();
+                GameEngine.init(<?php echo file_get_contents('./port') ?>);
             });
         </script>
     </head>
