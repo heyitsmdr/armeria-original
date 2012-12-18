@@ -303,6 +303,73 @@ var Logic = function() {
             player.msg("<span class='" + chan_color + "'>(" + channel.substr(0, 1).toUpperCase() + channel.substr(1) + ") You say, '" + args + "'</span>");
         }
     }
+    
+    self.editmode = function(player, state) {
+        if(!player.character.builder) { return self._invalidcmd(player); }
+        switch(state) {
+            case 'on':
+                enableEditMode();
+                break;
+            case 'off':
+                disableEditMode();
+                break;
+            default:
+                player.msg("Please state whether you want Edit Mode 'on' or 'off'.");
+        }
+        
+        function enableEditMode() {
+            //jQuery that isn't working below:
+            /*$('#movementControls').html(
+                        '<tr>\
+                        <td><input type="button" id="act_Attack" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/attack\')"/></td>\
+                        <td><input type="button" id="dir_N" class="movementButton shadow2 border333" onClick="movementButtonClick(\'n\')"/></td>\
+                        <td><input type="button" id="dir_U" class="movementButton shadow2 border333" onClick="movementButtonClick(\'u\')"/></td>\
+                    </tr>\
+                    <tr>\
+                        <td><input type="button" id="dir_W" class="movementButton shadow2 border333" onClick="movementButtonClick(\'w\')"/></td>\
+                        <td><input type="button" id="act_Look" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/look\')"/></td>\
+                        <td><input type="button" id="dir_E" class="movementButton shadow2 border333" onClick="movementButtonClick(\'e\')"/></td>\
+                    </tr>\
+                    <tr>\
+                        <td></td>\
+                        <td><input type="button" id="dir_S" class="movementButton shadow2 border333" onClick="movementButtonClick(\'s\')"/></td>\
+                        <td><input type="button" id="dir_D" class="movementButton shadow2 border333" onClick="movementButtonClick(\'d\')"/></td>\
+                    </tr>\
+                    <tr>\
+                        <td></td>\
+                        <td></td>\
+                        <td><input type="button" id="editMode" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/editmode off\')" value="Edit" background-color: rgba(0, 120, 0, 0.3);/></td>\
+                    </tr>'
+            );*/
+            player.msg('Edit Mode: <span class="green">ON</span>');
+        }
+        function disableEditMode() {
+            //jQuery that isn't working below:
+            /*$('#movementControls').html(
+                        '<tr>\
+                        <td><input type="button" id="act_Attack" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/attack\')"/></td>\
+                        <td><input type="button" id="dir_N" class="movementButton shadow2 border333" onClick="movementButtonClick(\'n\')"/></td>\
+                        <td><input type="button" id="dir_U" class="movementButton shadow2 border333" onClick="movementButtonClick(\'u\')"/></td>\
+                    </tr>\
+                    <tr>\
+                        <td><input type="button" id="dir_W" class="movementButton shadow2 border333" onClick="movementButtonClick(\'w\')"/></td>\
+                        <td><input type="button" id="act_Look" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/look\')"/></td>\
+                        <td><input type="button" id="dir_E" class="movementButton shadow2 border333" onClick="movementButtonClick(\'e\')"/></td>\
+                    </tr>\
+                    <tr>\
+                        <td></td>\
+                        <td><input type="button" id="dir_S" class="movementButton shadow2 border333" onClick="movementButtonClick(\'s\')"/></td>\
+                        <td><input type="button" id="dir_D" class="movementButton shadow2 border333" onClick="movementButtonClick(\'d\')"/></td>\
+                    </tr>\
+                    <tr>\
+                        <td></td>\
+                        <td></td>\
+                        <td><input type="button" id="editMode" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/editmode on\')" value="Edit" style="background-color: rgba(120, 0, 0, 0.3);"/></td>\
+                    </tr>'
+            );*/
+            player.msg('Edit Mode: <span class="red">OFF</span>');
+        }
+    }
     /* ## END: BASIC ## */
 
     /*  ## EMOTES ## */

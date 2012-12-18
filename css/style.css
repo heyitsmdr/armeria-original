@@ -257,6 +257,9 @@ input:focus {
     padding: 5px;
     background-color: rgba(0, 0, 0, 0.3);
 }
+#editModeCheck {
+    
+}
 #inputButton {
     width: 5%;
     height: 29px;
@@ -266,8 +269,8 @@ input:focus {
     position: absolute;
     right: 35px;
     bottom: 105px;
-    width: 200px;
-    height: 200px;
+    width: 170px;
+    height: 220px;
     z-index: 999;
 }
 #movementControls td {
@@ -305,6 +308,12 @@ input:focus {
 }
 #dir_D {
     background-image: url('../images/layout/dir_D.png');
+}
+#editMode {
+    height: 20px;
+}
+#editMode:hover {
+    background-color: rgba(150, 30, 30, 0.3);
 }
 /* Links */
 a {

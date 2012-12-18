@@ -1,5 +1,5 @@
 // require built-ins
-var io            = require('socket.io').listen(2772);
+var io            = require('socket.io').listen(2773);
 // require custom
 var Players       = require('./classes/player').Players;
 var Player        = require('./classes/player').Player;
@@ -84,7 +84,7 @@ io.sockets.on('connection', function(socket){
     socket.on('cmd', function(data){
         // get base command
         var sections = data.cmd.split(' ');
-        var cmd = matchcmd(sections[0], new Array('say', 'move', ['look', 'examine'], 'me', 'whisper', 'reply', 'attack', 'create', 'destroy', 'modify', 'builder', 'gossip'));
+        var cmd = matchcmd(sections[0], new Array('say', 'move', ['look', 'examine'], 'me', 'whisper', 'reply', 'attack', 'create', 'destroy', 'modify', 'builder', 'gossip', 'editmode'));
         sections.shift();
         var cmd_args = sections.join(' ');
         
@@ -124,6 +124,9 @@ io.sockets.on('connection', function(socket){
                 break;
             case 'gossip':
                 LOGIC.channel(player, 'gossip', cmd_args);
+                break;
+            case 'editmode':
+                LOGIC.editmode(player, cmd_args);
                 break;
             default:
                 if(!LOGIC.emote(player, cmd.toLowerCase()))

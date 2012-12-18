@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Armeria: Social</title>
+        <title>Josh's Branch - Armeria: Social</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
         <!-- Stylesheets -->
         <link id="cssReset" rel="stylesheet" type="text/css" href="css/reset.css">
@@ -14,7 +14,7 @@
         <script src="engine.js"></script>
         <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
         <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
-        <script src="http://ethryx.net:2772/socket.io/socket.io.js"></script>
+        <script src="http://ethryx.net:2773/socket.io/socket.io.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
                 GameEngine.init();
@@ -48,7 +48,7 @@
            function movementButtonClick(c){
                $('#inputGameCommands').val(c);
                GameEngine.parseCommand();
-           }
+           };
         </script>
         
         
@@ -99,15 +99,16 @@
                         </div>
                         <p id="mapName"></p>
                     </div>
+                    
                 </div>
             </div>
             <div id="outerFrameInput">
                 <div id="frameInput" class="shadow border222">
-                    <input type="text" id="inputGameCommands" placeholder="Type commands here.." class="shadow2 border333" />
+                    <input type="text" id="inputGameCommands" placeholder="Type commands here.." class="shadow2 border333"/>
                 </div>
             </div>
 
-            <table border="0" bordercolor="#ff0000" frame="void" id="movementControls">
+            <table border="0" frame="void" id="movementControls">
             <tr>
                 <td><input type="button" id="act_Attack" class="movementButton shadow2 border333" onClick="movementButtonClick('/attack')"/></td>
                 <td><input type="button" id="dir_N" class="movementButton shadow2 border333" onClick="movementButtonClick('n')"/></td>
@@ -122,6 +123,11 @@
                 <td></td>
                 <td><input type="button" id="dir_S" class="movementButton shadow2 border333" onClick="movementButtonClick('s')"/></td>
                 <td><input type="button" id="dir_D" class="movementButton shadow2 border333" onClick="movementButtonClick('d')"/></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td><input type="button" id="editMode" class="movementButton shadow2 border333" onClick="movementButtonClick('/editmode on')" value="Edit" style="background-color: rgba(120, 0, 0, 0.3);"/></td>
             </tr>
             </table>
         </div>
