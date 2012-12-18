@@ -1,5 +1,5 @@
 // require built-ins
-var io            = require('socket.io').listen(2773);
+var io            = require('socket.io').listen(2772);
 // require custom
 var Players       = require('./classes/player').Players;
 var Player        = require('./classes/player').Player;

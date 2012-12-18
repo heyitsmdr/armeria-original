@@ -107,7 +107,7 @@ var GameEngine = new function() {
     this.connect = function() {
         if(!this.fbinfo) return;
         this.parseInput("<br>Connecting to game server..");
-        this.socket = io.connect('http://ethryx.net:2773', {
+        this.socket = io.connect('http://ethryx.net:2772', {
             'reconnect': true,
             'reconnection delay': 1000,
             'max reconnection attempts': 10
