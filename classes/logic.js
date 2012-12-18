@@ -26,7 +26,7 @@ var Logic = function() {
         // Check arguments
         var args = what.split(' ');
         if(args[0] == '-history') {
-            if(!player.character.room.sayhistory) {
+            if(!player.character.room.sayhistory.length) {
                 player.msg('No history found.');
                 return;
             }
