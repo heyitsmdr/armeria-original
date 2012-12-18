@@ -279,19 +279,19 @@ var GameEngine = new function() {
             case 'on':
                 $('#movementControls').html(
                     '<tr>\
-                        <td><input type="button" id="act_Attack" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/modify room\')"/></td>\
-                        <td><input type="button" id="dir_N" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room north -move\')"/></td>\
-                        <td><input type="button" id="dir_U" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room up -move\')"/></td>\
+                        <td><input type="button" id="act_Modify" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/modify room\')"/></td>\
+                        <td><input type="button" id="createDir_N" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room north -move\')"/></td>\
+                        <td><input type="button" id="createDir_U" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room up -move\')"/></td>\
                     </tr>\
                     <tr>\
-                        <td><input type="button" id="dir_W" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room west -move\')"/></td>\
+                        <td><input type="button" id="createDir_W" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room west -move\')"/></td>\
                         <td><input type="button" id="act_Look" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/look\')"/></td>\
-                        <td><input type="button" id="dir_E" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room east -move\')"/></td>\
+                        <td><input type="button" id="createDir_E" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room east -move\')"/></td>\
                     </tr>\
                     <tr>\
                         <td></td>\
-                        <td><input type="button" id="dir_S" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room south -move\')"/></td>\
-                        <td><input type="button" id="dir_D" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room down -move\')"/></td>\
+                        <td><input type="button" id="createDir_S" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room south -move\')"/></td>\
+                        <td><input type="button" id="createDir_D" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room down -move\')"/></td>\
                     </tr>\
                     <tr>\
                         <td></td>\
