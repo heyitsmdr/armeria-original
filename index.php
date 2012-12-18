@@ -14,7 +14,7 @@
         <script src="engine.js"></script>
         <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
         <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
-        <script src="http://ethryx.net:2772/socket.io/socket.io.js"></script>
+        <script src="http://ethryx.net:2773/socket.io/socket.io.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
                 GameEngine.init(<?php echo file_get_contents('./port') ?>);
