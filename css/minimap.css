@@ -1,7 +1,10 @@
 #gameMapCanvas {
-    position: relative;
+    position: absolute;
     top: 0;
     left: 0;
+    height: 240px;
+    width: 240px;
+    margin: 4px 0 0 4px;
 }
 
 #gameMapCanvas div.grid {

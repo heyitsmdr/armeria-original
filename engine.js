@@ -225,6 +225,32 @@ var GameEngine = new function() {
         } else {
             this.mapdata = mapdata;
         }
+        // init canvas
+        var CANVAS = document.getElementById('gameMapCanvas');
+        var CONTEXT = CANVAS.getContext('2d');
+        CONTEXT.clearRect(0, 0, 9999, 9999);
+        // draw rooms
+        mapdata.forEach(function(maproom){
+            var x = parseInt(maproom.x);
+            var y = parseInt(maproom.y);
+            var z = parseInt(maproom.z);
+            if(z != GameEngine.mapz) return true; // skip
+            var left = x * 30;
+            var top = y * 15;
+            var _i = new Image();
+            _i.src = "images/tiles/dirt01/dirt01.png";
+            _i.onload = function() {
+                CONTEXT.drawImage(_i, left, top, 30, 15);
+            }
+        });
+    }
+
+    this.mapRender_old = function(mapdata) {
+        if(mapdata === false) {
+            mapdata = this.mapdata;
+        } else {
+            this.mapdata = mapdata;
+        }
         // draw rooms
         $('#gameMapCanvas').html('');
         mapdata.forEach(function(maproom){

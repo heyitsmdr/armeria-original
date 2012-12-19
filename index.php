@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Armeria: Social</title>
+        <title>Armeria: Social MUD</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
         <!-- Stylesheets -->
         <link id="cssReset" rel="stylesheet" type="text/css" href="css/reset.css">
@@ -14,7 +14,7 @@
         <script src="engine.js"></script>
         <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
         <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
-        <script src="http://ethryx.net:2773/socket.io/socket.io.js"></script>
+        <script src="http://ethryx.net:<?php echo file_get_contents('./port') ?>/socket.io/socket.io.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
                 GameEngine.init(<?php echo file_get_contents('./port') ?>);
@@ -93,7 +93,7 @@
                     </div>
                     <div id="frameGameMap" class="shadow border222">
                         <div id="gameMap">
-                            <div id="gameMapCanvas"></div>
+                            <canvas id="gameMapCanvas"></canvas>
                             <div id="playerMark"></div>
                             <div id="mapShadow" class="shadow2"></div>
                         </div>

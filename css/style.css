@@ -221,6 +221,7 @@ input:focus {
     line-height: 16px;
     vertical-align: middle;
     font-family: 'Paprika', serif;
+    margin-top: 248px;
 }
 #gameMap {
     width: 240px;
@@ -231,6 +232,7 @@ input:focus {
     border-bottom: solid thin #444;
     background-color: rgba(0,0,0,0.1);
     overflow: hidden;
+    position: absolute;
 }
 #playerMark {
     position: relative;
