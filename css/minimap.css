@@ -17,21 +17,14 @@
 }
 
 #gameMapCanvas div.dirt01 {
-    background-position: -30px 0;
-}
-
-#gameMapCanvas div.water01 {
-    background-position: -60px 0;
+    background-image: url('../images/tiles/dirt01/dirt01.png');
 }
 
 #gameMapCanvas div.weapon01 {
     background-position: -90px 0;
 }
 #gameMapCanvas div.bridge01 {
-    background-image: url('../images/tiles/test01.png'), url('../images/tiles/bridge.jpg');
-}
-#gameMapCanvas div.test01 {
-    background-image: url('../images/tiles/test01.png');
+    background-image: url('../images/tiles/bridge.jpg');
 }
 
 #gameMapCanvas div.bordertrbl, #gameMapCanvas div.bordertrl, #gameMapCanvas div.bordertl, #gameMapCanvas div.borderl, #gameMapCanvas div.bordertrb, #gameMapCanvas div.bordertr, #gameMapCanvas div.bordert, #gameMapCanvas div.borderrb, #gameMapCanvas div.borderr, #gameMapCanvas div.borderb, #gameMapCanvas div.borderrl, #gameMapCanvas div.bordertb, #gameMapCanvas div.bordertbl, #gameMapCanvas div.borderrl, #gameMapCanvas div.borderrbl,#gameMapCanvas div.borderbl {
@@ -162,6 +155,62 @@
     -webkit-border-bottom-left-radius: 3px;
     -moz-border-radius-bottomleft: 2px;
     border-bottom-left-radius: 3px;
+}
+
+/* WATER01 */
+#gameMapCanvas div.water01 {
+    background-image: url('../images/tiles/water01/water01.png');
+}
+#gameMapCanvas div.water01T {
+    background-image: url('../images/tiles/water01/water01T.png');
+}
+#gameMapCanvas div.water01TR {
+    background-image: url('../images/tiles/water01/water01TR.png');
+}
+#gameMapCanvas div.water01TL {
+    background-image: url('../images/tiles/water01/water01TL.png');
+}
+#gameMapCanvas div.water01TRB {
+    background-image: url('../images/tiles/water01/water01TRB.png');
+}
+#gameMapCanvas div.water01TRL {
+    background-image: url('../images/tiles/water01/water01TRL.png');
+}
+#gameMapCanvas div.water01TRBL {
+    background-image: url('../images/tiles/water01/water01TRBL.png');
+}
+#gameMapCanvas div.water01R {
+    background-image: url('../images/tiles/water01/water01R.png');
+}
+#gameMapCanvas div.water01RB {
+    background-image: url('../images/tiles/water01/water01RB.png');
+}
+#gameMapCanvas div.water01RL {
+    background-image: url('../images/tiles/water01/water01RL.png');
+}
+#gameMapCanvas div.water01RBL {
+    background-image: url('../images/tiles/water01/water01RBL.png');
+}
+#gameMapCanvas div.water01B {
+    background-image: url('../images/tiles/water01/water01B.png');
+}
+#gameMapCanvas div.water01BL {
+    background-image: url('../images/tiles/water01/water01BL.png');
+}
+#gameMapCanvas div.water01L {
+    background-image: url('../images/tiles/water01/water01L.png');
+}
+#gameMapCanvas div.water01TRc {
+    background-image: url('../images/tiles/water01/water01TRc.png');
+}
+#gameMapCanvas div.water01RBc {
+    background-image: url('../images/tiles/water01/water01RBc.png');
+}
+#gameMapCanvas div.water01BLc {
+    background-image: url('../images/tiles/water01/water01BLc.png');
+}
+#gameMapCanvas div.water01TLc {
+    background-image: url('../images/tiles/water01/water01TLc.png');
 }
 /*
 ltrb

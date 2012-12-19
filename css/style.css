@@ -173,6 +173,9 @@ input:focus {
     background-color: rgba(52,52,52,0.8);
     background-image: url('../images/layout/bg.png');
 }
+#frameGameMap:hover {
+    opacity: 0.15;
+}
 #outerFrameInput {
     position: absolute;
     width: 84%;
