@@ -21,7 +21,7 @@ var Logic = function() {
     /* ## BASIC ## */
     self.say = function(player, what) {
         if(what.length == 0) self.look(player);
-        if(what == "lol") { self.lol(player); return; }
+        if(what.toLowerCase() == "lol") { self.lol(player); return; }
         
         // Check arguments
         var args = what.split(' ');

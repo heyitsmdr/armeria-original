@@ -62,7 +62,7 @@ var GameEngine = new function() {
         GameEngine.mapctx.lineWidth = 3;
 
         GameEngine.maptileset = new Image();
-        GameEngine.maptileset.src = "images/tiles/tileset-test.png";
+        GameEngine.maptileset.src = "images/tiles/tileset.png";
         GameEngine.setupTileset();
         // focus input box
         $('#inputGameCommands').focus();
@@ -72,11 +72,26 @@ var GameEngine = new function() {
         /* TILE DEFINITIONS */
 
         GameEngine.mapts = [
-            {def: 'grass', sx: 0, sy: 0},
+            {def: 'grassTL', sx: 0, sy: 0},
             {def: 'grassT', sx: 1, sy: 0},
+            {def: 'grassTR', sx: 2, sy: 0},
             {def: 'grassL', sx: 0, sy: 1},
-            {def: 'dirt', sx: 3, sy: 0},
-            {def: 'water', sx: 4, sy: 0}
+            {def: 'grass', sx: 1, sy: 1},
+            {def: 'grassR', sx: 2, sy: 1},
+            {def: 'grassBL', sx: 0, sy: 2},
+            {def: 'grassB', sx: 1, sy: 2},
+            {def: 'grassRB', sx: 2, sy: 2},
+            {def: 'grassTRBL', sx: 3, sy: 0},
+            {def: 'grassTRL', sx: 4, sy: 0},
+            {def: 'grassRL', sx: 5, sy: 0},
+            {def: 'grassTBL', sx: 3, sy: 1},
+            {def: 'grassTB', sx: 4, sy: 1},
+            {def: 'grassTRB', sx: 5, sy: 1},
+            {def: 'grassRBL', sx: 3, sy: 2},
+            {def: 'dirt', sx: 6, sy: 0},
+            {def: 'water', sx: 7, sy: 0},
+            {def: 'stairsD', sx: 8, sy: 0},
+            {def: 'stairsUD', sx: 9, sy: 0}
         ];
 
         // Calculate Real sx and sy
@@ -287,7 +302,7 @@ var GameEngine = new function() {
                             break;
                         }
                     }
-                    if(founddef === false) founddef = 3; // default to dirt
+                    if(founddef === false) founddef = 4; // default to grass
                     GameEngine.mapctx.drawImage(GameEngine.maptileset, GameEngine.mapts[founddef].sx, GameEngine.mapts[founddef].sy, 30, 30, left, top, 30, 30);
                 });
                 // TODO: border code here
