@@ -6,7 +6,14 @@ var GameEngine = new function() {
     this.connected = false;
     this.mapdata = false;
     this.mapz = 0;
-    
+    this.mapctx = false;
+    this.maptileset = false; // Image
+    this.mapts = false;      // Image Properties
+    this.mapanimx = false;
+    this.mapanimy = false;
+    this.mapoffsetx = 0;
+    this.mapoffsety = 0;
+
     this.init = function(port) {
         // set port
         GameEngine.port = port;
@@ -50,10 +57,36 @@ var GameEngine = new function() {
         });
         // setup soundmanager2
         soundManager.setup({url: '/libraries/soundmanager2/swf/', ontimeout: function(){ console.log('SoundManager timed out.'); }});
+        // grab 2d context for map and load tileset
+        GameEngine.mapctx = document.getElementById('gameMapCanvas').getContext('2d');
+        GameEngine.mapctx.lineWidth = 3;
+
+        GameEngine.maptileset = new Image();
+        GameEngine.maptileset.src = "images/tiles/tileset-test.png";
+        GameEngine.setupTileset();
         // focus input box
         $('#inputGameCommands').focus();
     }
-    
+
+    this.setupTileset = function() {
+        /* TILE DEFINITIONS */
+
+        GameEngine.mapts = [
+            {def: 'grass', sx: 0, sy: 0},
+            {def: 'grassT', sx: 1, sy: 0},
+            {def: 'grassL', sx: 0, sy: 1},
+            {def: 'dirt', sx: 3, sy: 0},
+            {def: 'water', sx: 4, sy: 0}
+        ];
+
+        // Calculate Real sx and sy
+        this.mapts.forEach(function(ts){
+            ts.sx *= 30;
+            ts.sy *= 30;
+        });
+
+    }
+
     this._doFBLogin = function() {
         this.parseInput("Facebook not authorized. Asking for permission..");
         FB.login(function(response) {
@@ -152,7 +185,10 @@ var GameEngine = new function() {
             $('#mapName').html(data.name);
         });
         this.socket.on('maploc', function(data){
-            GameEngine.mapPosition(data.x, data.y, data.z);
+            GameEngine.mapPosition(data.x, data.y, data.z, true);
+        });
+        this.socket.on('maplocnoanim', function(data){
+            GameEngine.mapPosition(data.x, data.y, data.z, false);
         });
         this.socket.on('mapnomove', function(){
             GameEngine.parseInput("Alas, you cannot go that way.");
@@ -219,55 +255,43 @@ var GameEngine = new function() {
         $('#inputGameCommands').focus();
     }
     
-    this.mapRender = function(mapdata) {
+    this.mapRender = function(mapdata, offsetx, offsety) {
         if(mapdata === false) {
             mapdata = this.mapdata;
         } else {
             this.mapdata = mapdata;
         }
-        // init canvas
-        var CANVAS = document.getElementById('gameMapCanvas');
-        var CONTEXT = CANVAS.getContext('2d');
-        CONTEXT.clearRect(0, 0, 9999, 9999);
+        if(offsetx===undefined) offsetx = GameEngine.mapoffsetx;
+        if(offsety===undefined) offsety = GameEngine.mapoffsety;
+        GameEngine.mapoffsetx = offsetx;
+        GameEngine.mapoffsety = offsety;
+        // clear canvas
+        var canvas = document.getElementById('gameMapCanvas');
+        GameEngine.mapctx.clearRect(0, 0, canvas.width, canvas.height);
         // draw rooms
         mapdata.forEach(function(maproom){
             var x = parseInt(maproom.x);
             var y = parseInt(maproom.y);
             var z = parseInt(maproom.z);
             if(z != GameEngine.mapz) return true; // skip
-            var left = x * 30;
-            var top = y * 15;
-            var _i = new Image();
-            _i.src = "images/tiles/dirt01/dirt01.png";
-            _i.onload = function() {
-                CONTEXT.drawImage(_i, left, top, 30, 15);
+            var left = (x * 30) + offsetx;
+            var top = (y * 30) + offsety;
+            // only render within viewport
+            if(left > -30 && left < 255 && top > -30 && top < 255) {
+                var layers = maproom.terrain.split(' ');
+                layers.forEach(function(layer){
+                    var founddef = false;
+                    for(var x = 0; x < GameEngine.mapts.length; x++) {
+                        if(GameEngine.mapts[x].def.toLowerCase() == layer.toLowerCase()) {
+                            founddef = x;
+                            break;
+                        }
+                    }
+                    if(founddef === false) founddef = 3; // default to dirt
+                    GameEngine.mapctx.drawImage(GameEngine.maptileset, GameEngine.mapts[founddef].sx, GameEngine.mapts[founddef].sy, 30, 30, left, top, 30, 30);
+                });
+                // TODO: border code here
             }
-        });
-    }
-
-    this.mapRender_old = function(mapdata) {
-        if(mapdata === false) {
-            mapdata = this.mapdata;
-        } else {
-            this.mapdata = mapdata;
-        }
-        // draw rooms
-        $('#gameMapCanvas').html('');
-        mapdata.forEach(function(maproom){
-            var x = parseInt(maproom.x);
-            var y = parseInt(maproom.y);
-            var z = parseInt(maproom.z);
-            if(z != GameEngine.mapz) return true; // skip
-            var left = x * 30;
-            var top = y * 30;
-            // calculate borders
-            var border_class = '';
-            if(!GameEngine.mapGridAt(x, y - 1)) border_class += 't';
-            if(!GameEngine.mapGridAt(x + 1, y)) border_class += 'r';
-            if(!GameEngine.mapGridAt(x, y + 1)) border_class += 'b';
-            if(!GameEngine.mapGridAt(x - 1, y)) border_class += 'l';
-            if(border_class) border_class = ' border' + border_class;
-            $('#gameMapCanvas').html($('#gameMapCanvas').html() + "<div class='grid " + maproom.terrain + border_class + "' style='top: " + top + "px; left: " + left + "px'></div>");
         });
     }
     
@@ -279,28 +303,47 @@ var GameEngine = new function() {
         return false;
     }
     
-    this.mapPosition = function(x, y, z) {
+    this.mapPosition = function(x, y, z, anim) {
         if(!this.mapdata) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - local map cache empty'); return;}
         if(!this.mapGridAt(x, y)) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - destination doesnt exist in local map cache'); return;}
         if(this.mapz != z) {
             this.mapz = z;
-            $('#gameMapCanvas').fadeOut(250, function(){
-                GameEngine.mapRender(false);
-                $('#gameMapCanvas').fadeIn(250);
-            });
-            return; // don't need to reposition since only Z is changing
         }
-        var new_left = (75 + (-30 * (x - 1))) + 'px';
-        var new_top =  (75 + (-30 * (y - 1))) + 'px';
-        $('#gameMapCanvas').stop();
-        if($('#gameMapCanvas').css('left') != new_left)
-            $('#gameMapCanvas').animate({left: new_left}, 500, 'linear');
-        if($('#gameMapCanvas').css('top') != new_top)
-            $('#gameMapCanvas').animate({top: new_top}, 500, 'linear');
+        // clear current animations
+        clearInterval(GameEngine.mapanimx);
+        clearInterval(GameEngine.mapanimy);
+        // calculate offsets
+        var offsetx = 105 - (x * 30);
+        var offsety = 105 - (y * 30);
+        // use animation?
+        if(anim) {
+            GameEngine.mapanimx = setInterval(function(){
+                if(GameEngine.mapoffsetx != offsetx) {
+                    if(GameEngine.mapoffsetx < offsetx)
+                        GameEngine.mapRender(false, (GameEngine.mapoffsetx + 1), GameEngine.mapoffsety);
+                    else
+                        GameEngine.mapRender(false, (GameEngine.mapoffsetx - 1), GameEngine.mapoffsety);
+                } else {
+                    clearInterval(GameEngine.mapanimx);
+                }
+            }, 5);
+            GameEngine.mapanimy = setInterval(function(){
+                if(GameEngine.mapoffsety != offsety) {
+                    if(GameEngine.mapoffsety < offsety)
+                        GameEngine.mapRender(false, GameEngine.mapoffsetx, (GameEngine.mapoffsety + 1));
+                    else
+                        GameEngine.mapRender(false, GameEngine.mapoffsetx, (GameEngine.mapoffsety - 1));
+                } else {
+                    clearInterval(GameEngine.mapanimy);
+                }
+            }, 5);
+        } else {
+            GameEngine.mapRender(false, offsetx, offsety);
+        }
     }
     
     this.editModeToggle = function(state) {
-        //Need to check if user is builder or not. Will also hide the edit button from the beginning if they are not.
+        //TODO: Need to check if user is builder or not. Will also hide the edit button from the beginning if they are not.
         switch(state) {
             case 'on':
                 $('#movementControls').html(

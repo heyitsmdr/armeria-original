@@ -74,6 +74,10 @@ var Player = function(socket) {
         if(what.maploc) {
             self.emit('maploc', {x: self.character.location.x, y: self.character.location.y, z: self.character.location.z});
         }
+        // Update Map Location w/ No Animation (for redrawing minimap / moving up and down)
+        if(what.maplocnoanim) {
+            self.emit('maplocnoanim', {x: self.character.location.x, y: self.character.location.y, z: self.character.location.z});
+        }
     }
     
     self.socket = socket;

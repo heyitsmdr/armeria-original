@@ -5,7 +5,6 @@
         <!-- Stylesheets -->
         <link id="cssReset" rel="stylesheet" type="text/css" href="css/reset.css">
         <link id="cssStandard" rel="stylesheet" type="text/css" href="css/style.css">
-        <link rel="stylesheet" type="text/css" href="css/minimap.css">
         <link rel="stylesheet" type="text/css" href="libraries/gritter/css/jquery.gritter.css">
         <link href='http://fonts.googleapis.com/css?family=Paprika' rel='stylesheet' type='text/css'>
         <!-- Scripts -->
@@ -93,7 +92,7 @@
                     </div>
                     <div id="frameGameMap" class="shadow border222">
                         <div id="gameMap">
-                            <canvas id="gameMapCanvas"></canvas>
+                            <canvas id="gameMapCanvas" width="240px" height="240px"></canvas>
                             <div id="playerMark"></div>
                             <div id="mapShadow" class="shadow2"></div>
                         </div>

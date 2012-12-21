@@ -185,9 +185,13 @@ var Character = function(config) {
         });
         
         // update local player
-        // TODO: update minimap if the old_map != new_map
-        self.player.update({maploc: 1});
-        
+        if(map == old_room.map && old_room.z != z)
+            self.player.update({maplocnoanim: 1});
+        else if(map == old_room.map)
+            self.player.update({maploc: 1});
+        else
+            self.player.update({minimap: 1, maplocnoanim: 1});
+
         return true;
     }
     

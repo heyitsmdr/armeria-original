@@ -234,6 +234,11 @@ input:focus {
     overflow: hidden;
     position: absolute;
 }
+#gameMapCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
 #playerMark {
     position: relative;
     width: 240px;

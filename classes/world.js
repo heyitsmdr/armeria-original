@@ -151,11 +151,11 @@ var Map = function(config, fn) {
         self.rooms.push(new_room);
         self.save();
         player.msg('A new room has been created.');
-        player.update({minimap: true});
+        player.update({minimap: true, maplocnoanim: true});
         player.emit("sound", {sfx: 'create_room.wav', volume: 50});
         player.character.room.map.eachPlayerExcept(player, function(p){
             p.msg('Something about this area is different. Hmm..');
-            p.update({minimap: true});
+            p.update({minimap: true, maplocnoanim: true});
         });
         if(args.indexOf('-move') >= 0) {
             LOGIC.move(player, dir.substr(0, 1));
