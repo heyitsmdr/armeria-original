@@ -66,6 +66,10 @@ var GameEngine = new function() {
         GameEngine.maptileset = new Image();
         GameEngine.maptileset.src = "images/tiles/tileset-test.png";
         GameEngine.setupTileset();
+        // setup error reporting
+        $(window).error(function(err){
+            // TODO: add error reporting here
+        });
         // focus input box
         $('#inputGameCommands').focus();
     }
