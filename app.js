@@ -1,5 +1,6 @@
 // require built-ins
 var fs            = require('fs');
+var https         = require('https');
 // require custom
 var Players       = require('./classes/player').Players;
 var Player        = require('./classes/player').Player;
@@ -53,37 +54,24 @@ io.sockets.on('connection', function(socket){
     });
     
     socket.on('login', function(data){
-        // already logged in?
-        var logged_in = false;
-        PLAYERS.eachOnline(function(p){
-            if(p.character.id == data.id) {
-                player.msg("You're already logged in somewhere else. Disconnecting..");
-                p.msg("<span class='bred'>Warning!</span> Someone else attempted to log in to this character.");
-                socket.disconnect();
-                logged_in = true;
-            }
+        // check auth
+        console.log(data.token);
+        https.get("https://graph.facebook.com/me?access_token=" + data.token, function(res){
+            var fbresp = '';
+            res.on('data', function(chunk){
+                fbresp += chunk;
+            });
+            res.on('end', function(){
+                fbresp = JSON.parse(fbresp);
+                if(fbresp.id !== undefined && fbresp.id == data.id) {
+                    // authorized!
+                    LOGIC.login(player, data);
+                } else {
+                    player.msg("Failed server-side verification. Bye.");
+                    socket.disconnect();
+                }
+            });
         });
-        if(logged_in) return;
-        console.log('got a login from ' + data.name + ' (id: ' + data.id + ')');
-        player.character = CHARACTERS.getCharacterById(data.id);
-        if(!player.character) {
-            player.msg("<br>I've never seen you around here before. You must be new!");
-            var gamechar = CHARACTERS.create(data.id, data.name);
-            player.character = gamechar;
-            player.character.picture = data.picture;
-            player.character.player = player;
-            if(gamechar) {
-                player.msg('<br><b>Horray!</b> Your character has been created. You\'re now known to the world as ' + gamechar.htmlname + '.');
-                player.character.login();
-            } else {
-                player.msg('<br><b>Drat!</b> For some reason, your character could not be created. Try again later.');
-            }
-        } else {
-            player.character.picture = data.picture;
-            player.character.player = player;
-            player.msg("<br>Welcome back to Armeria, " + player.character.htmlname + "!");
-            player.character.login();
-        }
     });
     
     socket.on('cmd', function(data){

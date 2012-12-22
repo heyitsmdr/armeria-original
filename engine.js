@@ -67,9 +67,9 @@ var GameEngine = new function() {
         GameEngine.maptileset.src = "images/tiles/tileset-test.png";
         GameEngine.setupTileset();
         // setup error reporting
-        $(window).error(function(err){
-            // TODO: add error reporting here
-        });
+        window.onerror = function(msg, url, linenumber){
+            GameEngine.parseInput("<span style='color:#ff6d58'><b>Error: </b>" + msg + "<br><b>Location: </b>" + url + " (line " + linenumber + ")</span>");
+        }
         // focus input box
         $('#inputGameCommands').focus();
     }
@@ -165,7 +165,8 @@ var GameEngine = new function() {
             GameEngine.socket.emit('login', {
                 id: GameEngine.fbinfo.id,
                 name: GameEngine.fbinfo.name,
-                picture: GameEngine.fbinfo.picture
+                picture: GameEngine.fbinfo.picture,
+                token: GameEngine.fbaccesstoken
             });
         });
         this.socket.on('disconnect', function(){
