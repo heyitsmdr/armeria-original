@@ -166,8 +166,8 @@ var Logic = function() {
     self.look = function(player) {
         player.msg('<br/><span class="yellow">' + player.character.room.name + '</span><br/>' + player.character.room.desc);
         player.character.room.eachPlayerExcept(player, function(p){
-                player.msg(p.character.htmlname + ' is here.');
-            });
+            player.msg(p.character.htmlname + ' ' + p.character.roomdesc);
+        });
     }
     
     self.whisper = function(player, args) {
