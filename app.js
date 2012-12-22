@@ -54,8 +54,18 @@ io.sockets.on('connection', function(socket){
     });
     
     socket.on('login', function(data){
+        // check version?
+        if(data.version !== false) {
+            fs.stat('./index.php', function(err, stat){
+                if(data.version != stat.mtime) {
+                    console.log('version mismatch. client has ' + data.version + ' and server has ' + stat.mtime);
+                    player.msg("<b>Notice!</b> Your client is out-of-date. Please refresh to get the latest version.");
+                    socket.disconnect();
+                    return;
+                }
+            });
+        }
         // check auth
-        console.log(data.token);
         https.get("https://graph.facebook.com/me?access_token=" + data.token, function(res){
             var fbresp = '';
             res.on('data', function(chunk){
@@ -69,6 +79,7 @@ io.sockets.on('connection', function(socket){
                 } else {
                     player.msg("Failed server-side verification. Bye.");
                     socket.disconnect();
+                    return;
                 }
             });
         });

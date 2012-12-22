@@ -1,4 +1,5 @@
 var GameEngine = new function() {
+    this.version = false;
     this.port = 2772;
     this.socket = false;
     this.fbinfo = false;
@@ -163,6 +164,7 @@ var GameEngine = new function() {
             GameEngine.connected = true;
             GameEngine.parseInput("Connected! Sending login data..");
             GameEngine.socket.emit('login', {
+                version: GameEngine.version,
                 id: GameEngine.fbinfo.id,
                 name: GameEngine.fbinfo.name,
                 picture: GameEngine.fbinfo.picture,
