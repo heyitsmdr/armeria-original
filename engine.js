@@ -396,54 +396,29 @@ var GameEngine = new function() {
         //TODO: Need to check if user is builder or not. Will also hide the edit button from the beginning if they are not.
         switch(state) {
             case 'on':
-                $('#movementControls').html(
-                    '<tr>\
-                        <td><input type="button" id="act_Modify" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/modify room\')"/></td>\
-                        <td><input type="button" id="createDir_N" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room north -move\')"/></td>\
-                        <td><input type="button" id="createDir_U" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room up -move\')"/></td>\
-                    </tr>\
-                    <tr>\
-                        <td><input type="button" id="createDir_W" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room west -move\')"/></td>\
-                        <td><input type="button" id="act_Look" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/look\')"/></td>\
-                        <td><input type="button" id="createDir_E" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room east -move\')"/></td>\
-                    </tr>\
-                    <tr>\
-                        <td></td>\
-                        <td><input type="button" id="createDir_S" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room south -move\')"/></td>\
-                        <td><input type="button" id="createDir_D" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/create room down -move\')"/></td>\
-                    </tr>\
-                    <tr>\
-                        <td></td>\
-                        <td></td>\
-                        <td><input type="button" id="editMode" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/editmode off\')" value="Edit" style="background-color: rgba(0, 120, 0, 0.3);"/></td>\
-                    </tr>'
-                );
+                $("#act_Attack").attr("onClick","movementButtonClick('/modify room')");
+                $("#dir_N").attr("onClick","movementButtonClick('/create room north -move')");
+                $("#dir_U").attr("onClick","movementButtonClick('/create room up -move')");
+                $("#dir_W").attr("onClick","movementButtonClick('/create room west -move')");
+                $("#act_Look").attr("onClick","movementButtonClick('/look')");
+                $("#dir_E").attr("onClick","movementButtonClick('/create room east -move')");
+                $("#dir_S").attr("onClick","movementButtonClick('/create room south -move')");
+                $("#dir_D").attr("onClick","movementButtonClick('/create room down -move')");
+                $("#editMode").attr("onClick", "movementButtonClick('/editmode off')");
+                $("#editMode").attr("style", "background-color: rgba(0, 120, 0, 0.3);");
                 break;
             case 'off':
-                $('#movementControls').html(
-                    '<tr>\
-                        <td><input type="button" id="act_Attack" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/attack\')"/></td>\
-                        <td><input type="button" id="dir_N" class="movementButton shadow2 border333" onClick="movementButtonClick(\'n\')"/></td>\
-                        <td><input type="button" id="dir_U" class="movementButton shadow2 border333" onClick="movementButtonClick(\'u\')"/></td>\
-                    </tr>\
-                    <tr>\
-                        <td><input type="button" id="dir_W" class="movementButton shadow2 border333" onClick="movementButtonClick(\'w\')"/></td>\
-                        <td><input type="button" id="act_Look" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/look\')"/></td>\
-                        <td><input type="button" id="dir_E" class="movementButton shadow2 border333" onClick="movementButtonClick(\'e\')"/></td>\
-                    </tr>\
-                    <tr>\
-                        <td></td>\
-                        <td><input type="button" id="dir_S" class="movementButton shadow2 border333" onClick="movementButtonClick(\'s\')"/></td>\
-                        <td><input type="button" id="dir_D" class="movementButton shadow2 border333" onClick="movementButtonClick(\'d\')"/></td>\
-                    </tr>\
-                    <tr>\
-                        <td></td>\
-                        <td></td>\
-                        <td><input type="button" id="editMode" class="movementButton shadow2 border333" onClick="movementButtonClick(\'/editmode on\')" value="Edit" style="background-color: rgba(120, 0, 0, 0.3);"/></td>\
-                    </tr>'
-                );
+                $("#act_Attack").attr("onClick","movementButtonClick('/attack')");
+                $("#dir_N").attr("onClick","movementButtonClick('n')");
+                $("#dir_U").attr("onClick","movementButtonClick('u')");
+                $("#dir_W").attr("onClick","movementButtonClick('w')");
+                $("#act_Look").attr("onClick","movementButtonClick('/look')");
+                $("#dir_E").attr("onClick","movementButtonClick('e')");
+                $("#dir_S").attr("onClick","movementButtonClick('s')");
+                $("#dir_D").attr("onClick","movementButtonClick('d')");
+                $("#editMode").attr("onClick", "movementButtonClick('/editmode on')");
+                $("#editMode").attr("style", "background-color: rgba(120, 0, 0, 0.3);");
                 break;
         }
-        console.log(state);
     }
 };

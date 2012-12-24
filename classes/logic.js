@@ -82,8 +82,10 @@ var Logic = function() {
         var isExcited = false;
         var msgStart = " says, '";
         var msgStart_self = "You say, '";
-        if (what.substr(what.length - 1, 1) === '?' || what.substr(what.length - 2, 1) === '?') { isQuestion = true; }
-        if (what.substr(what.length - 1, 1) === '!' || what.substr(what.length - 2, 1) === '!') { isExcited = true; }
+        var lastChar = what.substr(what.length - 1, 1);
+        var lastChar2 = what.substr(what.length - 2, 1);
+        if (lastChar === '?' || lastChar2 === '?') { isQuestion = true; }
+        if (lastChar === '!' || lastChar2 === '!') { isExcited = true; }
         if (isQuestion) {
             msgStart = " asks, '";
             msgStart_self = "You ask, '";
@@ -358,6 +360,9 @@ var Logic = function() {
             case 'sit':
                 self.sit(player);
                 break;
+            case 'sleep':
+            	self.sleep(player);
+            	break;
             default:
                 return false;
         }
@@ -376,6 +381,14 @@ var Logic = function() {
         //Trigger sitting state.
         player.character.room.eachPlayerExcept(player, function(p){
             p.msg(player.character.htmlname + ' sits on the ground.');
+        });
+    }
+    
+    self.sleep = function(player) {
+        player.msg('You lie down and fall asleep. ZzzZzz..');
+        //Trigger sitting state.
+        player.character.room.eachPlayerExcept(player, function(p){
+            p.msg(player.character.htmlname + ' lies down and falls asleep. ZzzZzz..');
         });
     }
     /*  ## END: EMOTES ## */
