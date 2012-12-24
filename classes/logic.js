@@ -58,6 +58,7 @@ var Logic = function() {
     self.say = function(player, what) {
         if(what.length == 0) self.look(player);
         if(what.toLowerCase() == "lol") { self.lol(player); return; }
+        if(what == '^') { self.agree(player); return; }
         
         // Check arguments
         var args = what.split(' ');
@@ -363,6 +364,12 @@ var Logic = function() {
             case 'sleep':
             	self.sleep(player);
             	break;
+            case '^':
+                self.agree(player);
+                break;
+            case 'agree':
+                self.agree(player);
+                break;
             default:
                 return false;
         }
@@ -389,6 +396,13 @@ var Logic = function() {
         //Trigger sitting state.
         player.character.room.eachPlayerExcept(player, function(p){
             p.msg(player.character.htmlname + ' lies down and falls asleep. ZzzZzz..');
+        });
+    }
+
+    self.agree = function(player) {
+        player.msg('You agree.');
+        player.character.room.eachPlayerExcept(player, function(p){
+            p.msg(player.character.htmlname + ' agrees.');
         });
     }
     /*  ## END: EMOTES ## */
