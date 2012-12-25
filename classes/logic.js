@@ -240,24 +240,28 @@ var Logic = function() {
         var who = args.split(' ')[0];
         who = who.replace('.', ' ');
         var target = CHARACTERS.getCharacterByName(who, true);
+        if (target.player.character.name == player.character.name) { player.msg("You cannot attack yourself!"); return; }
 
         if (target)
         {
             if (target.player.character.stats.health > 0)
             {
+                var playerlevel = player.character.level;
+                var targetlevel = target.player.character.level;
                 var weaponmin = 4;
                 var weaponmax = 7;
-                var dmg = Math.floor(((Math.random() * (weaponmax - weaponmin + 1)) + weaponmin) + (player.character.stats.str / 2));
-                target.player.character.stats.health -= dmg;
-                player.character.room.eachPlayerExcept(player, function(p){
-                    player.character.room.eachPlayerExcept(player, function(p){
-                        p.msg(player.character.htmlname + " slaps " + target.htmlname + " for " + dmg + " damage!");
-                    });
-                });
-                player.msg("You slap " + target.htmlname + " for " + dmg + " damage!");
-                player.msg("Target's Remaining Health: " + target.player.character.stats.health);
-                target.player.msg(player.character.htmlname + " slaps you for " + dmg + " damage!");
-                target.player.msg("Remaining Health: " + target.player.character.stats.health);
+                var hit = 95 - (targetlevel - playerlevel) * 0.5;
+                if (Math.random() * (100 - 1 + 1) + 1 <= hit) {
+                    var dmg = Math.floor(((Math.random() * (weaponmax - weaponmin + 1)) + weaponmin) + (player.character.stats.str / 2));
+                    target.player.character.stats.health -= dmg;
+                    player.msg("You slap " + target.htmlname + " for " + dmg + " damage!");
+                    player.msg("Target's Remaining Health: " + target.player.character.stats.health);
+                    target.player.msg(player.character.htmlname + " slaps you for " + dmg + " damage!");
+                    target.player.msg("Remaining Health: " + target.player.character.stats.health);
+                } else {
+                    player.msg("Your slap misses " + target.htmlname + "!");
+                    target.player.msg(player.character.htmlname + "'s slap misses you!");
+                }
             } else { player.msg("Your target is dead!"); }
         }
         else { player.msg("You do not have a target!"); }

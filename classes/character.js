@@ -78,6 +78,7 @@ var Character = function(config) {
     self.channels;  // array of strings
     self.roomdesc;  // string
     self.stats;     // array (health, maxhealth, str, agi, sta, int)
+    self.level;
 
 
     // not saved
@@ -96,6 +97,7 @@ var Character = function(config) {
         self.channels = config.channels || [];
         self.roomdesc = config.roomdesc || 'is here.';
         self.stats = config.stats || {health: 100, maxhealth: 100, str: 30, agi: 30, sta: 30, int: 30};
+        self.level = config.level || 1;
     }
     
     self.stringify = function() {
@@ -108,7 +110,8 @@ var Character = function(config) {
             builder: self.builder,
             channels: self.channels,
             roomdesc: self.roomdesc,
-            stats: self.stats
+            stats: self.stats,
+            level: self.level
         }, null, '\t');    
     }
     
