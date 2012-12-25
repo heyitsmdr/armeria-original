@@ -1,4 +1,5 @@
 var GameEngine = new function() {
+    this.version = false;
     this.port = 2772;
     this.socket = false;
     this.fbinfo = false;
@@ -60,10 +61,16 @@ var GameEngine = new function() {
         // grab 2d context for map and load tileset
         GameEngine.mapctx = document.getElementById('gameMapCanvas').getContext('2d');
         GameEngine.mapctx.lineWidth = 3;
+        GameEngine.mapctx.lineJoin = 'round';
+        GameEngine.mapctx.strokeStyle = '#ffffff';
 
         GameEngine.maptileset = new Image();
         GameEngine.maptileset.src = "images/tiles/tileset.png";
         GameEngine.setupTileset();
+        // setup error reporting
+        window.onerror = function(msg, url, linenumber){
+            GameEngine.parseInput("<span style='color:#ff6d58'><b>Error: </b>" + msg + "<br><b>Location: </b>" + url + " (line " + linenumber + ")</span>");
+        }
         // focus input box
         $('#inputGameCommands').focus();
     }
@@ -172,9 +179,11 @@ var GameEngine = new function() {
             GameEngine.connected = true;
             GameEngine.parseInput("Connected! Sending login data..");
             GameEngine.socket.emit('login', {
+                version: GameEngine.version,
                 id: GameEngine.fbinfo.id,
                 name: GameEngine.fbinfo.name,
-                picture: GameEngine.fbinfo.picture
+                picture: GameEngine.fbinfo.picture,
+                token: GameEngine.fbaccesstoken
             });
         });
         this.socket.on('disconnect', function(){
@@ -305,7 +314,33 @@ var GameEngine = new function() {
                     if(founddef === false) founddef = 4; // default to grass
                     GameEngine.mapctx.drawImage(GameEngine.maptileset, GameEngine.mapts[founddef].sx, GameEngine.mapts[founddef].sy, 30, 30, left, top, 30, 30);
                 });
-                // TODO: border code here
+                /* REMOVED: Borders around map
+                 // is there a grid on the left?
+                 if(!GameEngine.mapGridAt(x - 1, y)) {
+                     // what about up top?
+                     if(!GameEngine.mapGridAt(x, y - 1)) {
+                         GameEngine.mapctx.beginPath();
+                         GameEngine.mapctx.moveTo(left, top + 30);
+                         GameEngine.mapctx.lineTo(left, top);
+                         GameEngine.mapctx.lineTo(left + 30, top);
+                         GameEngine.mapctx.lineJoin = 'round';
+                         GameEngine.mapctx.stroke();
+                     } else {
+                         GameEngine.mapctx.beginPath();
+                         GameEngine.mapctx.moveTo(left, top + 30);
+                         GameEngine.mapctx.lineTo(left, top);
+                         GameEngine.mapctx.stroke();
+                     }
+                     // what about the bottom?
+                     if(GameEngine.mapGridAt(x - 1, y + 1)) {
+                         GameEngine.mapctx.beginPath();
+                         GameEngine.mapctx.moveTo(left, top);
+                         GameEngine.mapctx.lineTo(left, top + 30);
+                         GameEngine.mapctx.lineTo(left - 30, top + 30);
+                         GameEngine.mapctx.lineJoin = 'round';
+                         GameEngine.mapctx.stroke();
+                     }
+                 } */
             }
         });
     }

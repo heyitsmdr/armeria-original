@@ -76,6 +76,9 @@ var Character = function(config) {
     self.picture;   // string
     self.builder;   // boolean
     self.channels;  // array of strings
+    self.roomdesc;  // string
+    self.stats;     // array (health, maxhealth, str, agi, sta, int)
+
 
     // not saved
     self.online = false;    // boolean
@@ -91,6 +94,8 @@ var Character = function(config) {
         self.picture = config.picture || '';
         self.builder = config.builder || false;
         self.channels = config.channels || [];
+        self.roomdesc = config.roomdesc || 'is here.';
+        self.stats = config.stats || {health: 100, maxhealth: 100, str: 30, agi: 30, sta: 30, int: 30};
     }
     
     self.stringify = function() {
@@ -101,7 +106,9 @@ var Character = function(config) {
             location: self.location,
             picture: self.picture,
             builder: self.builder,
-            channels: self.channels
+            channels: self.channels,
+            roomdesc: self.roomdesc,
+            stats: self.stats
         }, null, '\t');    
     }
     

@@ -18,6 +18,42 @@ var Logic = function() {
     }
     /* ## END: LOGIC HELPER FUNCTIONS ## */
 
+    /* ## LOGIN AUTHORIZATION ## */
+    self.login = function(player, data) {
+        // already logged in?
+        var logged_in = false;
+        PLAYERS.eachOnline(function(p){
+            if(p.character.id == data.id) {
+                player.msg("You're already logged in somewhere else. Disconnecting..");
+                p.msg("<span class='bred'>Warning!</span> Someone else attempted to log in to this character.");
+                player.socket.disconnect();
+                logged_in = true;
+            }
+        });
+        if(logged_in) return;
+        console.log('got a login from ' + data.name + ' (id: ' + data.id + ')');
+        player.character = CHARACTERS.getCharacterById(data.id);
+        if(!player.character) {
+            player.msg("<br>I've never seen you around here before. You must be new!");
+            var gamechar = CHARACTERS.create(data.id, data.name);
+            player.character = gamechar;
+            player.character.picture = data.picture;
+            player.character.player = player;
+            if(gamechar) {
+                player.msg('<br><b>Horray!</b> Your character has been created. You\'re now known to the world as ' + gamechar.htmlname + '.');
+                player.character.login();
+            } else {
+                player.msg('<br><b>Drat!</b> For some reason, your character could not be created. Try again later.');
+            }
+        } else {
+            player.character.picture = data.picture;
+            player.character.player = player;
+            player.msg("<br>Welcome back to Armeria, " + player.character.htmlname + "!");
+            player.character.login();
+        }
+    }
+    /* ## END: LOGIN AUTHORIZATION ## */
+
     /* ## BASIC ## */
     self.say = function(player, what) {
         if(what.length == 0) self.look(player);
@@ -169,8 +205,8 @@ var Logic = function() {
     self.look = function(player) {
         player.msg('<br/><span class="yellow">' + player.character.room.name + '</span><br/>' + player.character.room.desc);
         player.character.room.eachPlayerExcept(player, function(p){
-                player.msg(p.character.htmlname + ' is here.');
-            });
+                player.msg(p.character.htmlname + ' ' + p.character.roomdesc);
+        });
     }
     
     self.whisper = function(player, args) {
@@ -199,14 +235,21 @@ var Logic = function() {
         self.whisper(player, player.character.replyto + ' ' + what);
     }
 
-    self.attack = function(player, target) {
-        //Target needs to be checked against players in room, so players can use abbr.
-        if (target.length != 0)
+    self.attack = function(player, args) {
+        //TODO: Switch this to only use players in the room for target verification.
+        var who = args.split(' ')[0];
+        who = who.replace('.', ' ');
+        var target = CHARACTERS.getCharacterByName(who, true);
+
+        if (target)
         {
+            var weaponmin = 32;
+            var weaponmax = 40;
+            var dmg = Math.floor(((Math.random() * (weaponmax - weaponmin + 1)) + weaponmin) + (player.character.stats.str / 2));
             player.character.room.eachPlayerExcept(player, function(p){
-                p.msg(player.character.htmlname + " uses Attack Button O\' Doom on " + target);
+                p.msg(player.character.htmlname + " slaps " + target.htmlname + " for " + dmg + " damage!");
             });
-            player.msg("You use Attack Button O\' Doom on " + target);
+            player.msg("You slap " + target.htmlname + " for " + dmg + " damage!");
         }
         else { player.msg("You do not have a target!"); }
     }
