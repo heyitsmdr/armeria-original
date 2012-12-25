@@ -342,7 +342,7 @@ function SoundManager(smURL, smID) {
       complain(str('setupLate'));
     }
 
-    // TODO: defer: true?
+    //defer: true?
 
     assign(options);
 
@@ -1479,7 +1479,7 @@ function SoundManager(smURL, smID) {
       s.playState = 0;
       s.id3 = {};
 
-      // TODO: If switching from HTML5 -> flash (or vice versa), stop currently-playing audio.
+      //If switching from HTML5 -> flash (or vice versa), stop currently-playing audio.
 
       if (html5OK(instanceOptions)) {
 
@@ -1491,7 +1491,7 @@ function SoundManager(smURL, smID) {
 
           s._html5_canplay = false;
 
-          // TODO: review called_load / html5_canplay logic
+          //review called_load / html5_canplay logic
 
           // if url provided directly to load(), assign it here.
 
@@ -1501,7 +1501,7 @@ function SoundManager(smURL, smID) {
 
             s._a.src = instanceOptions.url;
 
-            // TODO: review / re-apply all relevant options (volume, loop, onposition etc.)
+            //review / re-apply all relevant options (volume, loop, onposition etc.)
 
             // reset position for new URL
             s.setPosition(0);
@@ -1799,7 +1799,7 @@ function SoundManager(smURL, smID) {
             sm2._wD(fN+'Beginning load of "'+ s.id+'" for from/to case');
 
             s.load({
-              // TODO: was _oncanplay. Sounds wrong.
+              //was _oncanplay. Sounds wrong.
               oncanplay: onready
             });
 
@@ -1986,7 +1986,7 @@ function SoundManager(smURL, smID) {
       if (!s.isHTML5) {
         flash._setAutoPlay(s.id, autoPlay);
         if (autoPlay) {
-          // only increment the instanceCount if the sound isn't loaded (TODO: verify RTMP)
+          // only increment the instanceCount if the sound isn't loaded (verify RTMP)
           if (!s.instanceCount && s.readyState === 1) {
             s.instanceCount++;
             sm2._wD('sound '+s.id+' incremented instance count to '+s.instanceCount);
@@ -2326,7 +2326,7 @@ function SoundManager(smURL, smID) {
 
     this.onPosition = function(nPosition, oMethod, oScope) {
 
-      // TODO: basic dupe checking?
+      // basic dupe checking?
 
       onPositionItems.push({
         position: parseInt(nPosition, 10),
@@ -2600,7 +2600,7 @@ function SoundManager(smURL, smID) {
 
       if (s._hasTimer || bForce) {
 
-        // TODO: May not need to track readyState (1 = loading)
+        //May not need to track readyState (1 = loading)
 
         if (s._a && (bForce || ((s.playState > 0 || s.readyState === 1) && !s.paused))) {
 
@@ -2614,7 +2614,7 @@ function SoundManager(smURL, smID) {
 
           }
 
-          // TODO: investigate why this goes wack if not set/re-set each time.
+          //investigate why this goes wack if not set/re-set each time.
           s.durationEstimate = s.duration;
 
           time = (s._a.currentTime * 1000 || 0);
@@ -3561,7 +3561,7 @@ function SoundManager(smURL, smID) {
 
     }),
 
-    // TODO: Reserved for potential use
+    //Reserved for potential use
     /*
     emptied: html5_event(function() {
 
@@ -3689,7 +3689,7 @@ function SoundManager(smURL, smID) {
 
         // if progress, likely not buffering
         s._onbufferchange(0);
-        // TODO: prevent calls with duplicate values.
+        //prevent calls with duplicate values.
         s._whileloading(loaded, total, s._get_html5_duration());
         if (loaded && total && loaded === total) {
           // in case "onload" doesn't fire (eg. gecko 1.9.2)
@@ -3823,7 +3823,7 @@ function SoundManager(smURL, smID) {
       html5Ext = new RegExp('\\.('+html5Ext.join('|')+')(\\?.*)?$','i');
     }
 
-    // TODO: Strip URL queries, etc.
+    //Strip URL queries, etc.
     fileExt = (url ? url.toLowerCase().match(html5Ext) : null);
 
     if (!fileExt || !fileExt.length) {
@@ -5465,7 +5465,7 @@ function SoundManager(smURL, smID) {
       sm2.setup({
         'useHTML5Audio': true,
         // make sure we aren't preferring flash, either
-        // TODO: preferFlash should not matter if flash is not installed. Currently, stuff breaks without the below tweak.
+        //preferFlash should not matter if flash is not installed. Currently, stuff breaks without the below tweak.
         'preferFlash': false
       });
     }
@@ -5477,7 +5477,7 @@ function SoundManager(smURL, smID) {
 
     if (!hasFlash && needsFlash) {
       _wDS('needFlash');
-      // TODO: Fatal here vs. timeout approach, etc.
+      //Fatal here vs. timeout approach, etc.
       // hack: fail sooner.
       sm2.setup({
         'flashLoadTimeout': 1

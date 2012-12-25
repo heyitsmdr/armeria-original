@@ -129,6 +129,9 @@ io.sockets.on('connection', function(socket){
             case 'gossip':
                 LOGIC.channel(player, 'gossip', cmd_args);
                 break;
+            case 'testheal':
+                LOGIC.testheal(player, cmd_args);
+                break;
             default:
                 if(!LOGIC.emote(player, cmd.toLowerCase()))
                     player.msg('That command is not recognized. Try again.');

@@ -243,13 +243,22 @@ var Logic = function() {
 
         if (target)
         {
-            var weaponmin = 32;
-            var weaponmax = 40;
-            var dmg = Math.floor(((Math.random() * (weaponmax - weaponmin + 1)) + weaponmin) + (player.character.stats.str / 2));
-            player.character.room.eachPlayerExcept(player, function(p){
-                p.msg(player.character.htmlname + " slaps " + target.htmlname + " for " + dmg + " damage!");
-            });
-            player.msg("You slap " + target.htmlname + " for " + dmg + " damage!");
+            if (target.player.character.stats.health > 0)
+            {
+                var weaponmin = 4;
+                var weaponmax = 7;
+                var dmg = Math.floor(((Math.random() * (weaponmax - weaponmin + 1)) + weaponmin) + (player.character.stats.str / 2));
+                target.player.character.stats.health -= dmg;
+                player.character.room.eachPlayerExcept(player, function(p){
+                    player.character.room.eachPlayerExcept(player, function(p){
+                        p.msg(player.character.htmlname + " slaps " + target.htmlname + " for " + dmg + " damage!");
+                    });
+                });
+                player.msg("You slap " + target.htmlname + " for " + dmg + " damage!");
+                player.msg("Target's Remaining Health: " + target.player.character.stats.health);
+                target.player.msg(player.character.htmlname + " slaps you for " + dmg + " damage!");
+                target.player.msg("Remaining Health: " + target.player.character.stats.health);
+            } else { player.msg("Your target is dead!"); }
         }
         else { player.msg("You do not have a target!"); }
     }
@@ -348,6 +357,21 @@ var Logic = function() {
             });
             player.msg("<span class='" + chan_color + "'>(" + channel.substr(0, 1).toUpperCase() + channel.substr(1) + ") You say, '" + args + "'</span>");
         }
+    }
+
+    self.testheal = function(player, args) {
+        //TODO: Switch this to only use players in the room for target verification.
+        var who = args.split(' ')[0];
+        who = who.replace('.', ' ');
+        var target = CHARACTERS.getCharacterByName(who, true);
+
+        if (target)
+        {
+            target.player.character.stats.health = target.player.character.stats.maxhealth;
+            player.msg(target.player.character.htmlname + " has been fully healed.");
+            target.player.msg(player.character.htmlname + " has fully healed you. Show your thanks with blowjobs and candy.")
+        }
+        else { player.msg("You do not have a target!"); }
     }
     /* ## END: BASIC ## */
 
