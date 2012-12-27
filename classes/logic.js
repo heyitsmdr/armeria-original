@@ -235,16 +235,21 @@ var Logic = function() {
         self.whisper(player, player.character.replyto + ' ' + what);
     }
 
-    self.attack = function(player, target) {
-        //Target needs to be checked against players in room, so players can use abbr.
-        if (target.length != 0)
+    self.attack = function(player, args) {
+        var who = args.split(' ')[0];
+        who = who.replace('.', ' ');
+        var target = CHARACTERS.getCharacterByName(who, true);
+
+        //TODO Check player and target location's match.
+        if (target)
         {
-            player.character.room.eachPlayerExcept(player, function(p){
-                p.msg(player.character.htmlname + " uses Attack Button O\' Doom on " + target);
-            });
-            player.msg("You use Attack Button O\' Doom on " + target);
+            if (target.player.character.name == player.character.name) { player.msg("You cannot attack yourself!"); return; }
+            if (target.player.character.stats.health > 0)
+            {
+                COMBAT.normalAttack(player, target);
+            } else { player.msg("Your target is dead!"); }
         }
-        else { player.msg("You do not have a target!"); }
+        else { player.msg("You do not have a target."); }
     }
 
     self.create = function(player, args) {
@@ -341,6 +346,26 @@ var Logic = function() {
             });
             player.msg("<span class='" + chan_color + "'>(" + channel.substr(0, 1).toUpperCase() + channel.substr(1) + ") You say, '" + args + "'</span>");
         }
+    }
+
+    self.cast = function(player, args) {
+        var what = args.split(' ')[0];
+        var who = args.split(' ').splice(1).join(' ');
+        who = who.replace('.', ' ');
+        var target = CHARACTERS.getCharacterByName(who, true);
+
+        //TODO Check player and target location's match.
+        if (target)
+        {
+            switch(what) {
+                case 'heal':
+                    COMBAT.heal(player, target);
+                    break;
+                default:
+                    player.msg("Invalid spell.");
+            }
+        }
+        else { player.msg("You do not have a target."); }
     }
     /* ## END: BASIC ## */
 

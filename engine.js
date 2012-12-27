@@ -7,6 +7,7 @@ var GameEngine = new function() {
     this.connected = false;
     this.mapdata = false;
     this.mapz = 0;
+	this.canvas = false;
     this.mapctx = false;
     this.maptileset = false; // Image
     this.mapts = false;      // Image Properties
@@ -59,11 +60,11 @@ var GameEngine = new function() {
         // setup soundmanager2
         soundManager.setup({url: '/libraries/soundmanager2/swf/', ontimeout: function(){ console.log('SoundManager timed out.'); }});
         // grab 2d context for map and load tileset
-        GameEngine.mapctx = document.getElementById('gameMapCanvas').getContext('2d');
+		GameEngine.canvas = document.getElementById('gameMapCanvas');
+        GameEngine.mapctx = GameEngine.canvas.getContext('2d');
         GameEngine.mapctx.lineWidth = 3;
         GameEngine.mapctx.lineJoin = 'round';
         GameEngine.mapctx.strokeStyle = '#ffffff';
-
         GameEngine.maptileset = new Image();
         GameEngine.maptileset.src = "images/tiles/tileset.png";
         GameEngine.setupTileset();
@@ -290,8 +291,7 @@ var GameEngine = new function() {
         GameEngine.mapoffsetx = offsetx;
         GameEngine.mapoffsety = offsety;
         // clear canvas
-        var canvas = document.getElementById('gameMapCanvas');
-        GameEngine.mapctx.clearRect(0, 0, canvas.width, canvas.height);
+        GameEngine.mapctx.clearRect(0, 0, GameEngine.canvas.width, GameEngine.canvas.height);
         // draw rooms
         mapdata.forEach(function(maproom){
             var x = parseInt(maproom.x);
@@ -315,32 +315,32 @@ var GameEngine = new function() {
                     GameEngine.mapctx.drawImage(GameEngine.maptileset, GameEngine.mapts[founddef].sx, GameEngine.mapts[founddef].sy, 30, 30, left, top, 30, 30);
                 });
                 /* REMOVED: Borders around map
-                // is there a grid on the left?
-                if(!GameEngine.mapGridAt(x - 1, y)) {
-                    // what about up top?
-                    if(!GameEngine.mapGridAt(x, y - 1)) {
-                        GameEngine.mapctx.beginPath();
-                        GameEngine.mapctx.moveTo(left, top + 30);
-                        GameEngine.mapctx.lineTo(left, top);
-                        GameEngine.mapctx.lineTo(left + 30, top);
-                        GameEngine.mapctx.lineJoin = 'round';
-                        GameEngine.mapctx.stroke();
-                    } else {
-                        GameEngine.mapctx.beginPath();
-                        GameEngine.mapctx.moveTo(left, top + 30);
-                        GameEngine.mapctx.lineTo(left, top);
-                        GameEngine.mapctx.stroke();
-                    }
-                    // what about the bottom?
-                    if(GameEngine.mapGridAt(x - 1, y + 1)) {
-                        GameEngine.mapctx.beginPath();
-                        GameEngine.mapctx.moveTo(left, top);
-                        GameEngine.mapctx.lineTo(left, top + 30);
-                        GameEngine.mapctx.lineTo(left - 30, top + 30);
-                        GameEngine.mapctx.lineJoin = 'round';
-                        GameEngine.mapctx.stroke();
-                    }
-                } */
+                 // is there a grid on the left?
+                 if(!GameEngine.mapGridAt(x - 1, y)) {
+                     // what about up top?
+                     if(!GameEngine.mapGridAt(x, y - 1)) {
+                         GameEngine.mapctx.beginPath();
+                         GameEngine.mapctx.moveTo(left, top + 30);
+                         GameEngine.mapctx.lineTo(left, top);
+                         GameEngine.mapctx.lineTo(left + 30, top);
+                         GameEngine.mapctx.lineJoin = 'round';
+                         GameEngine.mapctx.stroke();
+                     } else {
+                         GameEngine.mapctx.beginPath();
+                         GameEngine.mapctx.moveTo(left, top + 30);
+                         GameEngine.mapctx.lineTo(left, top);
+                         GameEngine.mapctx.stroke();
+                     }
+                     // what about the bottom?
+                     if(GameEngine.mapGridAt(x - 1, y + 1)) {
+                         GameEngine.mapctx.beginPath();
+                         GameEngine.mapctx.moveTo(left, top);
+                         GameEngine.mapctx.lineTo(left, top + 30);
+                         GameEngine.mapctx.lineTo(left - 30, top + 30);
+                         GameEngine.mapctx.lineJoin = 'round';
+                         GameEngine.mapctx.stroke();
+                     }
+                 } */
             }
         });
     }
