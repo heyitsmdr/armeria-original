@@ -9,6 +9,7 @@ var GameEngine = new function() {
     this.mapz = 0;
 	this.canvas = false;
     this.mapctx = false;
+    this.mapcv = false;
     this.maptileset = false; // Image
     this.mapts = false;      // Image Properties
     this.mapanimx = false;
@@ -60,8 +61,8 @@ var GameEngine = new function() {
         // setup soundmanager2
         soundManager.setup({url: '/libraries/soundmanager2/swf/', ontimeout: function(){ console.log('SoundManager timed out.'); }});
         // grab 2d context for map and load tileset
-		GameEngine.canvas = document.getElementById('gameMapCanvas');
-        GameEngine.mapctx = GameEngine.canvas.getContext('2d');
+        GameEngine.mapcv = document.getElementById('gameMapCanvas');
+        GameEngine.mapctx = GameEngine.mapcv.getContext('2d');
         GameEngine.mapctx.lineWidth = 3;
         GameEngine.mapctx.lineJoin = 'round';
         GameEngine.mapctx.strokeStyle = '#ffffff';
@@ -291,58 +292,31 @@ var GameEngine = new function() {
         GameEngine.mapoffsetx = offsetx;
         GameEngine.mapoffsety = offsety;
         // clear canvas
-        GameEngine.mapctx.clearRect(0, 0, GameEngine.canvas.width, GameEngine.canvas.height);
+        GameEngine.mapctx.clearRect(0, 0, GameEngine.mapcv.width, GameEngine.mapcv.height);
         // draw rooms
-        mapdata.forEach(function(maproom){
-            var x = parseInt(maproom.x);
-            var y = parseInt(maproom.y);
-            var z = parseInt(maproom.z);
-            if(z != GameEngine.mapz) return true; // skip
+        for(var i = 0; i < mapdata.length; i++) {
+            var x = parseInt(mapdata[i].x);
+            var y = parseInt(mapdata[i].y);
+            var z = parseInt(mapdata[i].z);
+            if(z != GameEngine.mapz) continue; // skip
             var left = (x * 30) + offsetx;
             var top = (y * 30) + offsety;
             // only render within viewport
             if(left > -30 && left < 255 && top > -30 && top < 255) {
-                var layers = maproom.terrain.split(' ');
-                layers.forEach(function(layer){
+                var layers = mapdata[i].terrain.split(' ');
+                for(var j = 0; j < layers.length; j++) {
                     var founddef = false;
-                    for(var x = 0; x < GameEngine.mapts.length; x++) {
-                        if(GameEngine.mapts[x].def.toLowerCase() == layer.toLowerCase()) {
-                            founddef = x;
+                    for(var k = 0; k < GameEngine.mapts.length; k++) {
+                        if(GameEngine.mapts[k].def.toLowerCase() == layers[j].toLowerCase()) {
+                            founddef = k;
                             break;
                         }
                     }
                     if(founddef === false) founddef = 4; // default to grass
                     GameEngine.mapctx.drawImage(GameEngine.maptileset, GameEngine.mapts[founddef].sx, GameEngine.mapts[founddef].sy, 30, 30, left, top, 30, 30);
-                });
-                /* REMOVED: Borders around map
-                 // is there a grid on the left?
-                 if(!GameEngine.mapGridAt(x - 1, y)) {
-                     // what about up top?
-                     if(!GameEngine.mapGridAt(x, y - 1)) {
-                         GameEngine.mapctx.beginPath();
-                         GameEngine.mapctx.moveTo(left, top + 30);
-                         GameEngine.mapctx.lineTo(left, top);
-                         GameEngine.mapctx.lineTo(left + 30, top);
-                         GameEngine.mapctx.lineJoin = 'round';
-                         GameEngine.mapctx.stroke();
-                     } else {
-                         GameEngine.mapctx.beginPath();
-                         GameEngine.mapctx.moveTo(left, top + 30);
-                         GameEngine.mapctx.lineTo(left, top);
-                         GameEngine.mapctx.stroke();
-                     }
-                     // what about the bottom?
-                     if(GameEngine.mapGridAt(x - 1, y + 1)) {
-                         GameEngine.mapctx.beginPath();
-                         GameEngine.mapctx.moveTo(left, top);
-                         GameEngine.mapctx.lineTo(left, top + 30);
-                         GameEngine.mapctx.lineTo(left - 30, top + 30);
-                         GameEngine.mapctx.lineJoin = 'round';
-                         GameEngine.mapctx.stroke();
-                     }
-                 } */
+                }
             }
-        });
+        }
     }
     
     this.mapGridAt = function(x, y) {
