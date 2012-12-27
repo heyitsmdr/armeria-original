@@ -68,17 +68,6 @@ var GameEngine = new function() {
         GameEngine.maptileset = new Image();
         GameEngine.maptileset.src = "images/tiles/tileset.png";
         GameEngine.setupTileset();
-		// setup animframe
-		window.requestAnimFrame = (function(){
-			return  window.requestAnimationFrame       ||
-					window.webkitRequestAnimationFrame ||
-					window.mozRequestAnimationFrame    ||
-					window.oRequestAnimationFrame      ||
-					window.msRequestAnimationFrame     ||
-					function(/* function */ callback, /* DOMElement */ element){
-						window.setTimeout(callback, 1000 / 60);
-					};
-		})();
         // setup error reporting
         window.onerror = function(msg, url, linenumber){
             GameEngine.parseInput("<span style='color:#ff6d58'><b>Error: </b>" + msg + "<br><b>Location: </b>" + url + " (line " + linenumber + ")</span>");
@@ -356,13 +345,6 @@ var GameEngine = new function() {
         });
     }
     
-	this.mapDraw = function(a, b, c) {
-		requestAnimFrame( GameEngine.mapDraw );
-		// are we moving?
-		
-		this.mapRender(a, b, c);
-	}
-
     this.mapGridAt = function(x, y) {
         if(!this.mapdata) return;
         for(var i = 0; i < this.mapdata.length; i++) {
