@@ -236,35 +236,20 @@ var Logic = function() {
     }
 
     self.attack = function(player, args) {
-        //TODO: Switch this to only use players in the room for target verification.
         var who = args.split(' ')[0];
         who = who.replace('.', ' ');
         var target = CHARACTERS.getCharacterByName(who, true);
-        if (target.player.character.name == player.character.name) { player.msg("You cannot attack yourself!"); return; }
 
+        //TODO Check player and target location's match.
         if (target)
         {
+            if (target.player.character.name == player.character.name) { player.msg("You cannot attack yourself!"); return; }
             if (target.player.character.stats.health > 0)
             {
-                var playerlevel = player.character.level;
-                var targetlevel = target.player.character.level;
-                var weaponmin = 4;
-                var weaponmax = 7;
-                var hit = 95 - (targetlevel - playerlevel) * 0.5;
-                if (Math.random() * (100 - 1 + 1) + 1 <= hit) {
-                    var dmg = Math.floor(((Math.random() * (weaponmax - weaponmin + 1)) + weaponmin) + (player.character.stats.str / 2));
-                    target.player.character.stats.health -= dmg;
-                    player.msg("You slap " + target.htmlname + " for " + dmg + " damage!");
-                    player.msg("Target's Remaining Health: " + target.player.character.stats.health);
-                    target.player.msg(player.character.htmlname + " slaps you for " + dmg + " damage!");
-                    target.player.msg("Remaining Health: " + target.player.character.stats.health);
-                } else {
-                    player.msg("Your slap misses " + target.htmlname + "!");
-                    target.player.msg(player.character.htmlname + "'s slap misses you!");
-                }
+                COMBAT.normalAttack(player, target);
             } else { player.msg("Your target is dead!"); }
         }
-        else { player.msg("You do not have a target!"); }
+        else { player.msg("You do not have a target."); }
     }
 
     self.create = function(player, args) {
@@ -363,19 +348,24 @@ var Logic = function() {
         }
     }
 
-    self.testheal = function(player, args) {
-        //TODO: Switch this to only use players in the room for target verification.
-        var who = args.split(' ')[0];
+    self.cast = function(player, args) {
+        var what = args.split(' ')[0];
+        var who = args.split(' ').splice(1).join(' ');
         who = who.replace('.', ' ');
         var target = CHARACTERS.getCharacterByName(who, true);
 
+        //TODO Check player and target location's match.
         if (target)
         {
-            target.player.character.stats.health = target.player.character.stats.maxhealth;
-            player.msg(target.player.character.htmlname + " has been fully healed.");
-            target.player.msg(player.character.htmlname + " has fully healed you. Show your thanks with blowjobs and candy.")
+            switch(what) {
+                case 'heal':
+                    COMBAT.heal(player, target);
+                    break;
+                default:
+                    player.msg("Invalid spell.");
+            }
         }
-        else { player.msg("You do not have a target!"); }
+        else { player.msg("You do not have a target."); }
     }
     /* ## END: BASIC ## */
 

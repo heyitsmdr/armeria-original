@@ -7,12 +7,14 @@ var Player        = require('./classes/player').Player;
 var Characters    = require('./classes/character').Characters;
 var Logic         = require('./classes/logic').Logic;
 var World         = require('./classes/world').World;
+var Combat        = require('./classes/combat').Combat;
 
 // globals
 PLAYERS    = new Players();
 CHARACTERS = new Characters();
 LOGIC      = new Logic();
 WORLD      = new World();
+COMBAT      = new Combat();
 
 // listen
 var port = parseInt(fs.readFileSync('./port').toString('utf8'));
@@ -129,8 +131,8 @@ io.sockets.on('connection', function(socket){
             case 'gossip':
                 LOGIC.channel(player, 'gossip', cmd_args);
                 break;
-            case 'testheal':
-                LOGIC.testheal(player, cmd_args);
+            case 'cast':
+                LOGIC.cast(player, cmd_args);
                 break;
             default:
                 if(!LOGIC.emote(player, cmd.toLowerCase()))
