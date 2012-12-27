@@ -11,8 +11,8 @@ var GameEngine = new function() {
     this.mapctx = false;
     this.maptileset = false; // Image
     this.mapts = false;      // Image Properties
-    this.mapdestoffsetx = false;
-    this.mapdestoffsety = false;
+    this.mapanimx = false;
+    this.mapanimy = false;
     this.mapoffsetx = 0;
     this.mapoffsety = 0;
 
@@ -79,8 +79,6 @@ var GameEngine = new function() {
 						window.setTimeout(callback, 1000 / 60);
 					};
 		})();
-        // start map drawing
-        GameEngine.mapDraw();
         // setup error reporting
         window.onerror = function(msg, url, linenumber){
             GameEngine.parseInput("<span style='color:#ff6d58'><b>Error: </b>" + msg + "<br><b>Location: </b>" + url + " (line " + linenumber + ")</span>");
@@ -327,34 +325,42 @@ var GameEngine = new function() {
                     if(founddef === false) founddef = 4; // default to grass
                     GameEngine.mapctx.drawImage(GameEngine.maptileset, GameEngine.mapts[founddef].sx, GameEngine.mapts[founddef].sy, 30, 30, left, top, 30, 30);
                 });
+                /* REMOVED: Borders around map
+                 // is there a grid on the left?
+                 if(!GameEngine.mapGridAt(x - 1, y)) {
+                     // what about up top?
+                     if(!GameEngine.mapGridAt(x, y - 1)) {
+                         GameEngine.mapctx.beginPath();
+                         GameEngine.mapctx.moveTo(left, top + 30);
+                         GameEngine.mapctx.lineTo(left, top);
+                         GameEngine.mapctx.lineTo(left + 30, top);
+                         GameEngine.mapctx.lineJoin = 'round';
+                         GameEngine.mapctx.stroke();
+                     } else {
+                         GameEngine.mapctx.beginPath();
+                         GameEngine.mapctx.moveTo(left, top + 30);
+                         GameEngine.mapctx.lineTo(left, top);
+                         GameEngine.mapctx.stroke();
+                     }
+                     // what about the bottom?
+                     if(GameEngine.mapGridAt(x - 1, y + 1)) {
+                         GameEngine.mapctx.beginPath();
+                         GameEngine.mapctx.moveTo(left, top);
+                         GameEngine.mapctx.lineTo(left, top + 30);
+                         GameEngine.mapctx.lineTo(left - 30, top + 30);
+                         GameEngine.mapctx.lineJoin = 'round';
+                         GameEngine.mapctx.stroke();
+                     }
+                 } */
             }
         });
     }
     
-	this.mapDraw = function() {
+	this.mapDraw = function(a, b, c) {
 		requestAnimFrame( GameEngine.mapDraw );
 		// are we moving?
-		if(GameEngine.mapdestoffsetx) {
-            if(GameEngine.mapdestoffsetx > GameEngine.mapoffsetx)
-                GameEngine.mapoffsetx++;
-            else if(GameEngine.mapdestoffsetx < GameEngine.mapoffsetx)
-                GameEngine.mapoffsetx--;
-            else
-                GameEngine.mapdestoffsetx = false;
-
-        }
-        if(GameEngine.mapdestoffsety) {
-            if(GameEngine.mapdestoffsety > GameEngine.mapoffsety)
-                GameEngine.mapoffsety++;
-            else if(GameEngine.mapdestoffsety < GameEngine.mapoffsety)
-                GameEngine.mapoffsety--;
-            else
-                GameEngine.mapdestoffsety = false;
-
-        }
-        // do we need to render?
-        if(GameEngine.mapdestoffsetx || GameEngine.mapdestoffsety)
-		    GameEngine.mapRender(false);
+		
+		this.mapRender(a, b, c);
 	}
 
     this.mapGridAt = function(x, y) {
@@ -379,8 +385,26 @@ var GameEngine = new function() {
         var offsety = 105 - (y * 30);
         // use animation?
         if(anim) {
-            GameEngine.mapdestoffsetx = offsetx;
-            GameEngine.mapdestoffsety = offsety;
+            GameEngine.mapanimx = setInterval(function(){
+                if(GameEngine.mapoffsetx != offsetx) {
+                    if(GameEngine.mapoffsetx < offsetx)
+                        GameEngine.mapRender(false, (GameEngine.mapoffsetx + 1), GameEngine.mapoffsety);
+                    else
+                        GameEngine.mapRender(false, (GameEngine.mapoffsetx - 1), GameEngine.mapoffsety);
+                } else {
+                    clearInterval(GameEngine.mapanimx);
+                }
+            }, 5);
+            GameEngine.mapanimy = setInterval(function(){
+                if(GameEngine.mapoffsety != offsety) {
+                    if(GameEngine.mapoffsety < offsety)
+                        GameEngine.mapRender(false, GameEngine.mapoffsetx, (GameEngine.mapoffsety + 1));
+                    else
+                        GameEngine.mapRender(false, GameEngine.mapoffsetx, (GameEngine.mapoffsety - 1));
+                } else {
+                    clearInterval(GameEngine.mapanimy);
+                }
+            }, 5);
         } else {
             GameEngine.mapRender(false, offsetx, offsety);
         }
