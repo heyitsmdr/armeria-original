@@ -17,7 +17,7 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 GameEngine.init(<?php echo file_get_contents('./port') ?>);
-                GameEngine.version = '<?php echo date("D M d Y h:i:s \G\M\TO (T)", filemtime(__FILE__)); ?>';
+                GameEngine.version = '<?php echo date("D M d Y H:i:s \G\M\TO (T)", filemtime(__FILE__)); ?>';
             });
         </script>
     </head>
