@@ -7,6 +7,7 @@ var GameEngine = new function() {
     this.connected = false;
     this.mapdata = false;
     this.mapz = 0;
+	this.canvas = false;
     this.mapctx = false;
     this.maptileset = false; // Image
     this.mapts = false;      // Image Properties
@@ -59,14 +60,25 @@ var GameEngine = new function() {
         // setup soundmanager2
         soundManager.setup({url: '/libraries/soundmanager2/swf/', ontimeout: function(){ console.log('SoundManager timed out.'); }});
         // grab 2d context for map and load tileset
-        GameEngine.mapctx = document.getElementById('gameMapCanvas').getContext('2d');
+		GameEngine.canvas = document.getElementById('gameMapCanvas');
+        GameEngine.mapctx = GameEngine.canvas.getContext('2d');
         GameEngine.mapctx.lineWidth = 3;
         GameEngine.mapctx.lineJoin = 'round';
         GameEngine.mapctx.strokeStyle = '#ffffff';
-
         GameEngine.maptileset = new Image();
         GameEngine.maptileset.src = "images/tiles/tileset.png";
         GameEngine.setupTileset();
+		// setup animframe
+		window.requestAnimFrame = (function(){
+			return  window.requestAnimationFrame       ||
+					window.webkitRequestAnimationFrame ||
+					window.mozRequestAnimationFrame    ||
+					window.oRequestAnimationFrame      ||
+					window.msRequestAnimationFrame     ||
+					function(/* function */ callback, /* DOMElement */ element){
+						window.setTimeout(callback, 1000 / 60);
+					};
+		})();
         // setup error reporting
         window.onerror = function(msg, url, linenumber){
             GameEngine.parseInput("<span style='color:#ff6d58'><b>Error: </b>" + msg + "<br><b>Location: </b>" + url + " (line " + linenumber + ")</span>");
@@ -290,8 +302,7 @@ var GameEngine = new function() {
         GameEngine.mapoffsetx = offsetx;
         GameEngine.mapoffsety = offsety;
         // clear canvas
-        var canvas = document.getElementById('gameMapCanvas');
-        GameEngine.mapctx.clearRect(0, 0, canvas.width, canvas.height);
+        GameEngine.mapctx.clearRect(0, 0, GameEngine.canvas.width, GameEngine.canvas.height);
         // draw rooms
         mapdata.forEach(function(maproom){
             var x = parseInt(maproom.x);
@@ -345,6 +356,13 @@ var GameEngine = new function() {
         });
     }
     
+	this.mapDraw = function(a, b, c) {
+		requestAnimFrame( GameEngine.mapDraw );
+		// are we moving?
+		
+		this.mapRender(a, b, c);
+	}
+
     this.mapGridAt = function(x, y) {
         if(!this.mapdata) return;
         for(var i = 0; i < this.mapdata.length; i++) {
