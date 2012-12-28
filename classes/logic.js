@@ -294,6 +294,13 @@ var Logic = function() {
         }
     }
 
+    self.channels = function(player) {
+        if(!player.character.channels.length)
+            player.msg("You're not connected to any channels. Womp!");
+        else
+            player.msg("You're connected to the following channels: " + player.character.channels.join(" "));
+    }
+
     self.channel = function(player, channel, args) {
         var chan_color;
         switch(channel) {
@@ -369,6 +376,21 @@ var Logic = function() {
             }
         }
         else { player.msg("You do not have a target."); }
+    }
+
+    self.library = function(player, args) {
+        if(!player.character.builder) { return self._invalidcmd(player); }
+        var creation = args.split(' ')[0];
+        var argsremaining = args.split(' ').splice(1).join(' ');
+        creation = matchcmd(creation, new Array(['additem', 'ai']));
+        switch(creation.toLowerCase()) {
+            case 'additem':
+                LIBRARY.addItem(player, argsremaining);
+                break;
+            default:
+                player.msg("Unknown library function.");
+        }
+
     }
     /* ## END: BASIC ## */
 

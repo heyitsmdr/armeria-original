@@ -98,6 +98,7 @@ var Character = function(config) {
         self.roomdesc = config.roomdesc || 'is here.';
         self.stats = config.stats || {health: 100, maxhealth: 100, mana: 100, maxmana: 100, energy: 100, str: 15, agi: 15, sta: 15, int: 15, wis: 15, armor: 25, eres: 25, mres: 25};
         self.level = config.level || 1;
+        console.log('[init] character loaded: ' + self.name);
     }
     
     self.stringify = function() {
