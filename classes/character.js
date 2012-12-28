@@ -78,7 +78,8 @@ var Character = function(config) {
     self.channels;  // array of strings
     self.roomdesc;  // string
     self.stats;     // array (health, maxhealth, str, agi, sta, int)
-    self.level;
+    self.level;     // int
+
 
     // not saved
     self.online = false;    // boolean
@@ -95,7 +96,7 @@ var Character = function(config) {
         self.builder = config.builder || false;
         self.channels = config.channels || [];
         self.roomdesc = config.roomdesc || 'is here.';
-        self.stats = config.stats || {health: 100, maxhealth: 100, str: 30, agi: 30, sta: 30, int: 30};
+        self.stats = config.stats || {health: 100, maxhealth: 100, mana: 100, maxmana: 100, energy: 100, str: 15, agi: 15, sta: 15, int: 15, wis: 15, armor: 25, eres: 25, mres: 25};
         self.level = config.level || 1;
     }
     
