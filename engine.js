@@ -71,7 +71,12 @@ var GameEngine = new function() {
         GameEngine.setupTileset();
         // setup error reporting
         window.onerror = function(msg, url, linenumber){
+            // let the user know
             GameEngine.parseInput("<span style='color:#ff6d58'><b>Error: </b>" + msg + "<br><b>Location: </b>" + url + " (line " + linenumber + ")</span>");
+            // send it to the server
+            $.post('error.php', {msg: msg, loc: url, line: linenumber, version: GameEngine.version}, function(){
+                GameEngine.parseInput("<span style='color:#ff6d58'>This error has been reported.</span>");
+            });
         }
         // focus input box
         $('#inputGameCommands').focus();
@@ -144,23 +149,28 @@ var GameEngine = new function() {
             GameEngine.parseInput("You're already connected.");
             return false;   
         }
-        FB.getLoginStatus(function(response) {
-            if (response.status === 'connected') {
-                // save access token
-                GameEngine.fbaccesstoken = response.authResponse.accessToken;
-                // authorized
-                GameEngine._getFBInfo(function(){
-                    GameEngine.parseInput("Facebook authorized.");
-                    GameEngine.connect();
-                });
-            } else if (response.status === 'not_authorized') {
-                // not_authorized
-                GameEngine._doFBLogin();
-            } else {
-                // not_logged_in
-                GameEngine._doFBLogin();
-            }
-        });
+        try {
+            FB.getLoginStatus(function(response) {
+                if (response.status === 'connected') {
+                    // save access token
+                    GameEngine.fbaccesstoken = response.authResponse.accessToken;
+                    // authorized
+                    GameEngine._getFBInfo(function(){
+                        GameEngine.parseInput("Facebook authorized.");
+                        GameEngine.connect();
+                    });
+                } else if (response.status === 'not_authorized') {
+                    // not_authorized
+                    GameEngine._doFBLogin();
+                } else {
+                    // not_logged_in
+                    GameEngine._doFBLogin();
+                }
+            });
+        }
+        catch(err) {
+            this.parseInput("Facebook API has not been initiated yet. Please try again in a few seconds.");
+        }
         return false;
     }
     
