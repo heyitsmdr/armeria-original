@@ -151,6 +151,8 @@ var Character = function(config) {
         self.player.update({minimap: 1, maploc: 1});
         // announce to room
         self.room.announceExcept(self.player, self.htmlname + " has just logged in to Armeria!");
+        // look around
+        LOGIC.look(self.player);
     }
     
     self.logout = function() {
