@@ -203,7 +203,50 @@ var Logic = function() {
             player.emit("sound", {sfx: 'walk_grass_1.mp3', volume: 75});
         }
     }
-    
+
+    self.teleport = function(player, args) {
+        if(!player.character.builder) { return self._invalidcmd(player); }
+        var first = getarg(args, 0, false);
+        var dest_map = player.character.location.map;
+        var dest_x = player.character.location.x;
+        var dest_y = player.character.location.y;
+        var dest_z = player.character.location.z;
+        // check if first argument is a player
+        var char = CHARACTERS.getCharacterByName(first, true, true);
+        if(char) {
+            dest_map = char.location.map;
+            dest_x = char.location.x;
+            dest_y = char.location.y;
+            dest_z = char.location.z;
+        } else {
+            player.msg("Teleport failed. Invalid destination.");
+            player.emit("mapnomove", false);
+            return;
+        }
+        // do the teleport
+        var old_room = player.character.room;
+        var new_room = WORLD.getMap(dest_map).getRoom(dest_x, dest_y, dest_z);
+        if(!new_room) {
+            player.msg("Teleport failed. Invalid destination.");
+            player.emit("mapnomove", false);
+            return;
+        }
+        // announce
+        if(player.character.switchRooms(dest_map, dest_x, dest_y, dest_z)) {
+            old_room.eachPlayerExcept(player, function(p){
+                p.msg(player.character.htmlname + ' disappeared in a flash of light!');
+                p.emit("sound", {sfx: 'teleport.mp3', volume: 75});
+            });
+            new_room.eachPlayerExcept(player, function(p){
+                p.msg(player.character.htmlname + ' appeared in a puff of smoke!');
+                p.emit("sound", {sfx: 'teleport.mp3', volume: 75});
+            });
+            player.msg('<br>You teleported to a new location. Woosh!');
+            self.look(player);
+            player.emit("sound", {sfx: 'teleport.mp3', volume: 75});
+        }
+    }
+
     self.look = function(player) {
         player.msg('<br/><span class="yellow">' + player.character.room.name + '</span><br/>' + player.character.room.desc);
         player.character.room.eachPlayerExcept(player, function(p){

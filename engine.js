@@ -234,8 +234,8 @@ var GameEngine = new function() {
         this.socket.on('maplocnoanim', function(data){
             GameEngine.mapPosition(data.x, data.y, data.z, false);
         });
-        this.socket.on('mapnomove', function(){
-            GameEngine.parseInput("Alas, you cannot go that way.");
+        this.socket.on('mapnomove', function(data){
+            if(data!==false) GameEngine.parseInput("Alas, you cannot go that way.");
             $('#gameMapCanvas').effect("shake", { times:3 , distance: 1}, 250);
         });
         this.socket.on('sound', function(data){
