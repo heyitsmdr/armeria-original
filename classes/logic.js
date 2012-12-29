@@ -39,6 +39,7 @@ var Logic = function() {
             player.character = gamechar;
             player.character.picture = data.picture;
             player.character.player = player;
+            player.character.nickname = data.nick;
             if(gamechar) {
                 player.msg('<br><b>Horray!</b> Your character has been created. You\'re now known to the world as ' + gamechar.htmlname + '.');
                 player.character.login();
@@ -48,6 +49,7 @@ var Logic = function() {
         } else {
             player.character.picture = data.picture;
             player.character.player = player;
+            player.character.nickname = data.nick;
             player.msg("<br>Welcome back to Armeria, " + player.character.htmlname + "!");
             player.character.login();
         }
@@ -210,12 +212,10 @@ var Logic = function() {
     }
     
     self.whisper = function(player, args) {
-        var who = args.split(' ')[0];
-        var what = args.split(' ').splice(1).join(' ');
+        var who = getarg(args, 0, false);
+        var what = getarg(args, 1, true);
         
-        who = who.replace('.', ' ');
-        
-        var target = CHARACTERS.getCharacterByName(who, true);
+        var target = CHARACTERS.getCharacterByName(who, true, true);
         if(target) {
             player.msg("<span class='purple'>You whisper to " + target.htmlname + ", '" + what + "'</span>");
             target.player.msg("<span class='purple'>" + player.character.htmlname + " whispers, '" + what + "'</span>");

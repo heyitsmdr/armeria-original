@@ -29,6 +29,10 @@ var Library = function(){
         return false;
     };
 
+    self.save = function() {
+        
+    }
+
     self.addItem = function(player, parent) {
 
     }

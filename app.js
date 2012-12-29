@@ -47,6 +47,40 @@ matchcmd = function(cmd, cmdlist) {
     return cmd_real;
 }
 
+// haystack = input string
+// needle = argument position (starting with 0)
+// continuous = boolean to return remaining args
+getarg = function(haystack, needle, continuous) {
+    var sections = haystack.split(' ');
+    var args = new Array();
+    var temp = '';
+    for(var i = 0; i < sections.length; i++) {
+        if(temp.length) {
+            if(sections[i].substr(sections[i].length - 1, 1) == '"') {
+                // stop recording and add to arguments array
+                temp += sections[i].substr(0, sections[i].length - 1);
+                args.push(temp);
+                temp = '';
+            } else {
+                temp += sections[i] + ' ';
+            }
+        } else if(sections[i].substr(0, 1) == '"') {
+            if(sections[i].substr(sections[i].length - 1, 1) == '"')
+                args.push(sections[i].substr(1, sections[i].length - 1));
+            else
+                temp += sections[i].substr(1) + ' ';
+        } else {
+            args.push(sections[i]);
+        }
+    }
+    if((needle + 1) > args.length) { return false; }
+    if(!continuous) {
+        return args[needle];
+    } else {
+        return args.splice(needle, (args.length - needle)).join(' ');
+    }
+}
+
 io.sockets.on('connection', function(socket){
     var player = new Player(socket);
     PLAYERS.addPlayer(player);

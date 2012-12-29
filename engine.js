@@ -202,7 +202,8 @@ var GameEngine = new function() {
                 id: GameEngine.fbinfo.id,
                 name: GameEngine.fbinfo.name,
                 picture: GameEngine.fbinfo.picture,
-                token: GameEngine.fbaccesstoken
+                token: GameEngine.fbaccesstoken,
+                nick: GameEngine.fbinfo.username
             });
         });
         this.socket.on('disconnect', function(){

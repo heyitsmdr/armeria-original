@@ -46,9 +46,9 @@ var Characters = function() {
         return false;
     }
     
-    self.getCharacterByName = function(name, isonline) {
+    self.getCharacterByName = function(name, isonline, checknicks) {
         for(var i = 0; i < self.objects.length; i++) {
-            if(self.objects[i].name.toLowerCase() == name.toLowerCase()) {
+            if((self.objects[i].name.toLowerCase() == name.toLowerCase()) || (checknicks === true && self.objects[i].nickname.toLowerCase() == name.toLowerCase())) {
                 if(isonline) {
                     if(self.objects[i].online)
                         return self.objects[i];
@@ -80,13 +80,13 @@ var Character = function(config) {
     self.stats;     // array (health, maxhealth, str, agi, sta, int)
     self.level;     // int
 
-
     // not saved
     self.online = false;    // boolean
     self.player;            // object (Player)
     self.room;              // object (Room)
     self.replyto;           // string
-    
+    self.nickname = '';     // string
+
     self.init = function(config) {
         self.id = config.id || 0;
         self.name = config.name || 'Someone';
