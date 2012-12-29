@@ -1,3 +1,10 @@
+/*
+    Armeria Game Engine
+    Created by Mike Du Russel & Josh Schmille
+    Copyright 2012 - 2013
+    Questions? info@playarmeria.com
+*/
+
 var GameEngine = new function() {
     this.version = false;
     this.port = 2772;
@@ -7,7 +14,6 @@ var GameEngine = new function() {
     this.connected = false;
     this.mapdata = false;
     this.mapz = 0;
-	this.canvas = false;
     this.mapctx = false;
     this.mapcv = false;
     this.maptileset = false; // Image
@@ -16,6 +22,7 @@ var GameEngine = new function() {
     this.mapanimy = false;
     this.mapoffsetx = 0;
     this.mapoffsety = 0;
+    this.server = false;
 
     this.init = function(port) {
         // set port
@@ -195,7 +202,8 @@ var GameEngine = new function() {
                 id: GameEngine.fbinfo.id,
                 name: GameEngine.fbinfo.name,
                 picture: GameEngine.fbinfo.picture,
-                token: GameEngine.fbaccesstoken
+                token: GameEngine.fbaccesstoken,
+                nick: GameEngine.fbinfo.username
             });
         });
         this.socket.on('disconnect', function(){
@@ -226,8 +234,8 @@ var GameEngine = new function() {
         this.socket.on('maplocnoanim', function(data){
             GameEngine.mapPosition(data.x, data.y, data.z, false);
         });
-        this.socket.on('mapnomove', function(){
-            GameEngine.parseInput("Alas, you cannot go that way.");
+        this.socket.on('mapnomove', function(data){
+            if(data!==false) GameEngine.parseInput("Alas, you cannot go that way.");
             $('#gameMapCanvas').effect("shake", { times:3 , distance: 1}, 250);
         });
         this.socket.on('sound', function(data){
@@ -406,3 +414,40 @@ var GameEngine = new function() {
         }
     }
 };
+
+var Server = new function(){
+    this.restart = function() {
+        // TODO: In the future, hide this and add a password to it
+        console.log('Sending a restart signal to server..');
+        $.get('servercontroller.php', {action:'serverrestart'}, function(data){
+            console.log(data);
+        });
+    }
+    this.cmd = function(command, file) {
+        $.get('servercontroller.php', {action:command, fn: file}, function(data){
+            console.log(data);
+        });
+    }
+    this.help = function() {
+        console.log('You can use the following commands:');
+        console.log('   pullbb              pull changes from bitbucket');
+        console.log('   pushbb              push changes to bitbucket');
+        console.log('   status              view the git status report');
+        console.log('   reset               (warning) reset the repo to HEAD');
+        console.log('   resetfile           (warning) reset file to HEAD (file passed as second argument)');
+        console.log('   mergelive           pull changes in from origin/master (live)');
+        console.log('   pushlive            push changes to origin/master (same thing as a pull request)');
+        console.log('   commit              commit changes');
+        console.log('   add                 add a file to repo');
+        console.log('   remove              remove a file from repo');
+        console.log('   serverstart         start the repo server');
+        console.log('   serverstop          stop the repo server');
+        console.log('   serverrestart       restart the repo server');
+        console.log('   serverinstance      show the server instance (ps aux)');
+        console.log('   serveroutput        show the server log');
+        console.log('   serveroutputdelete  delete the server log');
+        console.log('Use GameEngine.server.cmd("command", "arguments") to run the commands above.');
+    }
+};
+
+GameEngine.server = Server;

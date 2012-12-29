@@ -46,9 +46,9 @@ var Characters = function() {
         return false;
     }
     
-    self.getCharacterByName = function(name, isonline) {
+    self.getCharacterByName = function(name, isonline, checknicks) {
         for(var i = 0; i < self.objects.length; i++) {
-            if(self.objects[i].name.toLowerCase() == name.toLowerCase()) {
+            if((self.objects[i].name.toLowerCase() == name.toLowerCase()) || (checknicks === true && self.objects[i].nickname.toLowerCase() == name.toLowerCase())) {
                 if(isonline) {
                     if(self.objects[i].online)
                         return self.objects[i];
@@ -80,13 +80,13 @@ var Character = function(config) {
     self.stats;     // array (health, maxhealth, str, agi, sta, int)
     self.level;     // int
 
-
     // not saved
     self.online = false;    // boolean
     self.player;            // object (Player)
     self.room;              // object (Room)
     self.replyto;           // string
-    
+    self.nickname = '';     // string
+
     self.init = function(config) {
         self.id = config.id || 0;
         self.name = config.name || 'Someone';
@@ -98,6 +98,7 @@ var Character = function(config) {
         self.roomdesc = config.roomdesc || 'is here.';
         self.stats = config.stats || {health: 100, maxhealth: 100, mana: 100, maxmana: 100, energy: 100, str: 15, agi: 15, sta: 15, int: 15, wis: 15, armor: 25, eres: 25, mres: 25};
         self.level = config.level || 1;
+        console.log('[init] character loaded: ' + self.name);
     }
     
     self.stringify = function() {
@@ -150,6 +151,8 @@ var Character = function(config) {
         self.player.update({minimap: 1, maploc: 1});
         // announce to room
         self.room.announceExcept(self.player, self.htmlname + " has just logged in to Armeria!");
+        // look around
+        LOGIC.look(self.player);
     }
     
     self.logout = function() {

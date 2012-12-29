@@ -39,6 +39,7 @@ var Logic = function() {
             player.character = gamechar;
             player.character.picture = data.picture;
             player.character.player = player;
+            player.character.nickname = data.nick;
             if(gamechar) {
                 player.msg('<br><b>Horray!</b> Your character has been created. You\'re now known to the world as ' + gamechar.htmlname + '.');
                 player.character.login();
@@ -48,6 +49,7 @@ var Logic = function() {
         } else {
             player.character.picture = data.picture;
             player.character.player = player;
+            player.character.nickname = data.nick;
             player.msg("<br>Welcome back to Armeria, " + player.character.htmlname + "!");
             player.character.login();
         }
@@ -201,21 +203,80 @@ var Logic = function() {
             player.emit("sound", {sfx: 'walk_grass_1.mp3', volume: 75});
         }
     }
-    
+
+    self.teleport = function(player, args) {
+        if(!player.character.builder) { return self._invalidcmd(player); }
+        var first = getarg(args, 0, false);
+        var second = getarg(args, 1, false);
+        var third = getarg(args, 2, false);
+        var fourth = getarg(args, 3, false);
+        var dest_map = player.character.location.map;
+        var dest_x = player.character.location.x;
+        var dest_y = player.character.location.y;
+        var dest_z = player.character.location.z;
+        // check if first argument is a player
+        var char = CHARACTERS.getCharacterByName(first, true, true);
+        if(char) {
+            dest_map = char.location.map;
+            dest_x = char.location.x;
+            dest_y = char.location.y;
+            dest_z = char.location.z;
+        } else if (first && second && third === false && fourth == false) {
+            dest_x = first;
+            dest_y = second;
+        } else if (first && second && third && fourth == false) {
+            dest_x = first;
+            dest_y = second;
+            dest_z = third;
+        } else if (first && second && third && fourth) {
+            dest_map = first;
+            dest_x = second;
+            dest_y = third;
+            dest_z = fourth;
+        } else{
+            player.msg("Teleport failed. Invalid destination.");
+            player.emit("mapnomove", false);
+            return;
+        }
+        // do the teleport
+        var old_room = player.character.room;
+        var new_room = WORLD.getMap(dest_map).getRoom(dest_x, dest_y, dest_z);
+        if(!new_room) {
+            player.msg("Teleport failed. Invalid destination.");
+            player.emit("mapnomove", false);
+            return;
+        }
+        // announce
+        if(player.character.switchRooms(dest_map, dest_x, dest_y, dest_z)) {
+            old_room.eachPlayerExcept(player, function(p){
+                p.msg(player.character.htmlname + ' disappeared in a flash of light!');
+                p.emit("sound", {sfx: 'teleport.mp3', volume: 75});
+            });
+            new_room.eachPlayerExcept(player, function(p){
+                p.msg(player.character.htmlname + ' appeared in a puff of smoke!');
+                p.emit("sound", {sfx: 'teleport.mp3', volume: 75});
+            });
+            player.msg('<br>You teleported to a new location. Woosh!');
+            self.look(player);
+            player.emit("sound", {sfx: 'teleport.mp3', volume: 75});
+        }
+    }
+
     self.look = function(player) {
-        player.msg('<br/><span class="yellow">' + player.character.room.name + '</span><br/>' + player.character.room.desc);
+        if(player.character.builder)
+            player.msg('<br/><span class="yellow">' + player.character.room.name + '</span> (' + player.character.location.x + ',' + player.character.location.y + ',' + player.character.location.z + ')<br/>' + player.character.room.desc);
+        else
+            player.msg('<br/><span class="yellow">' + player.character.room.name + '</span><br/>' + player.character.room.desc);
         player.character.room.eachPlayerExcept(player, function(p){
                 player.msg(p.character.htmlname + ' ' + p.character.roomdesc);
         });
     }
     
     self.whisper = function(player, args) {
-        var who = args.split(' ')[0];
-        var what = args.split(' ').splice(1).join(' ');
+        var who = getarg(args, 0, false);
+        var what = getarg(args, 1, true);
         
-        who = who.replace('.', ' ');
-        
-        var target = CHARACTERS.getCharacterByName(who, true);
+        var target = CHARACTERS.getCharacterByName(who, true, true);
         if(target) {
             player.msg("<span class='purple'>You whisper to " + target.htmlname + ", '" + what + "'</span>");
             target.player.msg("<span class='purple'>" + player.character.htmlname + " whispers, '" + what + "'</span>");
@@ -294,6 +355,13 @@ var Logic = function() {
         }
     }
 
+    self.channels = function(player) {
+        if(!player.character.channels.length)
+            player.msg("You're not connected to any channels. Womp!");
+        else
+            player.msg("You're connected to the following channels: " + player.character.channels.join(" "));
+    }
+
     self.channel = function(player, channel, args) {
         var chan_color;
         switch(channel) {
@@ -369,6 +437,21 @@ var Logic = function() {
             }
         }
         else { player.msg("You do not have a target."); }
+    }
+
+    self.library = function(player, args) {
+        if(!player.character.builder) { return self._invalidcmd(player); }
+        var creation = args.split(' ')[0];
+        var argsremaining = args.split(' ').splice(1).join(' ');
+        creation = matchcmd(creation, new Array(['additem', 'ai']));
+        switch(creation.toLowerCase()) {
+            case 'additem':
+                LIBRARY.addItem(player, argsremaining);
+                break;
+            default:
+                player.msg("Unknown library function.");
+        }
+
     }
     /* ## END: BASIC ## */
 

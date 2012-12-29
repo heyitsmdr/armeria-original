@@ -8,13 +8,18 @@ var Characters    = require('./classes/character').Characters;
 var Logic         = require('./classes/logic').Logic;
 var World         = require('./classes/world').World;
 var Combat        = require('./classes/combat').Combat;
+var Items         = require('./classes/item').Items;
+var Library       = require('./classes/library').Library;
 
 // globals
 PLAYERS    = new Players();
 CHARACTERS = new Characters();
 LOGIC      = new Logic();
 WORLD      = new World();
-COMBAT      = new Combat();
+COMBAT     = new Combat();
+ITEMS      = new Items(function(){
+LIBRARY    = new Library();
+});
 
 // listen
 var port = parseInt(fs.readFileSync('./port').toString('utf8'));
@@ -40,6 +45,40 @@ matchcmd = function(cmd, cmdlist) {
     }
 
     return cmd_real;
+}
+
+// haystack = input string
+// needle = argument position (starting with 0)
+// continuous = boolean to return remaining args
+getarg = function(haystack, needle, continuous) {
+    var sections = haystack.split(' ');
+    var args = new Array();
+    var temp = '';
+    for(var i = 0; i < sections.length; i++) {
+        if(temp.length) {
+            if(sections[i].substr(sections[i].length - 1, 1) == '"') {
+                // stop recording and add to arguments array
+                temp += sections[i].substr(0, sections[i].length - 1);
+                args.push(temp);
+                temp = '';
+            } else {
+                temp += sections[i] + ' ';
+            }
+        } else if(sections[i].substr(0, 1) == '"') {
+            if(sections[i].substr(sections[i].length - 1, 1) == '"')
+                args.push(sections[i].substr(1, sections[i].length - 1));
+            else
+                temp += sections[i].substr(1) + ' ';
+        } else {
+            args.push(sections[i]);
+        }
+    }
+    if((needle + 1) > args.length) { return false; }
+    if(!continuous) {
+        return args[needle];
+    } else {
+        return args.splice(needle, (args.length - needle)).join(' ');
+    }
 }
 
 io.sockets.on('connection', function(socket){
@@ -90,7 +129,7 @@ io.sockets.on('connection', function(socket){
     socket.on('cmd', function(data){
         // get base command
         var sections = data.cmd.split(' ');
-        var cmd = matchcmd(sections[0], new Array('say', 'move', ['look', 'examine'], 'me', 'whisper', 'reply', 'attack', 'create', 'destroy', 'modify', 'builder', 'gossip', 'cast'));
+        var cmd = matchcmd(sections[0], new Array('say', 'move', ['look', 'examine'], 'me', 'whisper', 'reply', 'attack', 'create', 'destroy', 'modify', 'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp']));
         sections.shift();
         var cmd_args = sections.join(' ');
         
@@ -125,6 +164,9 @@ io.sockets.on('connection', function(socket){
             case 'modify':
                 LOGIC.modify(player, cmd_args);
                 break;
+            case 'channels':
+                LOGIC.channels(player);
+                break;
             case 'builder':
                 LOGIC.channel(player, 'builder', cmd_args);
                 break;
@@ -133,6 +175,12 @@ io.sockets.on('connection', function(socket){
                 break;
             case 'cast':
                 LOGIC.cast(player, cmd_args);
+                break;
+            case 'library':
+                LOGIC.library(player, cmd_args);
+                break;
+            case 'teleport':
+                LOGIC.teleport(player, cmd_args);
                 break;
             default:
                 if(!LOGIC.emote(player, cmd.toLowerCase()))
