@@ -207,6 +207,9 @@ var Logic = function() {
     self.teleport = function(player, args) {
         if(!player.character.builder) { return self._invalidcmd(player); }
         var first = getarg(args, 0, false);
+        var second = getarg(args, 1, false);
+        var third = getarg(args, 2, false);
+        var fourth = getarg(args, 3, false);
         var dest_map = player.character.location.map;
         var dest_x = player.character.location.x;
         var dest_y = player.character.location.y;
@@ -218,7 +221,19 @@ var Logic = function() {
             dest_x = char.location.x;
             dest_y = char.location.y;
             dest_z = char.location.z;
-        } else {
+        } else if (first && second && third === false && fourth == false) {
+            dest_x = first;
+            dest_y = second;
+        } else if (first && second && third && fourth == false) {
+            dest_x = first;
+            dest_y = second;
+            dest_z = third;
+        } else if (first && second && third && fourth) {
+            dest_map = first;
+            dest_x = second;
+            dest_y = third;
+            dest_z = fourth;
+        } else{
             player.msg("Teleport failed. Invalid destination.");
             player.emit("mapnomove", false);
             return;
@@ -248,7 +263,10 @@ var Logic = function() {
     }
 
     self.look = function(player) {
-        player.msg('<br/><span class="yellow">' + player.character.room.name + '</span><br/>' + player.character.room.desc);
+        if(player.character.builder)
+            player.msg('<br/><span class="yellow">' + player.character.room.name + '</span> (' + player.character.location.x + ',' + player.character.location.y + ',' + player.character.location.z + ')<br/>' + player.character.room.desc);
+        else
+            player.msg('<br/><span class="yellow">' + player.character.room.name + '</span><br/>' + player.character.room.desc);
         player.character.room.eachPlayerExcept(player, function(p){
                 player.msg(p.character.htmlname + ' ' + p.character.roomdesc);
         });
