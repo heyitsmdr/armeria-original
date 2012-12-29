@@ -109,10 +109,25 @@ var GameEngine = new function() {
             {def: 'grassTB', sx: 4, sy: 1},
             {def: 'grassTRB', sx: 5, sy: 1},
             {def: 'grassRBL', sx: 3, sy: 2},
+            {def: 'waterTL', sx: 0, sy: 3},
+            {def: 'waterT', sx: 1, sy: 3},
+            {def: 'waterTR', sx: 2, sy: 3},
+            {def: 'waterL', sx: 0, sy: 4},
+            {def: 'water', sx: 1, sy: 4},
+            {def: 'waterR', sx: 2, sy: 4},
+            {def: 'waterBL', sx: 0, sy: 5},
+            {def: 'waterB', sx: 1, sy: 5},
+            {def: 'waterRB', sx: 2, sy: 5},
+            {def: 'waterTRBL', sx: 3, sy: 3},
+            {def: 'waterTRL', sx: 4, sy: 3},
+            {def: 'waterRL', sx: 5, sy: 3},
+            {def: 'waterTBL', sx: 3, sy: 4},
+            {def: 'waterTB', sx: 4, sy: 4},
+            {def: 'waterTRB', sx: 5, sy: 4},
+            {def: 'waterRBL', sx: 3, sy: 5},
             {def: 'dirt', sx: 6, sy: 0},
-            {def: 'water', sx: 7, sy: 0},
-            {def: 'stairsD', sx: 8, sy: 0},
-            {def: 'stairsUD', sx: 9, sy: 0}
+            {def: 'stone', sx: 7, sy: 0},
+            {def: 'wp', sx: 0, sy: 19}
         ];
 
         // Calculate Real sx and sy
