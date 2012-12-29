@@ -398,7 +398,17 @@ var GameEngine = new function() {
             GameEngine.mapRender(false, offsetx, offsety);
         }
     }
-    
+
+    this.mapLightRadius = function(rad, color) {
+        GameEngine.mapctx.beginPath();
+        var rad = GameEngine.mapctx.createRadialGradient(120, 120, 1, 120, 120, 240);
+        rad.addColorStop(0, 'rgba(' + color + ',0)');
+        rad.addColorStop(rad, 'rgba(' + color + ',1)');
+        GameEngine.mapctx.fillStyle = rad;
+        GameEngine.mapctx.arc(120, 120, 240, 0, Math.PI*2, false);
+        GameEngine.mapctx.fill();
+    }
+
     this.editModeToggle = function(state) {
         //TODO: Need to check if user is builder or not. Will also hide the edit button from the beginning if they are not.
         switch(state) {
