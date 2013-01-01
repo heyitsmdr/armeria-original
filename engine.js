@@ -126,7 +126,22 @@ var GameEngine = new function() {
             {def: 'waterTRB', sx: 5, sy: 4},
             {def: 'waterRBL', sx: 3, sy: 5},
             {def: 'dirt', sx: 6, sy: 0},
-            {def: 'stone', sx: 7, sy: 0},
+            {def: 'stoneTL', sx: 0, sy: 6},
+            {def: 'stoneT', sx: 1, sy: 6},
+            {def: 'stoneTR', sx: 2, sy: 6},
+            {def: 'stoneL', sx: 0, sy: 7},
+            {def: 'stone', sx: 1, sy: 7},
+            {def: 'stoneR', sx: 2, sy: 7},
+            {def: 'stoneBL', sx: 0, sy: 8},
+            {def: 'stoneB', sx: 1, sy: 8},
+            {def: 'stoneRB', sx: 2, sy: 8},
+            {def: 'stoneTRBL', sx: 3, sy: 6},
+            {def: 'stoneTRL', sx: 4, sy: 6},
+            {def: 'stoneRL', sx: 5, sy: 6},
+            {def: 'stoneTBL', sx: 3, sy: 7},
+            {def: 'stoneTB', sx: 4, sy: 7},
+            {def: 'stoneTRB', sx: 5, sy: 7},
+            {def: 'stoneRBL', sx: 3, sy: 8},
             {def: 'wp', sx: 0, sy: 19}
         ];
 
