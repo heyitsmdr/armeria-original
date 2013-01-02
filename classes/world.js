@@ -88,7 +88,7 @@ var Map = function(config, fn) {
     self.getMinimapData = function() {
         var roomdata = [];
          self.rooms.forEach(function(r){
-             roomdata.push({x: r.x, y: r.y, z: r.z, terrain: r.type});
+             roomdata.push({x: r.x, y: r.y, z: r.z, terrain: r.type, env: r.environment});
          });
          return roomdata;
     };
@@ -215,7 +215,7 @@ var Map = function(config, fn) {
         var id = modargs.split(' ')[0];
         var value = modargs.split(' ').splice(1).join(' ');
         if(id)
-            id = matchcmd(id, new Array('name', 'description', 'terrain'));
+            id = matchcmd(id, new Array('name', 'description', 'terrain', 'environment'));
         var shouldSave = false;
         var shouldAnnounce = false;
         var shouldSendMap = false;
@@ -237,6 +237,12 @@ var Map = function(config, fn) {
                 shouldAnnounce = true;
                 shouldSendMapToArea = true;
                 break;
+            case 'environment':
+                player.character.room.environment = value;
+                shouldSave = true;
+                shouldSendMapToArea = true;
+                shouldAnnounce = true;
+                break;
             default:
                 player.msg(LOGIC._createTable(
                 "Room Properties: (" + player.character.location.map + "," + player.character.location.x + "," + player.character.location.y + "," + player.character.location.z + ")",
@@ -252,6 +258,10 @@ var Map = function(config, fn) {
                     {
                         property: "Terrain",
                         value: player.character.room.type
+                    },
+                    {
+                        property: "Environment",
+                        value: player.character.room.environment
                     }
                 ]));
         }
@@ -292,7 +302,8 @@ var Room = function(config, mapobj) {
     self.y;             // int
     self.z;             // int
     self.type;          // string
-    
+    self.environment;   // string (inside, outside, underground)
+
     self.init = function(config, mapobj) {
         self.map = mapobj;
         self.name = config.name || 'Untitled Room';
@@ -301,6 +312,7 @@ var Room = function(config, mapobj) {
         self.y = config.y || 0;
         self.z = config.z || 0;
         self.type = config.type || 'grass';
+        self.environment = config.environment || 'outside';
     }
     
     self.getSaveData = function() {
@@ -310,7 +322,8 @@ var Room = function(config, mapobj) {
             x: self.x,
             y: self.y,
             z: self.z,
-            type: self.type
+            type: self.type,
+            environment: self.environment
         };    
     }
     
