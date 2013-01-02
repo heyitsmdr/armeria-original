@@ -387,6 +387,8 @@ var GameEngine = new function() {
         // calculate offsets
         var offsetx = 105 - (x * 30);
         var offsety = 105 - (y * 30);
+        // lighting?
+        var room = this.mapGridAt(x, y);
         // use animation?
         if(anim) {
             GameEngine.mapanimx = setInterval(function(){
@@ -395,6 +397,7 @@ var GameEngine = new function() {
                         GameEngine.mapRender(false, (GameEngine.mapoffsetx + 1), GameEngine.mapoffsety);
                     else
                         GameEngine.mapRender(false, (GameEngine.mapoffsetx - 1), GameEngine.mapoffsety);
+                    GameEngine.mapRenderLight(room);
                 } else {
                     clearInterval(GameEngine.mapanimx);
                 }
@@ -405,15 +408,32 @@ var GameEngine = new function() {
                         GameEngine.mapRender(false, GameEngine.mapoffsetx, (GameEngine.mapoffsety + 1));
                     else
                         GameEngine.mapRender(false, GameEngine.mapoffsetx, (GameEngine.mapoffsety - 1));
+                    GameEngine.mapRenderLight(room);
                 } else {
                     clearInterval(GameEngine.mapanimy);
                 }
             }, 5);
         } else {
             GameEngine.mapRender(false, offsetx, offsety);
+            GameEngine.mapRenderLight(room);
         }
     }
-    
+
+    this.mapRenderLight = function(room) {
+        if(room.env == 'underground')
+            GameEngine.mapLightRadius(0.3, '20,20,1');
+    }
+
+    this.mapLightRadius = function(radius, color) {
+        GameEngine.mapctx.beginPath();
+        var rad = GameEngine.mapctx.createRadialGradient(120, 120, 1, 120, 120, 240);
+        rad.addColorStop(0, 'rgba(' + color + ',0)');
+        rad.addColorStop(radius, 'rgba(' + color + ',1)');
+        GameEngine.mapctx.fillStyle = rad;
+        GameEngine.mapctx.arc(120, 120, 240, 0, Math.PI*2, false);
+        GameEngine.mapctx.fill();
+    }
+
     this.editModeToggle = function(state) {
         //TODO: Need to check if user is builder or not. Will also hide the edit button from the beginning if they are not.
         switch(state) {
