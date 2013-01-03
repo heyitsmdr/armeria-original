@@ -6,23 +6,24 @@
 */
 
 var GameEngine = new function() {
-    this.version = false;
-    this.port = 2772;
-    this.socket = false;
-    this.fbinfo = false;
-    this.fbaccesstoken = false;
-    this.connected = false;
-    this.mapdata = false;
-    this.mapz = 0;
-    this.mapctx = false;
-    this.mapcv = false;
-    this.maptileset = false; // Image
-    this.mapts = false;      // Image Properties
-    this.mapanimx = false;
-    this.mapanimy = false;
-    this.mapoffsetx = 0;
-    this.mapoffsety = 0;
-    this.server = false;
+    this.version = false;         // Version
+    this.port = 2772;             // Port
+    this.socket = false;         // Socket.IO
+    this.fbinfo = false;         // Facebook Information Array
+    this.fbaccesstoken = false; // Facebook Access Token
+    this.connected = false;     // Connected or not (boolean)
+    this.mapdata = false;       // Entire minimap data
+    this.mapz = 0;              // Map Z-Coordinate
+    this.maproom = false;      // Object within this.mapdata that contains the current room
+    this.mapctx = false;       // Minimap Canvas 2D Context
+    this.mapcv = false;        // Minimap Canvas
+    this.maptileset = false;  // Image
+    this.mapts = false;        // Image Properties
+    this.mapanimx = false;    // Animation for setInterval
+    this.mapanimy = false;    // Animation for setInterval
+    this.mapoffsetx = 0;      // Minimap offset
+    this.mapoffsety = 0;      // Minimap offset
+    this.server = false;       // Server class
 
     this.init = function(port) {
         // set port
@@ -334,6 +335,7 @@ var GameEngine = new function() {
             mapdata = this.mapdata;
         } else {
             this.mapdata = mapdata;
+            GameEngine.mapRenderLight(GameEngine.maproom);
         }
         if(offsetx===undefined) offsetx = GameEngine.mapoffsetx;
         if(offsety===undefined) offsety = GameEngine.mapoffsety;
@@ -388,7 +390,7 @@ var GameEngine = new function() {
         var offsetx = 105 - (x * 30);
         var offsety = 105 - (y * 30);
         // lighting?
-        var room = this.mapGridAt(x, y);
+        this.maproom = this.mapGridAt(x, y);
         // use animation?
         if(anim) {
             GameEngine.mapanimx = setInterval(function(){
@@ -397,7 +399,7 @@ var GameEngine = new function() {
                         GameEngine.mapRender(false, (GameEngine.mapoffsetx + 1), GameEngine.mapoffsety);
                     else
                         GameEngine.mapRender(false, (GameEngine.mapoffsetx - 1), GameEngine.mapoffsety);
-                    GameEngine.mapRenderLight(room);
+                    GameEngine.mapRenderLight(GameEngine.maproom);
                 } else {
                     clearInterval(GameEngine.mapanimx);
                 }
@@ -408,14 +410,14 @@ var GameEngine = new function() {
                         GameEngine.mapRender(false, GameEngine.mapoffsetx, (GameEngine.mapoffsety + 1));
                     else
                         GameEngine.mapRender(false, GameEngine.mapoffsetx, (GameEngine.mapoffsety - 1));
-                    GameEngine.mapRenderLight(room);
+                    GameEngine.mapRenderLight(GameEngine.maproom);
                 } else {
                     clearInterval(GameEngine.mapanimy);
                 }
             }, 5);
         } else {
             GameEngine.mapRender(false, offsetx, offsety);
-            GameEngine.mapRenderLight(room);
+            GameEngine.mapRenderLight(GameEngine.maproom);
         }
     }
 
