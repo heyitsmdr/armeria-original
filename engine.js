@@ -25,6 +25,8 @@ var GameEngine = new function() {
     this.mapoffsety = 0;        // Minimap offset
     this.server = false;        // Server class
     this.serverOffline = false; // Set to True if Socket.IO is not found (server offline)
+    this.sendHistory = [];      // Array of strings that you sent to the server (for up/down history)
+    this.sendHistPtr = false;   // Pointer for navigating the history
 
     this.init = function(port) {
         // set port
@@ -34,6 +36,11 @@ var GameEngine = new function() {
         // bind ENTER to input box
         $('#inputGameCommands').keypress(function(e){
             if(e.which == 13) GameEngine.parseCommand();
+        });
+        // bind UP/DOWN to input box (for history)
+        $('#inputGameCommands').keyup(function(e){
+            if(e.which == 38) GameEngine.navigateHistory('back');
+            if(e.which == 40) GameEngine.navigateHistory('forward');
         });
         // numpad macros
         $(document).keydown(function(e){
@@ -339,10 +346,37 @@ var GameEngine = new function() {
             eval("GameEngine.server.cmdFromSlash('" + command.substr(8) + "')");
         }
 
+        // save in history
+        if(command) {
+            this.sendHistory.push(command);
+            this.sendHistPtr = this.sendHistory.length;
+        }
+
         $('#inputGameCommands').val('');
         $('#inputGameCommands').focus();
     }
-    
+
+    this.navigateHistory = function(direction) {
+        var ptr = this.sendHistPtr;
+        if(ptr === false) return;
+        // navigate
+        if(direction=='back')
+            ptr--;
+        else if(direction=='forward')
+            ptr++;
+        // check bounds
+        if(ptr < 0) { ptr = 0; }
+        if(ptr > (this.sendHistory.length - 1)) {
+            this.sendHistPtr = this.sendHistory.length - 1;
+            $('#inputGameCommands').val('');
+            return;
+        }
+        // display
+        $('#inputGameCommands').val(this.sendHistory[ptr]);
+        document.getElementById('inputGameCommands').selectionStart = this.sendHistory[ptr].length;
+        this.sendHistPtr = ptr;
+    }
+
     this.mapRender = function(mapdata, offsetx, offsety) {
         if(mapdata === false) {
             mapdata = this.mapdata;
