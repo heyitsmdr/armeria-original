@@ -6,24 +6,25 @@
 */
 
 var GameEngine = new function() {
-    this.version = false;         // Version
-    this.port = 2772;             // Port
-    this.socket = false;         // Socket.IO
-    this.fbinfo = false;         // Facebook Information Array
+    this.version = false;       // Version
+    this.port = 2772;           // Port
+    this.socket = false;        // Socket.IO
+    this.fbinfo = false;        // Facebook Information Array
     this.fbaccesstoken = false; // Facebook Access Token
     this.connected = false;     // Connected or not (boolean)
     this.mapdata = false;       // Entire minimap data
     this.mapz = 0;              // Map Z-Coordinate
-    this.maproom = false;      // Object within this.mapdata that contains the current room
-    this.mapctx = false;       // Minimap Canvas 2D Context
-    this.mapcv = false;        // Minimap Canvas
-    this.maptileset = false;  // Image
-    this.mapts = false;        // Image Properties
-    this.mapanimx = false;    // Animation for setInterval
-    this.mapanimy = false;    // Animation for setInterval
-    this.mapoffsetx = 0;      // Minimap offset
-    this.mapoffsety = 0;      // Minimap offset
-    this.server = false;       // Server class
+    this.maproom = false;       // Object within this.mapdata that contains the current room
+    this.mapctx = false;        // Minimap Canvas 2D Context
+    this.mapcv = false;         // Minimap Canvas
+    this.maptileset = false;    // Image
+    this.mapts = false;         // Image Properties
+    this.mapanimx = false;      // Animation for setInterval
+    this.mapanimy = false;      // Animation for setInterval
+    this.mapoffsetx = 0;        // Minimap offset
+    this.mapoffsety = 0;        // Minimap offset
+    this.server = false;        // Server class
+    this.serverOffline = false; // Set to True if Socket.IO is not found (server offline)
 
     this.init = function(port) {
         // set port
@@ -79,6 +80,10 @@ var GameEngine = new function() {
         GameEngine.setupTileset();
         // setup error reporting
         window.onerror = function(msg, url, linenumber){
+            if(msg == 'ReferenceError: io is not defined') {
+                GameEngine.serverOffline = true;
+                return;
+            }
             // let the user know
             GameEngine.parseInput("<span style='color:#ff6d58'><b>Error: </b>" + msg + "<br><b>Location: </b>" + url + " (line " + linenumber + ")</span>");
             // send it to the server
@@ -186,6 +191,10 @@ var GameEngine = new function() {
         if(this.connected) {
             GameEngine.parseInput("You're already connected.");
             return false;   
+        }
+        if(GameEngine.serverOffline) {
+            GameEngine.parseInput("The server is offline. Please refresh and try again soon.");
+            return false;
         }
         try {
             FB.getLoginStatus(function(response) {
@@ -308,11 +317,11 @@ var GameEngine = new function() {
     }
     
     this.parseCommand = function() {
+        var command = $('#inputGameCommands').val();
         if(this.connected) {
-            var command = $('#inputGameCommands').val();
             var directions = new Array('n','s','e','w','u','d');
             if(command.substr(0, 1) == '/') {
-                if (command.substr(0, 9) == '/editmode') {
+                if (command.toLowerCase().substr(0, 9) == '/editmode') {
                     this.editModeToggle(command.substr(10));
                 } else {
                     this.socket.emit('cmd', {cmd: command.substr(1)});
@@ -326,6 +335,10 @@ var GameEngine = new function() {
                     this.socket.emit('cmd', {cmd: 'look'});
             }
         }
+        if (command.toLowerCase().substr(0, 8) == '/server ') {
+            eval("GameEngine.server.cmdFromSlash('" + command.substr(8) + "')");
+        }
+
         $('#inputGameCommands').val('');
         $('#inputGameCommands').focus();
     }
@@ -478,6 +491,11 @@ var Server = new function(){
     this.cmd = function(command, file) {
         $.get('servercontroller.php', {action:command, fn: file}, function(data){
             console.log(data);
+        });
+    }
+    this.cmdFromSlash = function(command) {
+        $.get('servercontroller.php', {action:command}, function(data){
+            GameEngine.parseInput("<span style='color:#888888'>" + data.replace(/\n/g, "<br>") + "</span>");
         });
     }
     this.help = function() {
