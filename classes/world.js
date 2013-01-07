@@ -245,7 +245,7 @@ var Map = function(config, fn) {
                 break;
             default:
                 player.msg(LOGIC._createTable(
-                "Room Properties: (" + player.character.location.map + "," + player.character.location.x + "," + player.character.location.y + "," + player.character.location.z + ")",
+                "Room Properties: " + player.character.location.map + ", " + player.character.location.x + ", " + player.character.location.y + ", " + player.character.location.z,
                 [
                     {
                         property: "Name",

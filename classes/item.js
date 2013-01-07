@@ -48,7 +48,7 @@ var Item = function(config) {
         self.name = config.name;
         self.htmlname = config.htmlname;
         self.level = config.level;
-        console.log('[init] item template loaded: ' + self.name);
+        console.log('[init] item template loaded: ' + self.id);
     };
 
     self.stringify = function() {
