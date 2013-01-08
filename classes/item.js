@@ -21,7 +21,7 @@ var Items = function(callback) {
             }
             callback();
         });
-    }
+    };
 
     self.getById = function(id) {
         for(var i = 0; i < self.objects.length; i++) {
@@ -62,7 +62,7 @@ var Item = function(config) {
 
     self.save = function() {
         fs.writeFileSync(data_path + self.id + '.json', self.stringify(), 'utf8');
-    }
+    };
 
     self.init(config);
 };

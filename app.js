@@ -129,7 +129,10 @@ io.sockets.on('connection', function(socket){
     socket.on('cmd', function(data){
         // get base command
         var sections = data.cmd.split(' ');
-        var cmd = matchcmd(sections[0], new Array('say', 'move', ['look', 'examine'], 'me', 'whisper', 'reply', 'attack', 'create', 'destroy', 'modify', 'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp']));
+        var cmd = matchcmd(sections[0], new Array('say', 'move', ['look', 'examine'], 'me',
+            'whisper', 'reply', 'attack', 'create', 'destroy', 'modify',
+            'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp'],
+            'inventory'));
         sections.shift();
         var cmd_args = sections.join(' ');
         
@@ -181,6 +184,9 @@ io.sockets.on('connection', function(socket){
                 break;
             case 'teleport':
                 LOGIC.teleport(player, cmd_args);
+                break;
+            case 'inventory':
+                LOGIC.inventory(player);
                 break;
             default:
                 if(!LOGIC.emote(player, cmd.toLowerCase()))
