@@ -20,7 +20,7 @@ var Characters = function() {
                 self.objects.push(new Character(JSON.parse(fs.readFileSync(character_file).toString('utf8'))));
             }
         });
-    }
+    };
     
     self.create = function(charid, charname) {
         if(self.getCharacterById(charid)) return false;
@@ -37,14 +37,14 @@ var Characters = function() {
         self.objects.push(char);
         char.save();
         return char;
-    }
+    };
     
     self.getCharacterById = function(id) {
         for(var i = 0; i < self.objects.length; i++) {
             if(self.objects[i].id==id) return self.objects[i];
         }
         return false;
-    }
+    };
     
     self.getCharacterByName = function(name, isonline, checknicks) {
         for(var i = 0; i < self.objects.length; i++) {
@@ -60,7 +60,7 @@ var Characters = function() {
             }
         }
         return false;
-    }
+    };
     
     self.init();
 };
@@ -79,6 +79,7 @@ var Character = function(config) {
     self.roomdesc;  // string
     self.stats;     // array (health, maxhealth, str, agi, sta, int)
     self.level;     // int
+    self.inventory; // array of strings
 
     // not saved
     self.online = false;    // boolean
@@ -98,8 +99,9 @@ var Character = function(config) {
         self.roomdesc = config.roomdesc || 'is here.';
         self.stats = config.stats || {health: 100, maxhealth: 100, mana: 100, maxmana: 100, energy: 100, str: 15, agi: 15, sta: 15, int: 15, wis: 15, armor: 25, eres: 25, mres: 25};
         self.level = config.level || 1;
+        self.inventory = config.inventory || [];
         console.log('[init] character loaded: ' + self.name);
-    }
+    };
     
     self.stringify = function() {
         return JSON.stringify({
@@ -112,21 +114,22 @@ var Character = function(config) {
             channels: self.channels,
             roomdesc: self.roomdesc,
             stats: self.stats,
-            level: self.level
+            level: self.level,
+            inventory: self.inventory
         }, null, '\t');    
-    }
+    };
     
     self.save = function() {
         fs.writeFileSync(data_path + self.id + '.json', self.stringify(), 'utf8');
-    }
+    };
     
     self.getMapObj = function() {
         return WORLD.getMap(self.location.map);
-    }
+    };
     
     self.getRoomObj = function() {
         return self.getMapObj().getRoom(self.location.x, self.location.y, self.location.z);
-    }
+    };
     
     self.login = function() {
         // set online
@@ -153,7 +156,7 @@ var Character = function(config) {
         self.room.announceExcept(self.player, self.htmlname + " has just logged in to Armeria!");
         // look around
         LOGIC.look(self.player);
-    }
+    };
     
     self.logout = function() {
         // announce to room
@@ -168,7 +171,7 @@ var Character = function(config) {
         self.online = false;
         // save
         self.save();
-    }
+    };
     
     self.switchRooms = function(m, x, y, z) {
         var map = WORLD.getMap(m);
@@ -206,8 +209,16 @@ var Character = function(config) {
             self.player.update({minimap: 1, maplocnoanim: 1});
 
         return true;
-    }
-    
+    };
+
+    self.eachInventoryItem = function(callback) {
+        self.inventory.forEach(function(item){
+            var libobj = LIBRARY.getById(item);
+            if(libobj !== false)
+                callback(libobj);
+        });
+    };
+
     self.init(config);
 };
 

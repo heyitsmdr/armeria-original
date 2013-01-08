@@ -22,6 +22,8 @@
         </script>
     </head>
     <body>
+        <!-- Animated Fog -->
+        <div id="fog"></div>
         <!-- Facebook Integration -->
         <div id="fb-root"></div>
         <script>

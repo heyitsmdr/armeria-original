@@ -455,6 +455,20 @@ var Logic = function() {
     }
     /* ## END: BASIC ## */
 
+    /*  ## ITEM MANAGEMENT ## */
+    self.inventory = function(player) {
+        if(player.character.inventory.length == 0) {
+            player.msg('You are not carrying anything.');
+            return;
+        }
+        var inv = 'You are carrying:';
+        player.character.eachInventoryItem(function(item){
+            inv += '<br>&nbsp;&nbsp;&nbsp;&nbsp;' + item.ttOutput();
+        });
+        player.msg(inv);
+    }
+    /*  ## END: ITEM MANAGEMENT ## */
+
     /*  ## EMOTES ## */
     self.me = function(player, emote) {
         console.log(emote.substr(emote.length - 1, 1));

@@ -31,11 +31,11 @@ var Library = function(){
 
     self.save = function() {
         
-    }
+    };
 
     self.addItem = function(player, parent) {
 
-    }
+    };
 
     self.init();
 };
@@ -66,6 +66,12 @@ var LibraryEntry = function(config) {
     self.get = function(stat) {
         return eval("self.overrides." + stat + " || self.parent." + stat);
     }
+
+    /* ITEM ONLY FUNCTIONS */
+    self.ttOutput = function() {
+        return "<span class='itemtooltip' data-id='" + self.id + "'>" + self.get('htmlname') + "</span>";
+    };
+    /* END: ITEM ONLY FUNCTIONS */
 
     self.stringify = function() {
         return JSON.stringify({

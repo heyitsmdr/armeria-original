@@ -21,7 +21,7 @@ var Items = function(callback) {
             }
             callback();
         });
-    }
+    };
 
     self.getById = function(id) {
         for(var i = 0; i < self.objects.length; i++) {
@@ -48,7 +48,7 @@ var Item = function(config) {
         self.name = config.name;
         self.htmlname = config.htmlname;
         self.level = config.level;
-        console.log('[init] item template loaded: ' + self.name);
+        console.log('[init] item template loaded: ' + self.id);
     };
 
     self.stringify = function() {
@@ -62,7 +62,7 @@ var Item = function(config) {
 
     self.save = function() {
         fs.writeFileSync(data_path + self.id + '.json', self.stringify(), 'utf8');
-    }
+    };
 
     self.init(config);
 };
