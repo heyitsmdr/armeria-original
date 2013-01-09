@@ -6,27 +6,23 @@
 */
 
 var GameEngine = new function() {
-    this.version = false;       // Version
-    this.port = 2772;           // Port
-    this.socket = false;        // Socket.IO
-    this.fbinfo = false;        // Facebook Information Array
-    this.fbaccesstoken = false; // Facebook Access Token
-    this.connected = false;     // Connected or not (boolean)
-    this.mapdata = false;       // Entire minimap data
-    this.mapz = 0;              // Map Z-Coordinate
-    this.maproom = false;       // Object within this.mapdata that contains the current room
-    this.mapctx = false;        // Minimap Canvas 2D Context
-    this.mapcv = false;         // Minimap Canvas
-    this.maptileset = false;    // Image
-    this.mapts = false;         // Image Properties
-    this.mapanimx = false;      // Animation for setInterval
-    this.mapanimy = false;      // Animation for setInterval
-    this.mapoffsetx = 0;        // Minimap offset
-    this.mapoffsety = 0;        // Minimap offset
-    this.server = false;        // Server class
-    this.serverOffline = false; // Set to True if Socket.IO is not found (server offline)
-    this.sendHistory = [];      // Array of strings that you sent to the server (for up/down history)
-    this.sendHistPtr = false;   // Pointer for navigating the history
+    this.version = false;
+    this.port = 2772;
+    this.socket = false;
+    this.fbinfo = false;
+    this.fbaccesstoken = false;
+    this.connected = false;
+    this.mapdata = false;
+    this.mapz = 0;
+    this.mapctx = false;
+    this.mapcv = false;
+    this.maptileset = false; // Image
+    this.mapts = false;      // Image Properties
+    this.mapanimx = false;
+    this.mapanimy = false;
+    this.mapoffsetx = 0;
+    this.mapoffsety = 0;
+    this.server = false;
 
     this.init = function(port) {
         // set port
@@ -36,11 +32,6 @@ var GameEngine = new function() {
         // bind ENTER to input box
         $('#inputGameCommands').keypress(function(e){
             if(e.which == 13) GameEngine.parseCommand();
-        });
-        // bind UP/DOWN to input box (for history)
-        $('#inputGameCommands').keyup(function(e){
-            if(e.which == 38) GameEngine.navigateHistory('back');
-            if(e.which == 40) GameEngine.navigateHistory('forward');
         });
         // numpad macros
         $(document).keydown(function(e){
@@ -87,10 +78,6 @@ var GameEngine = new function() {
         GameEngine.setupTileset();
         // setup error reporting
         window.onerror = function(msg, url, linenumber){
-            if(msg == 'ReferenceError: io is not defined') {
-                GameEngine.serverOffline = true;
-                return;
-            }
             // let the user know
             GameEngine.parseInput("<span style='color:#ff6d58'><b>Error: </b>" + msg + "<br><b>Location: </b>" + url + " (line " + linenumber + ")</span>");
             // send it to the server
@@ -115,13 +102,18 @@ var GameEngine = new function() {
             {def: 'grassBL', sx: 0, sy: 2},
             {def: 'grassB', sx: 1, sy: 2},
             {def: 'grassRB', sx: 2, sy: 2},
-            {def: 'grassTRBL', sx: 3, sy: 0},
-            {def: 'grassTRL', sx: 4, sy: 0},
-            {def: 'grassRL', sx: 5, sy: 0},
-            {def: 'grassTBL', sx: 3, sy: 1},
-            {def: 'grassTB', sx: 4, sy: 1},
-            {def: 'grassTRB', sx: 5, sy: 1},
-            {def: 'grassRBL', sx: 3, sy: 2},
+            {def: 'grassTBL', sx: 3, sy: 0},
+            {def: 'grassTB', sx: 4, sy: 0},
+            {def: 'grassTRB', sx: 5, sy: 0},
+            {def: 'grassTRBL', sx: 3, sy: 1},
+            {def: 'grassTRL', sx: 6, sy: 0},
+            {def: 'grassRL', sx: 6, sy: 1},
+            {def: 'grassRBL', sx: 6, sy: 2},
+            {def: 'flowers', sx: 4, sy: 1},
+            {def: 'grassWorn', sx: 5, sy: 1},
+            {def: 'grassTall', sx: 3, sy: 2},
+            {def: 'dirt', sx: 7, sy: 0},
+
             {def: 'waterTL', sx: 0, sy: 3},
             {def: 'waterT', sx: 1, sy: 3},
             {def: 'waterTR', sx: 2, sy: 3},
@@ -131,14 +123,14 @@ var GameEngine = new function() {
             {def: 'waterBL', sx: 0, sy: 5},
             {def: 'waterB', sx: 1, sy: 5},
             {def: 'waterRB', sx: 2, sy: 5},
-            {def: 'waterTRBL', sx: 3, sy: 3},
-            {def: 'waterTRL', sx: 4, sy: 3},
-            {def: 'waterRL', sx: 5, sy: 3},
-            {def: 'waterTBL', sx: 3, sy: 4},
-            {def: 'waterTB', sx: 4, sy: 4},
-            {def: 'waterTRB', sx: 5, sy: 4},
-            {def: 'waterRBL', sx: 3, sy: 5},
-            {def: 'dirt', sx: 6, sy: 0},
+            {def: 'waterTBL', sx: 3, sy: 3},
+            {def: 'waterTB', sx: 4, sy: 3},
+            {def: 'waterTRB', sx: 5, sy: 3},
+            {def: 'waterTRBL', sx: 3, sy: 4},
+            {def: 'waterTRL', sx: 6, sy: 3},
+            {def: 'waterRL', sx: 6, sy: 4},
+            {def: 'waterRBL', sx: 6, sy: 5},
+
             {def: 'stoneTL', sx: 0, sy: 6},
             {def: 'stoneT', sx: 1, sy: 6},
             {def: 'stoneTR', sx: 2, sy: 6},
@@ -148,14 +140,16 @@ var GameEngine = new function() {
             {def: 'stoneBL', sx: 0, sy: 8},
             {def: 'stoneB', sx: 1, sy: 8},
             {def: 'stoneRB', sx: 2, sy: 8},
-            {def: 'stoneTRBL', sx: 3, sy: 6},
-            {def: 'stoneTRL', sx: 4, sy: 6},
-            {def: 'stoneRL', sx: 5, sy: 6},
-            {def: 'stoneTBL', sx: 3, sy: 7},
-            {def: 'stoneTB', sx: 4, sy: 7},
-            {def: 'stoneTRB', sx: 5, sy: 7},
-            {def: 'stoneRBL', sx: 3, sy: 8},
-            {def: 'wp', sx: 0, sy: 19}
+            {def: 'stoneTBL', sx: 3, sy: 6},
+            {def: 'stoneTB', sx: 4, sy: 6},
+            {def: 'stoneTRB', sx: 5, sy: 6},
+            {def: 'stoneTRBL', sx: 3, sy: 7},
+            {def: 'stoneTRL', sx: 6, sy: 6},
+            {def: 'stoneRL', sx: 6, sy: 7},
+            {def: 'stoneRBL', sx: 6, sy: 8},
+            
+            {def: 'wp', sx: 0, sy: 19},
+            {def: 'house', sx: 1, sy: 19}
         ];
 
         // Calculate Real sx and sy
@@ -198,10 +192,6 @@ var GameEngine = new function() {
         if(this.connected) {
             GameEngine.parseInput("You're already connected.");
             return false;   
-        }
-        if(GameEngine.serverOffline) {
-            GameEngine.parseInput("The server is offline. Please refresh and try again soon.");
-            return false;
         }
         try {
             FB.getLoginStatus(function(response) {
@@ -324,11 +314,11 @@ var GameEngine = new function() {
     }
     
     this.parseCommand = function() {
-        var command = $('#inputGameCommands').val();
         if(this.connected) {
+            var command = $('#inputGameCommands').val();
             var directions = new Array('n','s','e','w','u','d');
             if(command.substr(0, 1) == '/') {
-                if (command.toLowerCase().substr(0, 9) == '/editmode') {
+                if (command.substr(0, 9) == '/editmode') {
                     this.editModeToggle(command.substr(10));
                 } else {
                     this.socket.emit('cmd', {cmd: command.substr(1)});
@@ -342,47 +332,15 @@ var GameEngine = new function() {
                     this.socket.emit('cmd', {cmd: 'look'});
             }
         }
-        if (command.toLowerCase().substr(0, 8) == '/server ') {
-            eval("GameEngine.server.cmdFromSlash('" + command.substr(8) + "')");
-        }
-
-        // save in history
-        if(command) {
-            this.sendHistory.push(command);
-            this.sendHistPtr = this.sendHistory.length;
-        }
-
         $('#inputGameCommands').val('');
         $('#inputGameCommands').focus();
     }
-
-    this.navigateHistory = function(direction) {
-        var ptr = this.sendHistPtr;
-        if(ptr === false) return;
-        // navigate
-        if(direction=='back')
-            ptr--;
-        else if(direction=='forward')
-            ptr++;
-        // check bounds
-        if(ptr < 0) { ptr = 0; }
-        if(ptr > (this.sendHistory.length - 1)) {
-            this.sendHistPtr = this.sendHistory.length - 1;
-            $('#inputGameCommands').val('');
-            return;
-        }
-        // display
-        $('#inputGameCommands').val(this.sendHistory[ptr]);
-        document.getElementById('inputGameCommands').selectionStart = this.sendHistory[ptr].length;
-        this.sendHistPtr = ptr;
-    }
-
+    
     this.mapRender = function(mapdata, offsetx, offsety) {
         if(mapdata === false) {
             mapdata = this.mapdata;
         } else {
             this.mapdata = mapdata;
-            GameEngine.mapRenderLight(GameEngine.maproom);
         }
         if(offsetx===undefined) offsetx = GameEngine.mapoffsetx;
         if(offsety===undefined) offsety = GameEngine.mapoffsety;
@@ -436,8 +394,6 @@ var GameEngine = new function() {
         // calculate offsets
         var offsetx = 105 - (x * 30);
         var offsety = 105 - (y * 30);
-        // lighting?
-        this.maproom = this.mapGridAt(x, y);
         // use animation?
         if(anim) {
             GameEngine.mapanimx = setInterval(function(){
@@ -446,7 +402,6 @@ var GameEngine = new function() {
                         GameEngine.mapRender(false, (GameEngine.mapoffsetx + 1), GameEngine.mapoffsety);
                     else
                         GameEngine.mapRender(false, (GameEngine.mapoffsetx - 1), GameEngine.mapoffsety);
-                    GameEngine.mapRenderLight(GameEngine.maproom);
                 } else {
                     clearInterval(GameEngine.mapanimx);
                 }
@@ -457,32 +412,15 @@ var GameEngine = new function() {
                         GameEngine.mapRender(false, GameEngine.mapoffsetx, (GameEngine.mapoffsety + 1));
                     else
                         GameEngine.mapRender(false, GameEngine.mapoffsetx, (GameEngine.mapoffsety - 1));
-                    GameEngine.mapRenderLight(GameEngine.maproom);
                 } else {
                     clearInterval(GameEngine.mapanimy);
                 }
             }, 5);
         } else {
             GameEngine.mapRender(false, offsetx, offsety);
-            GameEngine.mapRenderLight(GameEngine.maproom);
         }
     }
-
-    this.mapRenderLight = function(room) {
-        if(room.env == 'underground')
-            GameEngine.mapLightRadius(0.3, '20,20,1');
-    }
-
-    this.mapLightRadius = function(radius, color) {
-        GameEngine.mapctx.beginPath();
-        var rad = GameEngine.mapctx.createRadialGradient(120, 120, 1, 120, 120, 240);
-        rad.addColorStop(0, 'rgba(' + color + ',0)');
-        rad.addColorStop(radius, 'rgba(' + color + ',1)');
-        GameEngine.mapctx.fillStyle = rad;
-        GameEngine.mapctx.arc(120, 120, 240, 0, Math.PI*2, false);
-        GameEngine.mapctx.fill();
-    }
-
+    
     this.editModeToggle = function(state) {
         //TODO: Need to check if user is builder or not. Will also hide the edit button from the beginning if they are not.
         switch(state) {
@@ -525,11 +463,6 @@ var Server = new function(){
     this.cmd = function(command, file) {
         $.get('servercontroller.php', {action:command, fn: file}, function(data){
             console.log(data);
-        });
-    }
-    this.cmdFromSlash = function(command) {
-        $.get('servercontroller.php', {action:command}, function(data){
-            GameEngine.parseInput("<span style='color:#888888'>" + data.replace(/\n/g, "<br>") + "</span>");
         });
     }
     this.help = function() {
