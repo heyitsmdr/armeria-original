@@ -97,7 +97,11 @@ var GameEngine = new function() {
             $.post('error.php', {msg: msg, loc: url, line: linenumber, version: GameEngine.version}, function(){
                 GameEngine.parseInput("<span style='color:#ff6d58'>This error has been reported.</span>");
             });
-        }
+        };
+        // bind item tooltips
+        $(document).on('mouseover', '.itemtooltip', this.itemToolTipEnter);
+        $(document).on('mouseout', '.itemtooltip', this.itemToolTipLeave);
+        $(document).on('mousemove', '.itemtooltip', this.itemToolTipMove);
         // focus input box
         $('#inputGameCommands').focus();
     }
@@ -238,7 +242,7 @@ var GameEngine = new function() {
     this.connect = function() {
         if(!this.fbinfo) return;
         this.parseInput("<br>Connecting to game server..");
-        this.socket = io.connect('http://www.playarmeria.com:' + GameEngine.port, {
+        this.socket = io.connect('http://ethryx.net:' + GameEngine.port, {
             'reconnect': true,
             'reconnection delay': 1000,
             'max reconnection attempts': 10
@@ -306,6 +310,9 @@ var GameEngine = new function() {
                 text: data.text,
                 image: data.image
             });
+        });
+        this.socket.on('itemtip', function(data){
+            $('#itemTooltipBox').html(data.content);
         });
     }
 
@@ -488,7 +495,7 @@ var GameEngine = new function() {
         GameEngine.mapctx.fillStyle = rad;
         GameEngine.mapctx.arc(120, 120, 240, 0, Math.PI*2, false);
         GameEngine.mapctx.fill();
-    }
+    };
 
     this.editModeToggle = function(state) {
         //TODO: Need to check if user is builder or not. Will also hide the edit button from the beginning if they are not.
@@ -518,7 +525,22 @@ var GameEngine = new function() {
                 $("#editMode").attr("style", "background-color: rgba(120, 0, 0, 0.3);");
                 break;
         }
-    }
+    };
+
+    this.itemToolTipEnter = function() {
+        $('#itemTooltipBox').html('Loading...');
+        $('#itemTooltipBox').fadeIn(75);
+        if(GameEngine.connected)
+            GameEngine.socket.emit('itemtip', { id: $(this).data('id') });
+    };
+
+    this.itemToolTipLeave = function(){
+        $('#itemTooltipBox').fadeOut(75);
+    };
+
+    this.itemToolTipMove = function(e){
+        $('#itemTooltipBox').offset({ top:e.pageY + 15, left: e.pageX + 15 });
+    };
 };
 
 var Server = new function(){

@@ -5,3 +5,5 @@ git.php
 servercontroller.php
 out.log
 errors.txt
+stderr.log
+stdout.log
