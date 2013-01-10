@@ -107,7 +107,7 @@ io.sockets.on('connection', function(socket){
             });
         }
         // check auth
-        https.get("https://graph.facebook.com/me?access_token=" + data.token, function(res){
+        https.get({host: 'graph.facebook.com', port: 443, path: '/me?access_token=' + data.token}, function(res){
             var fbresp = '';
             res.on('data', function(chunk){
                 fbresp += chunk;

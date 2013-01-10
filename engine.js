@@ -238,7 +238,7 @@ var GameEngine = new function() {
     this.connect = function() {
         if(!this.fbinfo) return;
         this.parseInput("<br>Connecting to game server..");
-        this.socket = io.connect('http://ethryx.net:' + GameEngine.port, {
+        this.socket = io.connect('http://www.playarmeria.com:' + GameEngine.port, {
             'reconnect': true,
             'reconnection delay': 1000,
             'max reconnection attempts': 10
