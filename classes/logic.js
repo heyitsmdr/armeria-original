@@ -470,16 +470,16 @@ var Logic = function() {
         PLAYERS.eachOnline(function(p){
             tabledata.push([{
                 data: 'BUILDER',
-                style: ''
+                style: 'text-align:center'
             },
             {
                 data: p.character.htmlname,
-                style: ''
+                style: 'text-align:left'
             }]);
             count++;
         });
-        player.msg(self._createInvisTable(tabledata, '280px'));
-        player.msg('There are ' + count + ' visible player' + ((count>1)?'s':'') + ' online.');
+        player.msg(self._createInvisTable(tabledata, '300px'));
+        player.msg('There ' + ((count>1)?'are ':'is ') + count + ' visible player' + ((count>1)?'s':'') + ' online.');
     };
     /* ## END: BASIC ## */
 
