@@ -23,7 +23,7 @@ switch(arg) {
             console.log('Server already started. Quitting.');
             return process.exit(-1);
         } else {
-            pid = daemon.daemonize({ stdout: 'stdout.log', stderr: 'stderr.log' }, './server.pid');
+            pid = daemon.daemonize({ stdout: 'stdout.txt', stderr: 'stderr.txt' }, './server.pid');
             console.log('Daemon started successfully with pid: ' + pid);
             init();
         }
@@ -44,7 +44,7 @@ switch(arg) {
         if (path.existsSync("./server.pid")) {
             daemon.kill('./server.pid', function(){
                 console.log('Server restarted.');
-                pid = daemon.daemonize({ stdout: 'stdout.log', stderr: 'stderr.log' }, './server.pid');
+                pid = daemon.daemonize({ stdout: 'stdout.txt', stderr: 'stderr.txt' }, './server.pid');
                 console.log('Daemon started successfully with pid: ' + pid);
                 init();
             });
@@ -184,7 +184,7 @@ function init() {
             var cmd = matchcmd(sections[0], new Array('say', 'move', ['look', 'examine'], 'me',
                 'whisper', 'reply', 'attack', 'create', 'destroy', 'modify',
                 'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp'],
-                'inventory'));
+                'inventory', 'who'));
             sections.shift();
             var cmd_args = sections.join(' ');
 
@@ -239,6 +239,9 @@ function init() {
                     break;
                 case 'inventory':
                     LOGIC.inventory(player);
+                    break;
+                case 'who':
+                    LOGIC.who(player);
                     break;
                 default:
                     if(!LOGIC.emote(player, cmd.toLowerCase()))

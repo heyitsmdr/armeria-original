@@ -5,7 +5,7 @@ var Logic = function() {
     self._invalidcmd = function(p) {
         p.msg('That command is not recognized. Try again.');
         return true;
-    }
+    };
     self._createTable = function(title, data) {
         var output = "<br><table class='embed'><tr><td colspan='2' class='title'>" + title + "</td>";
         output += "<tr><td class='head'>Property</td><td class='head'>Value</td></tr>";
@@ -15,7 +15,18 @@ var Logic = function() {
         });
         output += "</table>";
         return output;
-    }
+    };
+    self._createInvisTable = function(data, width) {
+        var output = "<table width='" + width + "'>";
+        data.forEach(function(row){
+            output += "<tr>";
+            row.forEach(function(cell){
+                output += "<td style='" + cell.style + "'>" + cell.data + "</td>";
+            });
+            output += "</tr>";
+        });
+        return output;
+    };
     /* ## END: LOGIC HELPER FUNCTIONS ## */
 
     /* ## LOGIN AUTHORIZATION ## */
@@ -437,7 +448,7 @@ var Logic = function() {
             }
         }
         else { player.msg("You do not have a target."); }
-    }
+    };
 
     self.library = function(player, args) {
         if(!player.character.builder) { return self._invalidcmd(player); }
@@ -452,7 +463,24 @@ var Logic = function() {
                 player.msg("Unknown library function.");
         }
 
-    }
+    };
+    self.who = function(player) {
+        var tabledata = [];
+        var count = 0;
+        PLAYERS.eachOnline(function(p){
+            tabledata.push([{
+                data: 'BUILDER',
+                style: ''
+            },
+            {
+                data: p.character.htmlname,
+                style: ''
+            }]);
+            count++;
+        });
+        player.msg(self._createInvisTable(tabledata, '280px'));
+        player.msg('There are ' + count + ' visible player' + ((count>1)?'s':'') + ' online.');
+    };
     /* ## END: BASIC ## */
 
     /*  ## ITEM MANAGEMENT ## */
@@ -466,7 +494,7 @@ var Logic = function() {
             inv += '<br>&nbsp;&nbsp;&nbsp;&nbsp;' + item.ttOutput();
         });
         player.msg(inv);
-    }
+    };
     /*  ## END: ITEM MANAGEMENT ## */
 
     /*  ## EMOTES ## */
