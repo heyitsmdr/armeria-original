@@ -7,3 +7,4 @@ out.log
 errors.txt
 stderr.log
 stdout.log
+server.pid

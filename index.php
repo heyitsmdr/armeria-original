@@ -69,6 +69,7 @@
         </script>
         
         <!-- Game Client -->
+        <div id="itemTooltipBox"></div>
         <div id="status" class="shadow border222">
             <div id="updateStatus"></div>
             <div id="networkStatus"></div>

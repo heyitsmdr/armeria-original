@@ -40,10 +40,26 @@ switch(arg) {
             return process.exit(-1);
         }
         break;
+    case 'restart':
+        if (path.existsSync("./server.pid")) {
+            daemon.kill('./server.pid', function(){
+                console.log('Server restarted.');
+                pid = daemon.daemonize({ stdout: 'stdout.log', stderr: 'stderr.log' }, './server.pid');
+                console.log('Daemon started successfully with pid: ' + pid);
+                init();
+            });
+            return;
+        } else {
+            pid = daemon.daemonize({ stdout: 'stdout.log', stderr: 'stderr.log' }, './server.pid');
+            console.log('Daemon started successfully with pid: ' + pid);
+            init();
+        }
     default:
         console.log('Valid options:');
-        console.log('  start  - start the server');
-        console.log('  stop   - stop the server');
+        console.log('Syntax: ./app [option]')
+        console.log('   start   - start the server');
+        console.log('   stop    - stop the server');
+        console.log('   restart - restart (or start) the server');
 }
 
 function init() {
@@ -228,6 +244,17 @@ function init() {
                     if(!LOGIC.emote(player, cmd.toLowerCase()))
                         player.msg('That command is not recognized. Try again.');
             }
+        });
+        socket.on('itemtip', function(data){
+            var obj = LIBRARY.getById(data.id);
+            if(obj===false) {
+                player.emit('itemtip', { content: 'Not found in library.' });
+                return;
+            }
+            var tooltip = "<span class='tipIdentifier'>" + obj.get('htmlname') + "</span>";
+               tooltip += "<br>Level " + obj.get('level');
+               tooltip += "<br><br>This item is rare.";
+            player.emit('itemtip', { content: tooltip });
         });
     });
 }

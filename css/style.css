@@ -19,7 +19,23 @@ body {
     background-position: 0 0,0 0,0 0,0 0;
     opacity: 1;
 }
-
+#itemTooltipBox {
+    display: none;
+    z-index: 99999;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    height: auto;
+    width: auto;
+    padding: 8px;
+    border: 1px solid #444444;
+}
+#itemTooltipBox .tipIdentifier {
+    font-size: 15px;
+    font-weight: bold;
+    color: #ffffff;
+}
 input {
     font-family: 'Paprika', serif;
     font-size: 12px;
