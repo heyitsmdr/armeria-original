@@ -251,9 +251,15 @@ function init() {
                 player.emit('itemtip', { content: 'Not found in library.' });
                 return;
             }
+            // name
             var tooltip = "<span class='tipIdentifier'>" + obj.get('htmlname') + "</span>";
-               tooltip += "<br>Level " + obj.get('level');
-               tooltip += "<br><br>This item is rare.";
+            // library id (builders only)
+            if(player.character.builder)
+                tooltip += "<br><span style='color:#666666'>" + obj.id + "</span>";
+            // level
+            tooltip += "<br>Level " + obj.get('level');
+            // rare, unique, etc
+            tooltip += "<br><br>This item is rare.";
             player.emit('itemtip', { content: tooltip });
         });
     });
