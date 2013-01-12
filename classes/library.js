@@ -37,6 +37,15 @@ var Library = function(){
 
     };
 
+    self.listType = function(player, args, type) {
+        var objs = [];
+        self.objects.forEach(function(lib){
+            if(lib.type == type.toLowerCase())
+                objs.push({ property: lib.id, value: lib.get('name') });
+        });
+        player.msg(LOGIC._createTable("Armeria Library: " + type + "s Directory", objs));
+    };
+
     self.init();
 };
 

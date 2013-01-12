@@ -454,13 +454,19 @@ var Logic = function() {
         if(!player.character.builder) { return self._invalidcmd(player); }
         var creation = args.split(' ')[0];
         var argsremaining = args.split(' ').splice(1).join(' ');
-        creation = matchcmd(creation, new Array(['additem', 'ai']));
+        creation = matchcmd(creation, new Array('add', ['listitems', 'lsitems', 'li'], ['listmobs', 'lsmobs', 'lm']));
         switch(creation.toLowerCase()) {
             case 'additem':
                 LIBRARY.addItem(player, argsremaining);
                 break;
+            case 'listitems':
+                LIBRARY.listType(player, argsremaining, 'Item');
+                break;
+            case 'listmobs':
+                LIBRARY.listType(player, argsremaining, 'Mob');
+                break;
             default:
-                player.msg("Unknown library function.");
+                player.msg("Unknown library function. Valid functions: add, listitems, listmobs.");
         }
 
     };
