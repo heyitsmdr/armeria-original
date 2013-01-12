@@ -4,8 +4,8 @@ body {
     overflow: hidden;
     background-color: #333;
     background-image: url('../images/layout/bg.png');
-    font-family: "Paprika", "Inconsolata", "Monaco", "Consolas", "Andale Mono", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
-    font-size: 12px;
+    font-family: "Open Sans", "Inconsolata", "Monaco", "Consolas", "Andale Mono", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
+    font-size: 13px;
     color: #fff;
 }
 #fog {
@@ -33,7 +33,7 @@ body {
 }
 #itemTooltipBox .tipIdentifier {
     font-size: 15px;
-    font-weight: bold;
+    font-weight: 700;
     color: #ffffff;
 }
 input {
@@ -100,7 +100,7 @@ input:focus {
     margin-bottom: 5px;
     padding: 2px;
     text-align: center;
-    font-family: 'Paprika', serif;
+    font-family: 'Open Sans', serif;
     font-size: 13px;
     border: solid thin #555;
     border-top: solid thin #777;
@@ -248,7 +248,7 @@ input:focus {
     text-align: center;
     line-height: 16px;
     vertical-align: middle;
-    font-family: 'Paprika', serif;
+    font-family: 'Open Sans', serif;
     margin-top: 248px;
 }
 #gameMap {
@@ -294,6 +294,8 @@ input:focus {
     width: 100%;
     padding: 5px;
     background-color: rgba(0, 0, 0, 0.3);
+    font-family: "Open Sans", "Tahoma", "Verdana", sans-serif;
+    font-size: 13px;
 }
 #editModeCheck {
     
@@ -467,8 +469,8 @@ table.embed td.value {
         overflow: hidden;
         background-color: #333;
         background-image: url('../images/layout/bg.png');
-        font-family: "Paprika", "Inconsolata", "Monaco", "Consolas", "Andale Mono", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
-        font-size: 12px;
+        font-family: "Open Sans", "Inconsolata", "Monaco", "Consolas", "Andale Mono", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
+        font-size: 13px;
         color: #fff;
     }
     #wrapSidebar {

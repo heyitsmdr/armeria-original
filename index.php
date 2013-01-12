@@ -6,7 +6,7 @@
         <link id="cssReset" rel="stylesheet" type="text/css" href="css/reset.css">
         <link id="cssStandard" rel="stylesheet" type="text/css" href="css/style.css">
         <link rel="stylesheet" type="text/css" href="libraries/gritter/css/jquery.gritter.css">
-        <link href='http://fonts.googleapis.com/css?family=Paprika' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,800,700,600' rel='stylesheet' type='text/css'>
         <!-- Scripts -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
