@@ -56,6 +56,9 @@ var LibraryEntry = function(config) {
             case 'item':
                 self.parent = ITEMS.getById(config.parent);
                 break;
+            case 'mob':
+                self.parent = MOBS.getById(config.parent);
+                break;
             default:
                 self.parent = config.parent;
         }

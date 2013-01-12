@@ -12,6 +12,7 @@ var Logic         = require('./classes/logic').Logic;
 var World         = require('./classes/world').World;
 var Combat        = require('./classes/combat').Combat;
 var Items         = require('./classes/item').Items;
+var Mobs         = require('./classes/mob').Mobs;
 var Library       = require('./classes/library').Library;
 
 var arg = process.argv[2] || false;
@@ -54,12 +55,17 @@ switch(arg) {
             console.log('Daemon started successfully with pid: ' + pid);
             init();
         }
+        break;
+    case 'nodaemon':
+        init();
+        break;
     default:
         console.log('Valid options:');
         console.log('Syntax: ./app [option]')
-        console.log('   start   - start the server');
-        console.log('   stop    - stop the server');
-        console.log('   restart - restart (or start) the server');
+        console.log('   start    - start the server');
+        console.log('   stop     - stop the server');
+        console.log('   restart  - restart (or start) the server');
+        console.log('   nodaemon - start the server without using a daemon');
 }
 
 function init() {
@@ -70,7 +76,9 @@ function init() {
     WORLD      = new World();
     COMBAT     = new Combat();
     ITEMS      = new Items(function(){
-    LIBRARY    = new Library();
+        MOBS = new Mobs(function(){
+            LIBRARY    = new Library();
+        });
     });
 
     // listen
