@@ -293,6 +293,7 @@ var Room = function(config, mapobj) {
     // no-save
     self.map;             // object (Map)
     self.players = [];    // array of objects (Player)
+    self.mobs = [];       // array of objects (Mob)
     self.sayhistory = []; // array of objects (string)
 
     // save
@@ -333,6 +334,21 @@ var Room = function(config, mapobj) {
         self.sayhistory.push(say);
     };
 
+    self.addMob = function(mob) {
+        self.mobs.push(mob);
+    };
+    
+    self.removeMob = function(mob) {
+        var i = self.mobs.indexOf(mob);
+        self.mobs.splice(i, 1);
+    };
+
+    self.eachMob = function(callback) {
+        self.mobs.forEach(function(p){
+            callback(p);
+        });
+    };
+
     self.addPlayer = function(player) {
         self.players.push(player);
     };
@@ -356,10 +372,17 @@ var Room = function(config, mapobj) {
     
     self.getPlayerListData = function() {
         var plist = [];
+        // Note: Order is Last to First
         self.eachPlayer(function(player){
             plist.push({
-                name: player.character.name,
+                name: player.character.htmlname,
                 picture: player.character.picture
+            });
+        });
+        self.eachMob(function(mob){
+            plist.push({
+                name: mob.get('htmlname'),
+                picture: ''
             });
         });
         return plist;

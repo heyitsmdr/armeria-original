@@ -279,7 +279,10 @@ var GameEngine = new function() {
             // clear current list
             $('#playerList').html('');
             data.forEach(function(listdata){
-                $('#playerList').html("<li class='player'><img src='" + listdata.picture + "' width='40px' height='40px'><p>" + listdata.name + "</p></li>" + $('#playerList').html());
+                if(listdata.picture === false)
+                    $('#playerList').html("<li class='player'><p style='padding-left: 15px'>" + listdata.name + "</p></li>" + $('#playerList').html());
+                else
+                    $('#playerList').html("<li class='player'><img src='" + listdata.picture + "' width='40px' height='40px'><p>" + listdata.name + "</p></li>" + $('#playerList').html());
             });
         });
         this.socket.on('map', function(data){
@@ -365,6 +368,9 @@ var GameEngine = new function() {
             this.sendHistory.push(command);
             this.sendHistPtr = this.sendHistory.length;
         }
+
+        // echo
+        this.parseInput("&gt; <span style='color:#666'>" + command + "</span>");
 
         $('#inputGameCommands').val('');
         $('#inputGameCommands').focus();

@@ -12,7 +12,7 @@ var Logic         = require('./classes/logic').Logic;
 var World         = require('./classes/world').World;
 var Combat        = require('./classes/combat').Combat;
 var Items         = require('./classes/item').Items;
-var Mobs         = require('./classes/mob').Mobs;
+var Mobs          = require('./classes/mob').Mobs;
 var Library       = require('./classes/library').Library;
 
 var arg = process.argv[2] || false;
@@ -192,7 +192,7 @@ function init() {
             var cmd = matchcmd(sections[0], new Array('say', 'move', ['look', 'examine'], 'me',
                 'whisper', 'reply', 'attack', 'create', 'destroy', 'modify',
                 'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp'],
-                'inventory', 'who'));
+                'inventory', 'who', 'spawn'));
             sections.shift();
             var cmd_args = sections.join(' ');
 
@@ -250,6 +250,9 @@ function init() {
                     break;
                 case 'who':
                     LOGIC.who(player);
+                    break;
+                case 'spawn':
+                    LOGIC.spawn(player, cmd_args);
                     break;
                 default:
                     if(!LOGIC.emote(player, cmd.toLowerCase()))

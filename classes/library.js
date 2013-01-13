@@ -1,5 +1,6 @@
-var fs        = require('fs');
-var data_path = __dirname + '/../data/library.json';
+var fs          = require('fs');
+var data_path   = __dirname + '/../data/library.json';
+var script_path = __dirname + '/../data/scripts/';
 
 var Library = function(){
     var self = this;
@@ -57,21 +58,27 @@ var LibraryEntry = function(config) {
     self.parent;
     self.type;
     self.overrides;
+    self.gameScript = false;
 
     self.init = function(config) {
         self.id = config.id;
         self.type = config.type;
+        self.overrides = config.overrides;
         switch(self.type) {
             case 'item':
                 self.parent = ITEMS.getById(config.parent);
                 break;
             case 'mob':
                 self.parent = MOBS.getById(config.parent);
+                // load a script?
+                if(self.get('script')) {
+                    self.gameScript = require(script_path + self.get('script')).GameScript;
+                    self.gameScript = new self.gameScript(self);
+                }
                 break;
             default:
                 self.parent = config.parent;
         }
-        self.overrides = config.overrides;
         console.log('[init] library ' + self.type + ' loaded: ' + self.id + ' (parent: ' + self.parent.id + ') level ' + self.get('level'));
     };
 
@@ -84,6 +91,26 @@ var LibraryEntry = function(config) {
         return "<span class='itemtooltip' data-id='" + self.id + "'>" + self.get('htmlname') + "</span>";
     };
     /* END: ITEM ONLY FUNCTIONS */
+
+    /* SCRIPT FUNCTIONS */
+    self.emit = function(func, arg1, arg2, arg3, arg4) {
+        if(!self.gameScript) return;
+        switch(func) {
+            case 'onSay':
+                self.gameScript.onSay(arg1, arg2);
+                break;
+        }
+    };
+    self.say = function(location, text) {
+        var map = WORLD.getMap(location.map);
+        if(!map) return;
+        var room = map.getRoom(location.x, location.y, location.z);
+        if(!room) return;
+        room.eachPlayer(function(p){
+            p.msg(self.get('htmlname') + " says, '" + text + "'");
+        });
+    };
+    /* END: SCRIPT FUNCTIONS */
 
     self.stringify = function() {
         return JSON.stringify({

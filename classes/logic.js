@@ -25,6 +25,7 @@ var Logic = function() {
             });
             output += "</tr>";
         });
+        output += "</table>";
         return output;
     };
     /* ## END: LOGIC HELPER FUNCTIONS ## */
@@ -91,7 +92,7 @@ var Logic = function() {
             return;
         }
 
-        //Customize output depending on sentence punctuation.
+        // Customize output depending on sentence punctuation.
         var isQuestion = false;
         var isExcited = false;
         var msgStart = " says, '";
@@ -129,6 +130,10 @@ var Logic = function() {
         });
         player.character.room.updateSaveHistory(player.character.htmlname + msgStart + what + "'");
         player.msg(msgStart_self + what + "'");
+        // Emit to Mobs
+        player.character.room.eachMob(function(mob){
+            mob.emit('onSay', player, what);
+        });
     }
     
     self.move = function(player, dir) {
@@ -275,9 +280,12 @@ var Logic = function() {
 
     self.look = function(player) {
         if(player.character.builder)
-            player.msg('<br/><span class="yellow">' + player.character.room.name + '</span> (' + player.character.location.x + ',' + player.character.location.y + ',' + player.character.location.z + ')<br/>' + player.character.room.desc);
+            player.msg('<span class="yellow">' + player.character.room.name + '</span> (' + player.character.location.x + ',' + player.character.location.y + ',' + player.character.location.z + ')<br/>' + player.character.room.desc);
         else
-            player.msg('<br/><span class="yellow">' + player.character.room.name + '</span><br/>' + player.character.room.desc);
+            player.msg('<span class="yellow">' + player.character.room.name + '</span><br/>' + player.character.room.desc);
+        player.character.room.eachMob(function(m){
+                player.msg(m.get('htmlname') + ' is here.');
+        });
         player.character.room.eachPlayerExcept(player, function(p){
                 player.msg(p.character.htmlname + ' ' + p.character.roomdesc);
         });
@@ -337,6 +345,31 @@ var Logic = function() {
                 player.msg("Unknown creation item.");
         }
     }
+
+    self.spawn = function(player, args) {
+        if(!player.character.builder) { return self._invalidcmd(player); }
+        var creation = getarg(args, 0, true);
+        var obj = LIBRARY.getById(creation);
+        if (obj === false) {
+            player.msg('Entry not found in library.');
+            return;
+        }
+        switch(obj.type) {
+            case 'item':
+                break;
+            case 'mob':
+                player.character.room.addMob(obj);
+                player.character.room.eachPlayer(function(p){
+                    p.msg(obj.get('htmlname') + ' appeared in a puff of smoke!');
+                    p.emit("sound", {sfx: 'teleport.mp3', volume: 75});
+                    p.update({plist: 1});
+                });
+
+                break;
+            default:
+                player.msg('Cannot spawn this type.');
+        }
+    };
 
     self.destroy = function(player, args) {
         if(!player.character.builder) { return self._invalidcmd(player); }
@@ -474,17 +507,26 @@ var Logic = function() {
         var tabledata = [];
         var count = 0;
         PLAYERS.eachOnline(function(p){
-            tabledata.push([{
+            tabledata.push([
+            {
+                data: '[',
+                style: 'text-align:center'
+            },
+            {
                 data: 'BUILDER',
                 style: 'text-align:center'
             },
             {
+                data: ']',
+                style: 'text-align:center'
+            },
+            {
                 data: p.character.htmlname,
-                style: 'text-align:left'
+                style: 'text-align:left;padding-left:10px'
             }]);
             count++;
         });
-        player.msg(self._createInvisTable(tabledata, '300px'));
+        player.msg('<br>' + self._createInvisTable(tabledata, '300px'));
         player.msg('There ' + ((count>1)?'are ':'is ') + count + ' visible player' + ((count>1)?'s':'') + ' online.');
     };
     /* ## END: BASIC ## */
