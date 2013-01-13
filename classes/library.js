@@ -70,14 +70,19 @@ var LibraryEntry = function(config) {
                 break;
             case 'mob':
                 self.parent = MOBS.getById(config.parent);
-                // load a script?
-                if(self.get('script')) {
-                    self.gameScript = require(script_path + self.get('script')).GameScript;
-                    self.gameScript = new self.gameScript(self);
-                }
                 break;
             default:
                 self.parent = config.parent;
+        }
+        // load a script?
+        if(self.get('script')) {
+            try {
+                self.gameScript = require(script_path + self.get('script')).GameScript;
+                self.gameScript = new self.gameScript(self);
+            } catch (err) {
+                self.gameScript = false;
+                console.log('[script] error loading: ' + script_path + self.get('script'));
+            }
         }
         console.log('[init] library ' + self.type + ' loaded: ' + self.id + ' (parent: ' + self.parent.id + ') level ' + self.get('level'));
     };
