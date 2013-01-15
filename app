@@ -147,7 +147,7 @@ function init() {
         console.log('connection established, player added (total: ' + PLAYERS.getPlayerCount() + ')');
 
         socket.on('disconnect', function(){
-            if(player.character) {
+            if(player.character && player.character.online) {
                 player.character.logout();
             }
             PLAYERS.removePlayer(player);

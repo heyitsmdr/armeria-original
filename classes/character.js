@@ -136,6 +136,12 @@ var Character = function(config) {
         self.online = true;
         // store room
         self.room = self.getRoomObj();
+        if(self.room === false) {
+            self.player.msg('Your character is saved to a room that no longer exists. Please contact us. Disconnecting..');
+            self.online = false;
+            self.player.socket.disconnect();
+            return;
+        }
         // add player to room
         self.room.addPlayer(self.player);
         // update players (including yourself)

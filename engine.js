@@ -19,10 +19,11 @@ var GameEngine = new function() {
     this.mapcv = false;         // Minimap Canvas
     this.maptileset = false;    // Image
     this.mapts = false;         // Image Properties
-    this.mapanimx = false;      // Animation for setInterval
-    this.mapanimy = false;      // Animation for setInterval
-    this.mapoffsetx = 0;        // Minimap offset
-    this.mapoffsety = 0;        // Minimap offset
+    this.mapanim = false;       // Map Animation for setInterval
+    this.mapoffsetx = 0;        // Minimap offset - x
+    this.mapoffsety = 0;        // Minimap offset - y
+    this.mapdestoffsetx = 0;    // Minimap destination offset - x
+    this.mapdestoffsety = 0;    // Minimap destination offset - y
     this.server = false;        // Server class
     this.serverOffline = false; // Set to True if Socket.IO is not found (server offline)
     this.sendHistory = [];      // Array of strings that you sent to the server (for up/down history)
@@ -102,6 +103,9 @@ var GameEngine = new function() {
         $(document).on('mouseover', '.itemtooltip', this.itemToolTipEnter);
         $(document).on('mouseout', '.itemtooltip', this.itemToolTipLeave);
         $(document).on('mousemove', '.itemtooltip', this.itemToolTipMove);
+        // request animation frame
+        var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+        window.requestAnimationFrame = requestAnimationFrame;
         // focus input box
         $('#inputGameCommands').focus();
     }
@@ -450,40 +454,38 @@ var GameEngine = new function() {
         if(this.mapz != z) {
             this.mapz = z;
         }
-        // clear current animations
-        clearInterval(GameEngine.mapanimx);
-        clearInterval(GameEngine.mapanimy);
         // calculate offsets
-        var offsetx = 105 - (x * 30);
-        var offsety = 105 - (y * 30);
+        this.mapdestoffsetx = 105 - (x * 30);
+        this.mapdestoffsety = 105 - (y * 30);
         // lighting?
         this.maproom = this.mapGridAt(x, y);
         // use animation?
-        if(anim) {
-            GameEngine.mapanimx = setInterval(function(){
-                if(GameEngine.mapoffsetx != offsetx) {
-                    if(GameEngine.mapoffsetx < offsetx)
-                        GameEngine.mapRender(false, (GameEngine.mapoffsetx + 1), GameEngine.mapoffsety);
-                    else
-                        GameEngine.mapRender(false, (GameEngine.mapoffsetx - 1), GameEngine.mapoffsety);
+        if(anim && GameEngine.mapanim === false) {
+            GameEngine.mapanim = setInterval(function(){
+                var done = 0;
+                // X
+                if(GameEngine.mapoffsetx < GameEngine.mapdestoffsetx)
+                    GameEngine.mapRender(false, (GameEngine.mapoffsetx + 1), GameEngine.mapoffsety);
+                else if(GameEngine.mapoffsetx > GameEngine.mapdestoffsetx)
+                    GameEngine.mapRender(false, (GameEngine.mapoffsetx - 1), GameEngine.mapoffsety);
+                else
+                    done++;
+                // Y
+                if(GameEngine.mapoffsety < GameEngine.mapdestoffsety)
+                    GameEngine.mapRender(false, GameEngine.mapoffsetx, (GameEngine.mapoffsety + 1));
+                else if(GameEngine.mapoffsety > GameEngine.mapdestoffsety)
+                    GameEngine.mapRender(false, GameEngine.mapoffsetx, (GameEngine.mapoffsety - 1));
+                else
+                    done++;
+                // Animation complete?
+                if (done==2) {
+                    clearInterval(GameEngine.mapanim);
+                    GameEngine.mapanim = false;
+                } else
                     GameEngine.mapRenderLight(GameEngine.maproom);
-                } else {
-                    clearInterval(GameEngine.mapanimx);
-                }
-            }, 5);
-            GameEngine.mapanimy = setInterval(function(){
-                if(GameEngine.mapoffsety != offsety) {
-                    if(GameEngine.mapoffsety < offsety)
-                        GameEngine.mapRender(false, GameEngine.mapoffsetx, (GameEngine.mapoffsety + 1));
-                    else
-                        GameEngine.mapRender(false, GameEngine.mapoffsetx, (GameEngine.mapoffsety - 1));
-                    GameEngine.mapRenderLight(GameEngine.maproom);
-                } else {
-                    clearInterval(GameEngine.mapanimy);
-                }
-            }, 5);
+            }, 1);
         } else {
-            GameEngine.mapRender(false, offsetx, offsety);
+            GameEngine.mapRender(false, this.mapdestoffsetx, this.mapdestoffsety);
             GameEngine.mapRenderLight(GameEngine.maproom);
         }
     }

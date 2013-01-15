@@ -47,6 +47,75 @@ var Library = function(){
         player.msg(LOGIC._createTable("Armeria Library: " + type + "s Directory", objs));
     };
 
+    self.editEntry = function(player, args) {
+        var id = getarg(args, 0, false);
+        var prop = getarg(args, 1, false);
+        var val = getarg(args, 2, true);
+        // get object from library
+        var obj = self.getById(id);
+        if (obj === false) {
+            player.msg('Entry not found in library.');
+            return;
+        }
+        if(prop !== false && val !== false) {
+            self.editEntryPropVal(player, obj, prop, val);
+            return;
+        }
+        switch(obj.type) {
+            case 'item':
+                player.msg(LOGIC._createTable(
+                "Item Properties: " + obj.get('name'),
+                [
+                    {
+                        property: "Name",
+                        value: obj.get('name')
+                    },
+                    {
+                        property: "HTMLName",
+                        value: obj.get('htmlname').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    },
+                    {
+                        property: "Level",
+                        value: obj.get('level')
+                    }
+                ]));
+                break;
+            case 'mob':
+                player.msg(LOGIC._createTable(
+                "Mob Properties: " + obj.get('name'),
+                [
+                    {
+                        property: "Name",
+                        value: obj.get('name')
+                    },
+                    {
+                        property: "HTMLName",
+                        value: obj.get('htmlname').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    },
+                    {
+                        property: "Level",
+                        value: obj.get('level')
+                    },
+                    {
+                        property: "Script",
+                        value: obj.get('script')
+                    }
+                ]));
+                break;
+            default:
+                player.msg('Cannot edit this type of entry.');
+        }
+    };
+
+    self.editEntryPropVal = function(player, obj, prop, val){
+        switch(obj.type) {
+            case 'item':
+                break;
+            case 'mob':
+                break;
+        }
+    };
+
     self.init();
 };
 

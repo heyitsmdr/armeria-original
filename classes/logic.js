@@ -233,6 +233,25 @@ var Logic = function() {
         // check if first argument is a player
         var char = CHARACTERS.getCharacterByName(first, true, true);
         if(char) {
+            if(second && second == 'here') {
+                // reverse teleport
+                var old_room = char.room;
+                var new_room = player.character.room;
+                if(char.switchRooms(dest_map, dest_x, dest_y, dest_z)) {
+                    old_room.eachPlayerExcept(char.player, function(p){
+                        p.msg(char.htmlname + ' disappeared in a flash of light!');
+                        p.emit("sound", {sfx: 'teleport.mp3', volume: 75});
+                    });
+                    new_room.eachPlayerExcept(char.player, function(p){
+                        p.msg(char.htmlname + ' appeared in a puff of smoke!');
+                        p.emit("sound", {sfx: 'teleport.mp3', volume: 75});
+                    });
+                    char.player.msg('<br>.-~ * . - ~ * . -~ * Your surroundings have magically changed.<br>');
+                    self.look(char.player);
+                    char.player.emit("sound", {sfx: 'teleport.mp3', volume: 75});
+                }
+                return;
+            }
             dest_map = char.location.map;
             dest_x = char.location.x;
             dest_y = char.location.y;
@@ -272,7 +291,7 @@ var Logic = function() {
                 p.msg(player.character.htmlname + ' appeared in a puff of smoke!');
                 p.emit("sound", {sfx: 'teleport.mp3', volume: 75});
             });
-            player.msg('<br>You teleported to a new location. Woosh!');
+            player.msg('<br>.-~ * . - ~ * . -~ * Your surroundings have magically changed.<br>');
             self.look(player);
             player.emit("sound", {sfx: 'teleport.mp3', volume: 75});
         }
@@ -489,7 +508,7 @@ var Logic = function() {
         var argsremaining = args.split(' ').splice(1).join(' ');
         creation = matchcmd(creation, new Array('add', ['listitems', 'lsitems', 'li'], ['listmobs', 'lsmobs', 'lm']));
         switch(creation.toLowerCase()) {
-            case 'additem':
+            case 'add':
                 LIBRARY.addItem(player, argsremaining);
                 break;
             case 'listitems':
@@ -497,6 +516,9 @@ var Logic = function() {
                 break;
             case 'listmobs':
                 LIBRARY.listType(player, argsremaining, 'Mob');
+                break;
+            case 'edit':
+                LIBRARY.editEntry(player, argsremaining);
                 break;
             default:
                 player.msg("Unknown library function. Valid functions: add, listitems, listmobs.");
