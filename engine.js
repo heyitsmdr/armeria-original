@@ -363,19 +363,14 @@ var GameEngine = new function() {
                     this.socket.emit('cmd', {cmd: 'look'});
             }
         }
-        if (command.toLowerCase().substr(0, 8) == '/server ') {
-            eval("GameEngine.server.cmdFromSlash('" + command.substr(8) + "')");
-        }
-
         // save in history
         if(command) {
             this.sendHistory.push(command);
             this.sendHistPtr = this.sendHistory.length;
         }
-
         // echo
         this.parseInput("&gt; <span style='color:#666'>" + command + "</span>");
-
+        // clear and focus
         $('#inputGameCommands').val('');
         $('#inputGameCommands').focus();
     }
@@ -550,45 +545,3 @@ var GameEngine = new function() {
         $('#itemTooltipBox').offset({ top:e.pageY + 15, left: e.pageX + 15 });
     };
 };
-
-var Server = new function(){
-    this.restart = function() {
-        // TODO: In the future, hide this and add a password to it
-        console.log('Sending a restart signal to server..');
-        $.get('servercontroller.php', {action:'serverrestart'}, function(data){
-            console.log(data);
-        });
-    }
-    this.cmd = function(command, file) {
-        $.get('servercontroller.php', {action:command, fn: file}, function(data){
-            console.log(data);
-        });
-    }
-    this.cmdFromSlash = function(command) {
-        $.get('servercontroller.php', {action:command}, function(data){
-            GameEngine.parseInput("<span style='color:#888888'>" + data.replace(/\n/g, "<br>") + "</span>");
-        });
-    }
-    this.help = function() {
-        console.log('You can use the following commands:');
-        console.log('   pullbb              pull changes from bitbucket');
-        console.log('   pushbb              push changes to bitbucket');
-        console.log('   status              view the git status report');
-        console.log('   reset               (warning) reset the repo to HEAD');
-        console.log('   resetfile           (warning) reset file to HEAD (file passed as second argument)');
-        console.log('   mergelive           pull changes in from origin/master (live)');
-        console.log('   pushlive            push changes to origin/master (same thing as a pull request)');
-        console.log('   commit              commit changes');
-        console.log('   add                 add a file to repo');
-        console.log('   remove              remove a file from repo');
-        console.log('   serverstart         start the repo server');
-        console.log('   serverstop          stop the repo server');
-        console.log('   serverrestart       restart the repo server');
-        console.log('   serverinstance      show the server instance (ps aux)');
-        console.log('   serveroutput        show the server log');
-        console.log('   serveroutputdelete  delete the server log');
-        console.log('Use GameEngine.server.cmd("command", "arguments") to run the commands above.');
-    }
-};
-
-GameEngine.server = Server;
