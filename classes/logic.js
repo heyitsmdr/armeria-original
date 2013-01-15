@@ -238,6 +238,7 @@ var Logic = function() {
                 var old_room = char.room;
                 var new_room = player.character.room;
                 if(char.switchRooms(dest_map, dest_x, dest_y, dest_z)) {
+                    player.msg('Ok.');
                     old_room.eachPlayerExcept(char.player, function(p){
                         p.msg(char.htmlname + ' disappeared in a flash of light!');
                         p.emit("sound", {sfx: 'teleport.mp3', volume: 75});
@@ -437,18 +438,19 @@ var Logic = function() {
             default:
                 chan_color = 'white';
         }
+        var channel_proper = channel.substr(0, 1).toUpperCase() + channel.substr(1);
+        // special checks
+        switch(channel) {
+            case 'builder':
+                if(!player.character.builder) {
+                    player.msg("You cannot interact with this channel.");
+                    return;
+                }
+                break;
+        }
         if(!args) {
             // join or leave channel
-            // special checks
-            switch(channel) {
-                case 'builder':
-                    if(!player.character.builder) {
-                        player.msg("You cannot join this channel.");
-                        return;
-                    }
-                    break;
-            }
-            // are you in this channel already?
+            //  are you in this channel already?
             if(player.character.channels.indexOf(channel) >= 0) {
                 var i = player.character.channels.indexOf(channel);
                 player.character.channels.splice(i, 1);
@@ -464,6 +466,16 @@ var Logic = function() {
                 });
             }
         } else {
+            if(args.toLowerCase() == '-who') {
+                var wholist = '';
+                PLAYERS.eachOnline(function(p){
+                    if(p.character.channels.indexOf(channel) >= 0) {
+                        wholist += p.character.htmlname + ', ';
+                    }
+                });
+                player.msg('<span class="' + chan_color + '">(' + channel_proper + ') Players in channel: ' + wholist.substr(0, wholist.length - 2) + '.</span>');
+                return;
+            }
             // are you in the channel?
             if(player.character.channels.indexOf(channel) == -1) {
                 player.msg("You are not in this channel. Use <span class='yellow'>/" + channel + "</span> to join it.");
@@ -472,10 +484,10 @@ var Logic = function() {
             // say to channel
             PLAYERS.eachOnlineExcept(player, function(p){
                 if(p.character.channels.indexOf(channel) >= 0) {
-                    p.msg("<span class='" + chan_color + "'>(" + channel.substr(0, 1).toUpperCase() + channel.substr(1) + ") " + player.character.htmlname + " says, '" + args + "'</span>");
+                    p.msg("<span class='" + chan_color + "'>(" + channel_proper + ") " + player.character.htmlname + " says, '" + args + "'</span>");
                 }
             });
-            player.msg("<span class='" + chan_color + "'>(" + channel.substr(0, 1).toUpperCase() + channel.substr(1) + ") You say, '" + args + "'</span>");
+            player.msg("<span class='" + chan_color + "'>(" + channel_proper + ") You say, '" + args + "'</span>");
         }
     }
 
