@@ -43,6 +43,9 @@ var Logic = function() {
             p.msg("<span class='" + chan_color + "'>(" + channel.substr(0, 1).toUpperCase() + channel.substr(1) + ") " + data + "</span>");
         });
     };
+    self._removeHTML = function(data) {
+        return data.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    };
     /* ## END: LOGIC HELPER FUNCTIONS ## */
 
     /* ## LOGIN AUTHORIZATION ## */
@@ -89,6 +92,9 @@ var Logic = function() {
         if(what.toLowerCase() == "lol") { self.lol(player); return; }
         if(what == '^') { self.agree(player); return; }
         
+        // remove html
+        what = self._removeHTML(what);
+
         // Check arguments
         var args = what.split(' ');
         if(args[0] == '-history') {
@@ -369,7 +375,7 @@ var Logic = function() {
     
     self.whisper = function(player, args) {
         var who = getarg(args, 0, false);
-        var what = getarg(args, 1, true);
+        var what = self._removeHTML( getarg(args, 1, true) );
         
         var target = CHARACTERS.getCharacterByName(who, true, true);
         if(target) {
@@ -538,6 +544,8 @@ var Logic = function() {
                 player.msg("You are not in this channel. Use <span class='yellow'>/" + channel + "</span> to join it.");
                 return;
             }
+            // remove html
+            args = self._removeHTML(args);
             // say to channel
             PLAYERS.eachOnlineExcept(player, function(p){
                 if(p.character.channels.indexOf(channel) >= 0) {
