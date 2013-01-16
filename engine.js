@@ -348,18 +348,19 @@ var GameEngine = new function() {
         var command = $('#inputGameCommands').val();
         if(this.connected) {
             var directions = new Array('n','s','e','w','u','d');
-            if(command.substr(0, 1) == '/') {
-                if (command.toLowerCase().substr(0, 9) == '/editmode') {
-                    this.editModeToggle(command.substr(10));
-                } else {
-                    this.socket.emit('cmd', {cmd: command.substr(1)});
-                }
-            } else if (command.toLowerCase() == '/clear') {
+
+            if (command.toLowerCase() == '/clear') {
                 $('#frameGame').html('');
                 this.parseInput('Window cleared.');
                 $('#inputGameCommands').val('');
                 $('#inputGameCommands').focus();
                 return;
+            } else if(command.substr(0, 1) == '/') {
+                if (command.toLowerCase().substr(0, 9) == '/editmode') {
+                    this.editModeToggle(command.substr(10));
+                } else {
+                    this.socket.emit('cmd', {cmd: command.substr(1)});
+                }
             } else if(directions.indexOf(command.toLowerCase()) >= 0) {
                 this.socket.emit('cmd', {cmd: 'move ' + command});
             } else {
