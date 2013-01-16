@@ -20,15 +20,47 @@ var World = function() {
                 self.maps.push(new Map(JSON.parse(fs.readFileSync(map_file).toString('utf8')), files[i]));
             }
         });
-    }
+    };
     
     self.getMap = function(mapname) {
         for(var i = 0; i < self.maps.length; i++) {
             if(self.maps[i].name.toLowerCase()==mapname.toString().toLowerCase()) return self.maps[i];
         }
         return false;
-    }
+    };
     
+    self.eachMap = function(callback) {
+        self.maps.forEach(function(map){
+            callback(map);
+        });
+    };
+
+    self.createMap = function(player, title) {
+        var mapobj = self.getMap(title);
+        if(mapobj) {
+            player.msg('A map with that name already exists. Choose another.');
+            return;
+        }
+        // create map
+        var new_map = new Map({
+            name: title,
+            author: player.character.name,
+            rooms: []
+        });
+        self.maps.push(new_map);
+        // create first room
+        var new_room = new Room({
+            x: 0,
+            y: 0,
+            z: 0,
+            type: 'grassTRBL'
+        }, new_map);
+        new_map.rooms.push(new_room);
+        new_map.save();
+
+        player.msg('Ok.');
+    };
+
     self.init();
 };
 
@@ -220,6 +252,10 @@ var Map = function(config, fn) {
         var shouldAnnounce = false;
         var shouldSendMap = false;
         var shouldSendMapToArea = false;
+        var shouldOk = false;
+        // boolean fix
+        if(value=='true') value = true;
+        if(value=='false') value = false;
         switch(id.toLowerCase()) {
             case 'name':
                 player.character.room.name = value;
@@ -243,6 +279,36 @@ var Map = function(config, fn) {
                 shouldSendMapToArea = true;
                 shouldAnnounce = true;
                 break;
+            case 'north':
+                player.character.room.north = value;
+                shouldSave = true;
+                shouldOk = true;
+                break;
+            case 'south':
+                player.character.room.south = value;
+                shouldSave = true;
+                shouldOk = true;
+                break;
+            case 'east':
+                player.character.room.east = value;
+                shouldSave = true;
+                shouldOk = true;
+                break;
+            case 'west':
+                player.character.room.west = value;
+                shouldSave = true;
+                shouldOk = true;
+                break;
+            case 'up':
+                player.character.room.up = value;
+                shouldSave = true;
+                shouldOk = true;
+                break;
+            case 'down':
+                player.character.room.down = value;
+                shouldSave = true;
+                shouldOk = true;
+                break;
             default:
                 player.msg(LOGIC._createTable(
                 "Room Properties: " + player.character.location.map + ", " + player.character.location.x + ", " + player.character.location.y + ", " + player.character.location.z,
@@ -262,6 +328,30 @@ var Map = function(config, fn) {
                     {
                         property: "Environment",
                         value: player.character.room.environment
+                    },
+                    {
+                        property: "North",
+                        value: player.character.room.north
+                    },
+                    {
+                        property: "South",
+                        value: player.character.room.south
+                    },
+                    {
+                        property: "East",
+                        value: player.character.room.east
+                    },
+                    {
+                        property: "West",
+                        value: player.character.room.west
+                    },
+                    {
+                        property: "Up",
+                        value: player.character.room.up
+                    },
+                    {
+                        property: "Down",
+                        value: player.character.room.down
                     }
                 ]));
         }
@@ -282,6 +372,8 @@ var Map = function(config, fn) {
                 p.update({minimap: true});
             });
         }
+        if(shouldOk)
+            player.msg('Ok.');
     };
 
     self.init(config, fn);
@@ -304,6 +396,12 @@ var Room = function(config, mapobj) {
     self.z;             // int
     self.type;          // string
     self.environment;   // string (inside, outside, underground)
+    self.north;         // string for linking
+    self.south;         // string for linking
+    self.east;          // string for linking
+    self.west;          // string for linking
+    self.up;            // string for linking
+    self.down;          // string for linking
 
     self.init = function(config, mapobj) {
         self.map = mapobj;
@@ -314,6 +412,12 @@ var Room = function(config, mapobj) {
         self.z = config.z || 0;
         self.type = config.type || 'grass';
         self.environment = config.environment || 'outside';
+        self.north = config.north || true;
+        self.south = config.south || true;
+        self.east = config.east || true;
+        self.west = config.west || true;
+        self.up = config.up || false;
+        self.down = config.down || false;
     }
     
     self.getSaveData = function() {
@@ -324,7 +428,13 @@ var Room = function(config, mapobj) {
             y: self.y,
             z: self.z,
             type: self.type,
-            environment: self.environment
+            environment: self.environment,
+            north: self.north,
+            south: self.south,
+            east: self.east,
+            west: self.west,
+            up: self.up,
+            down: self.down
         };    
     }
     

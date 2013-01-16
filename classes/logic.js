@@ -28,6 +28,21 @@ var Logic = function() {
         output += "</table>";
         return output;
     };
+    self._sayToChannel = function(channel, data) {
+        switch(channel) {
+            case 'builder':
+                chan_color = 'orange';
+                break;
+            case 'gossip':
+                chan_color = 'pink';
+                break;
+            default:
+                chan_color = 'white';
+        }
+        PLAYERS.eachOnlineInChannel(channel, function(p){
+            p.msg("<span class='" + chan_color + "'>(" + channel.substr(0, 1).toUpperCase() + channel.substr(1) + ") " + data + "</span>");
+        });
+    };
     /* ## END: LOGIC HELPER FUNCTIONS ## */
 
     /* ## LOGIN AUTHORIZATION ## */
@@ -144,6 +159,7 @@ var Logic = function() {
         var dir_exit;
         var dir_enter;
         var dir_you;
+        var roomprop;
         var msg_old = '%n walked %d.';
         var msg_new = '%n arrived from the %d.';
         var msg_self = 'You walked %d.';
@@ -155,50 +171,82 @@ var Logic = function() {
                 dir_exit = 'north';
                 dir_enter = 'south';
                 dir_you = 'north';
+                roomprop = player.character.room.north;
                 break;
             case 's':
                 y += 1;
                 dir_exit = 'south';
                 dir_enter = 'north';
                 dir_you = 'south';
+                roomprop = player.character.room.south;
                 break;
             case 'e':
                 x += 1;
                 dir_exit = 'east';
                 dir_enter = 'west';
                 dir_you = 'east';
+                roomprop = player.character.room.east;
                 break;
             case 'w':
                 x -= 1;
                 dir_exit = 'west';
                 dir_enter = 'east';
                 dir_you = 'west';
+                roomprop = player.character.room.west;
                 break;
             case 'u':
                 z += 1;
                 dir_exit = 'up';
                 dir_enter = 'below';
                 dir_you = 'up';
+                roomprop = player.character.room.up;
                 break;
             case 'd':
                 z -=1;
                 dir_exit = 'down';
                 dir_enter = 'above';
                 dir_you = 'down';
+                roomprop = player.character.room.down;
                 break;
             default:
                 player.emit("mapnomove", true);
                 return;
         }
         
-        // attempt to get new room
+        // store old room
         var old_room = player.character.room;
-        var new_room = player.character.room.map.getRoom(x, y, z);
-        if(!new_room) {
+        var new_room = false;
+        var new_map = false;
+
+        // check and handle roomprop
+        if (roomprop === false) {
             player.emit("mapnomove", true);
             return;
+        } else if (roomprop !== true) {
+            // switching areas
+            map = roomprop.split(',')[0];
+            x = roomprop.split(',')[1];
+            y = roomprop.split(',')[2];
+            z = roomprop.split(',')[3];
+            // get map
+            var mapobj = WORLD.getMap(map);
+            if(!mapobj) { player.emit("mapnomove", true); self._sayToChannel('builder', 'Link error at \'' + player.character.locationString() + '\' going ' + dir_exit + ': map not found.'); return; }
+            var roomobj = mapobj.getRoom(x, y, z);
+            if(!roomobj) { player.emit("mapnomove", true); self._sayToChannel('builder', 'Link error at \'' + player.character.locationString() + '\' going ' + dir_exit + ': room not found (map was found).'); return; }
+            // okay!
+            new_room = roomobj;
+            new_map = mapobj;
         }
-        
+
+        // attempt to get new room if not switching maps
+        if(!new_room) {
+            new_room = player.character.room.map.getRoom(x, y, z);
+            if(!new_room) {
+                player.emit("mapnomove", true);
+                return;
+            }
+        }
+
         // messages
         msg_old = msg_old.replace('%n', player.character.htmlname);
         msg_old = msg_old.replace('%d', dir_exit);
@@ -214,6 +262,8 @@ var Logic = function() {
             new_room.eachPlayerExcept(player, function(p){
                 p.msg(msg_new);
             });
+            if(new_map)
+                player.msg('You have entered ' + new_map.name + '.');
             player.msg(msg_self);
             self.look(player);
             player.emit("sound", {sfx: 'walk_grass_1.mp3', volume: 75});
@@ -257,10 +307,10 @@ var Logic = function() {
             dest_x = char.location.x;
             dest_y = char.location.y;
             dest_z = char.location.z;
-        } else if (first && second && third === false && fourth == false) {
+        } else if (first && second && third === false && fourth === false) {
             dest_x = first;
             dest_y = second;
-        } else if (first && second && third && fourth == false) {
+        } else if (first && second && third && fourth === false) {
             dest_x = first;
             dest_y = second;
             dest_z = third;
@@ -270,15 +320,21 @@ var Logic = function() {
             dest_y = third;
             dest_z = fourth;
         } else{
-            player.msg("Teleport failed. Invalid destination.");
+            player.msg("Teleport failed. Invalid destination (1).");
             player.emit("mapnomove", false);
             return;
         }
         // do the teleport
         var old_room = player.character.room;
-        var new_room = WORLD.getMap(dest_map).getRoom(dest_x, dest_y, dest_z);
+        var new_map = WORLD.getMap(dest_map);
+        if(!new_map) {
+            player.msg("Teleport failed. Invalid destination (2).");
+            player.emit("mapnomove", false);
+            return;
+        }
+        var new_room = new_map.getRoom(dest_x, dest_y, dest_z);
         if(!new_room) {
-            player.msg("Teleport failed. Invalid destination.");
+            player.msg("Teleport failed. Invalid destination (3).");
             player.emit("mapnomove", false);
             return;
         }
@@ -332,7 +388,7 @@ var Logic = function() {
             return;
         } 
         
-        self.whisper(player, player.character.replyto + ' ' + what);
+        self.whisper(player, '"' + player.character.replyto + '" ' + what);
     }
 
     self.attack = function(player, args) {
@@ -360,6 +416,9 @@ var Logic = function() {
         switch(creation.toLowerCase()) {
             case 'room':
                 player.character.room.map.createRoom(player, argsremaining);
+                break;
+            case 'map':
+                WORLD.createMap(player, argsremaining);
                 break;
             default:
                 player.msg("Unknown creation item.");
@@ -468,10 +527,8 @@ var Logic = function() {
         } else {
             if(args.toLowerCase() == '-who') {
                 var wholist = '';
-                PLAYERS.eachOnline(function(p){
-                    if(p.character.channels.indexOf(channel) >= 0) {
-                        wholist += p.character.htmlname + ', ';
-                    }
+                PLAYERS.eachOnlineInChannel(channel, function(p){
+                    wholist += p.character.htmlname + ', ';
                 });
                 player.msg('<span class="' + chan_color + '">(' + channel_proper + ') Players in channel: ' + wholist.substr(0, wholist.length - 2) + '.</span>');
                 return;
@@ -555,13 +612,20 @@ var Logic = function() {
                 style: 'text-align:center'
             },
             {
-                data: p.character.htmlname,
+                data: p.character.htmlname + ((p.character.title)?', ' + p.character.title:'') + ' @ ' + p.character.room.map.name,
                 style: 'text-align:left;padding-left:10px'
             }]);
             count++;
         });
-        player.msg('<br>' + self._createInvisTable(tabledata, '300px'));
+        player.msg('<br>' + self._createInvisTable(tabledata, '600px'));
         player.msg('There ' + ((count>1)?'are ':'is ') + count + ' visible player' + ((count>1)?'s':'') + ' online.');
+    };
+    self.areas = function(player) {
+        var areadata = '';
+        WORLD.eachMap(function(map){
+            areadata += '<br>' + map.name;
+        });
+        player.msg('The known areas in the world are:' + areadata);
     };
     /* ## END: BASIC ## */
 
@@ -573,7 +637,7 @@ var Logic = function() {
         }
         var inv = 'You are carrying:';
         player.character.eachInventoryItem(function(item){
-            inv += '<br>&nbsp;&nbsp;&nbsp;&nbsp;' + item.ttOutput();
+            inv += '<br>' + item.ttOutput();
         });
         player.msg(inv);
     };

@@ -126,7 +126,7 @@ function init() {
                 }
             } else if(sections[i].substr(0, 1) == '"') {
                 if(sections[i].substr(sections[i].length - 1, 1) == '"')
-                    args.push(sections[i].substr(1, sections[i].length - 1));
+                    args.push(sections[i].substr(1, sections[i].length - 2));
                 else
                     temp += sections[i].substr(1) + ' ';
             } else {
@@ -192,7 +192,7 @@ function init() {
             var cmd = matchcmd(sections[0], new Array('say', 'move', ['look', 'examine'], 'me',
                 'whisper', 'reply', 'attack', 'create', 'destroy', 'modify',
                 'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp'],
-                'inventory', 'who', 'spawn'));
+                'inventory', 'who', 'spawn', 'areas'));
             sections.shift();
             var cmd_args = sections.join(' ');
 
@@ -253,6 +253,9 @@ function init() {
                     break;
                 case 'spawn':
                     LOGIC.spawn(player, cmd_args);
+                    break;
+                case 'areas':
+                    LOGIC.areas(player);
                     break;
                 default:
                     if(!LOGIC.emote(player, cmd.toLowerCase()))

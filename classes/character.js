@@ -80,6 +80,7 @@ var Character = function(config) {
     self.stats;     // array (health, maxhealth, str, agi, sta, int)
     self.level;     // int
     self.inventory; // array of strings
+    self.title;     // string
 
     // not saved
     self.online = false;    // boolean
@@ -100,6 +101,7 @@ var Character = function(config) {
         self.stats = config.stats || {health: 100, maxhealth: 100, mana: 100, maxmana: 100, energy: 100, str: 15, agi: 15, sta: 15, int: 15, wis: 15, armor: 25, eres: 25, mres: 25};
         self.level = config.level || 1;
         self.inventory = config.inventory || [];
+        self.title = config.title || '';
         console.log('[init] character loaded: ' + self.name);
     };
     
@@ -115,7 +117,8 @@ var Character = function(config) {
             roomdesc: self.roomdesc,
             stats: self.stats,
             level: self.level,
-            inventory: self.inventory
+            inventory: self.inventory,
+            title: self.title
         }, null, '\t');    
     };
     
@@ -131,6 +134,10 @@ var Character = function(config) {
         return self.getMapObj().getRoom(self.location.x, self.location.y, self.location.z);
     };
     
+    self.locationString = function() {
+        return self.location.map + ', ' + self.location.x + ', ' + self.location.y + ', ' + self.location.z;
+    };
+
     self.login = function() {
         // set online
         self.online = true;
