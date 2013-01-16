@@ -354,6 +354,12 @@ var GameEngine = new function() {
                 } else {
                     this.socket.emit('cmd', {cmd: command.substr(1)});
                 }
+            } else if (command.toLowerCase() == '/clear') {
+                $('#frameGame').html('');
+                this.parseInput('Window cleared.');
+                $('#inputGameCommands').val('');
+                $('#inputGameCommands').focus();
+                return;
             } else if(directions.indexOf(command.toLowerCase()) >= 0) {
                 this.socket.emit('cmd', {cmd: 'move ' + command});
             } else {
