@@ -277,7 +277,7 @@ var GameEngine = new function() {
         });
         /* Custom Events */
         this.socket.on('txt', function(data){
-            GameEngine.parseInput(data.msg);
+            GameEngine.parseInput(data.msg, true);
         });
         this.socket.on('plist', function(data){
             // clear current list
@@ -323,8 +323,13 @@ var GameEngine = new function() {
         });
     }
 
-    this.parseInput = function(newString){
-        $('#frameGame').html($('#frameGame').html() + newString + '<br>');
+    this.parseLinks = function(text) {
+        var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+        return text.replace(urlRegex, function(url) { return '<a href="' + url + '" target="_new">' + url + '</a>'; });
+    };
+
+    this.parseInput = function(newString, parseLinks){
+        $('#frameGame').html($('#frameGame').html() + ((parseLinks)?this.parseLinks(newString):newString) + '<br>');
         $('#frameGame').scrollTop(999999);
     }
 
