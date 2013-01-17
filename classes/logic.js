@@ -638,6 +638,15 @@ var Logic = function() {
         });
         player.msg('The known areas in the world are:' + areadata);
     };
+    self.title = function(player, newtitle) {
+        if(newtitle) {
+            player.character.title = newtitle;
+            player.msg('You will now be known as ' + player.character.htmlname + ', ' + newtitle + '.');
+        } else {
+            player.character.title = '';
+            player.msg('Your title has been removed.');
+        }
+    };
     /* ## END: BASIC ## */
 
     /*  ## ITEM MANAGEMENT ## */

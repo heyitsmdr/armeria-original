@@ -250,12 +250,16 @@ var GameEngine = new function() {
     this.connect = function() {
         if(!this.fbinfo) return;
         this.parseInput("<br>Connecting to game server..");
-        this.socket = io.connect('http://ethryx.net:' + GameEngine.port, {
-            'reconnect': true,
-            'reconnection delay': 1000,
-            'max reconnection attempts': 10
-        });
-        this._socketEvents();
+        try {
+            this.socket = io.connect('http://ethryx.net:' + GameEngine.port, {
+                'reconnect': true,
+                'reconnection delay': 1000,
+                'max reconnection attempts': 10
+            });
+            this._socketEvents();
+        } catch (err) {
+            this.parseInput('<b>Shucks!</b> The server seems to be offline. Try refreshing in a few moments and re-login.');
+        }
     }
 
     this._socketEvents = function() {
@@ -360,7 +364,7 @@ var GameEngine = new function() {
 
         // looking?
         if(command=='') command = '/look';
-        
+
         // echo
         this.parseInput("&gt; <span style='color:#666'>" + command + "</span>");
 

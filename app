@@ -194,7 +194,7 @@ function init() {
             var cmd = matchcmd(sections[0], new Array('say', 'move', ['look', 'examine'], 'me',
                 'whisper', 'reply', 'attack', 'create', 'destroy', 'modify',
                 'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp'],
-                'inventory', 'who', 'spawn', 'areas'));
+                'inventory', 'who', 'spawn', 'areas', 'title'));
             sections.shift();
             var cmd_args = sections.join(' ');
 
@@ -258,6 +258,9 @@ function init() {
                     break;
                 case 'areas':
                     LOGIC.areas(player);
+                    break;
+                case 'title':
+                    LOGIC.title(player, cmd_args);
                     break;
                 default:
                     if(!LOGIC.emote(player, cmd.toLowerCase()))
