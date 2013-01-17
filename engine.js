@@ -100,9 +100,13 @@ var GameEngine = new function() {
             });
         };
         // bind item tooltips
-        $(document).on('mouseover', '.itemtooltip', this.itemToolTipEnter);
-        $(document).on('mouseout', '.itemtooltip', this.itemToolTipLeave);
-        $(document).on('mousemove', '.itemtooltip', this.itemToolTipMove);
+        $(document).on('mouseenter', '.itemtooltip', this.itemToolTipEnter);
+        $(document).on('mouseleave', '.itemtooltip', this.toolTipLeave);
+        $(document).on('mousemove', '.itemtooltip', this.toolTipMove);
+        // bind room list tooltips
+        $(document).on('mouseenter', '.player', this.roomListToolTipEnter);
+        $(document).on('mouseleave', '.player', this.toolTipLeave);
+        $(document).on('mousemove', '.player', this.toolTipMove);
         // request animation frame
         var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
         window.requestAnimationFrame = requestAnimationFrame;
@@ -284,9 +288,9 @@ var GameEngine = new function() {
             $('#playerList').html('');
             data.forEach(function(listdata){
                 if(listdata.picture === false)
-                    $('#playerList').html("<li class='player'><p style='padding-left: 15px'>" + listdata.name + "</p></li>" + $('#playerList').html());
+                    $('#playerList').html("<li class='player' data-id='" + listdata.id + "' data-type='" + listdata.type + "'><p style='padding-left: 15px'>" + listdata.name + "</p></li>" + $('#playerList').html());
                 else
-                    $('#playerList').html("<li class='player'><img src='" + listdata.picture + "' width='40px' height='40px'><p>" + listdata.name + "</p></li>" + $('#playerList').html());
+                    $('#playerList').html("<li class='player' data-id='" + listdata.id + "' data-type='" + listdata.type + "'><img src='" + listdata.picture + "' width='40px' height='40px'><p>" + listdata.name + "</p></li>" + $('#playerList').html());
             });
         });
         this.socket.on('map', function(data){
@@ -340,11 +344,11 @@ var GameEngine = new function() {
     }
 
     this.showIntro = function() {
-        GameEngine.parseInput("<b># WHAT IS ARMERIA?</b>");
+        GameEngine.parseInput("<span style='font-size:14px;font-weight:bold;'>WHAT IS ARMERIA?</span>");
         GameEngine.parseInput("Armeria is a social multi-user dungeon, otherwise known as a MUD. Players in this world are known by their name in real-life. Armeria is not only a highly interactive game, but also a social environment. You can sit back, talk with others, listen to music in the pubs or go out and kill some monsters, complete quests, craft new items and best of all, make some money!");
-        GameEngine.parseInput("<b># WHY DO I WANT MONEY?</b>");
+        GameEngine.parseInput("<span style='font-size:14px;font-weight:bold;'>WHY DO I WANT MONEY?</span>");
         GameEngine.parseInput("Armeria uses a real-world currency system. You start the game with a loan (to help you get started). You can both spend money in real-life to get gold in-game and sell gold in-game to get money in real-life (with limitations, of course).");
-        GameEngine.parseInput("<b># WHAT IF I'VE NEVER PLAYED A 'MUD' BEFORE?</b>");
+        GameEngine.parseInput("<span style='font-size:14px;font-weight:bold;'>WHAT IF I'VE NEVER PLAYED A 'MUD' BEFORE?</span>");
         GameEngine.parseInput("That's perfectly fine! We designed this game from the ground up to have a small learning curve for newcommers. However, don't let that steer you away. The game can get very in-depth and has complex and rewarding systems that you would expect in any other MUD.");
         GameEngine.newLine(1);
     }
@@ -381,6 +385,7 @@ var GameEngine = new function() {
             this.sendHistPtr = this.sendHistory.length;
         }
         // echo
+        if(command=='') command = '/look';
         this.parseInput("&gt; <span style='color:#666'>" + command + "</span>");
         // clear and focus
         $('#inputGameCommands').val('');
@@ -549,11 +554,18 @@ var GameEngine = new function() {
             GameEngine.socket.emit('itemtip', { id: $(this).data('id') });
     };
 
-    this.itemToolTipLeave = function(){
+    this.toolTipLeave = function(){
         $('#itemTooltipBox').fadeOut(75);
     };
 
-    this.itemToolTipMove = function(e){
+    this.toolTipMove = function(e){
         $('#itemTooltipBox').offset({ top:e.pageY + 15, left: e.pageX + 15 });
+    };
+
+    this.roomListToolTipEnter = function() {
+        $('#itemTooltipBox').html('Loading...');
+        $('#itemTooltipBox').fadeIn(75);
+        if(GameEngine.connected)
+            GameEngine.socket.emit('ptip', { id: $(this).data('id'), type: $(this).data('type') });
     };
 };

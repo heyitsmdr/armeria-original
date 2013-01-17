@@ -64,7 +64,7 @@ var Library = function(){
         switch(obj.type) {
             case 'item':
                 player.msg(LOGIC._createTable(
-                "Item Properties: " + obj.get('name'),
+                "Item Properties: " + obj.id,
                 [
                     {
                         property: "Name",
@@ -82,7 +82,7 @@ var Library = function(){
                 break;
             case 'mob':
                 player.msg(LOGIC._createTable(
-                "Mob Properties: " + obj.get('name'),
+                "Mob Properties: " + obj.id,
                 [
                     {
                         property: "Name",

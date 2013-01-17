@@ -120,7 +120,7 @@ var Map = function(config, fn) {
     self.getMinimapData = function() {
         var roomdata = [];
          self.rooms.forEach(function(r){
-             roomdata.push({x: r.x, y: r.y, z: r.z, terrain: r.type, env: r.environment});
+            roomdata.push({x: r.x, y: r.y, z: r.z, terrain: r.type, env: r.environment});
          });
          return roomdata;
     };
@@ -485,14 +485,18 @@ var Room = function(config, mapobj) {
         // Note: Order is Last to First
         self.eachPlayer(function(player){
             plist.push({
+                id: player.character.name,
                 name: player.character.htmlname,
-                picture: player.character.picture
+                picture: player.character.picture,
+                type: 'player'
             });
         });
         self.eachMob(function(mob){
             plist.push({
+                id: mob.id,
                 name: mob.get('htmlname'),
-                picture: ''
+                picture: '',
+                type: 'mob'
             });
         });
         return plist;

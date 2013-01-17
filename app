@@ -279,5 +279,20 @@ function init() {
             tooltip += "<br><br>This item is rare.";
             player.emit('itemtip', { content: tooltip });
         });
+        socket.on('ptip', function(data){
+            switch(data.type) {
+                case 'player':
+                    var C = CHARACTERS.getCharacterByName(data.id, true, false);
+                    var tooltip = "<span class='tipIdentifier'>" + C.name + ((C.nickname)?' ('+C.nickname+')':'') + "</span>";
+                    if(C.builder)
+                        tooltip += "<br>Game Builder";
+                    else
+                        tooltip += "<br>Player";
+                    tooltip += "<br>&lt;Guild Name&gt;";
+                    tooltip += "<br>Level <b>" + C.level + "</b>";
+                    player.emit('itemtip', { content: tooltip });
+                    break;
+            }
+        });
     });
 }
