@@ -355,38 +355,46 @@ var GameEngine = new function() {
 
     this.parseCommand = function() {
         var command = $('#inputGameCommands').val();
-        if(this.connected) {
-            var directions = new Array('n','s','e','w','u','d');
 
-            if (command.toLowerCase() == '/clear') {
+        var directions = new Array('n','s','e','w','u','d');
+
+        // looking?
+        if(command=='') command = '/look';
+        
+        // echo
+        this.parseInput("&gt; <span style='color:#666'>" + command + "</span>");
+
+        if(command.substr(0, 1) == '/') {
+            if (command.toLowerCase().substr(0, 9) == '/editmode') {
+                this.editModeToggle(command.substr(10));
+            } else if (command.toLowerCase() == '/clear') {
                 $('#frameGame').html('');
                 this.parseInput('Window cleared.');
                 $('#inputGameCommands').val('');
                 $('#inputGameCommands').focus();
                 return;
-            } else if(command.substr(0, 1) == '/') {
-                if (command.toLowerCase().substr(0, 9) == '/editmode') {
-                    this.editModeToggle(command.substr(10));
-                } else {
-                    this.socket.emit('cmd', {cmd: command.substr(1)});
-                }
-            } else if(directions.indexOf(command.toLowerCase()) >= 0) {
-                this.socket.emit('cmd', {cmd: 'move ' + command});
+            } else if (command.toLowerCase() == '/version') {
+                this.parseInput('Your client is running version <b>' + this.version + '</b>.');
             } else {
-                if(command)
-                    this.socket.emit('cmd', {cmd: 'say ' + command});
-                else
-                    this.socket.emit('cmd', {cmd: 'look'});
+                if(this.connected)
+                    this.socket.emit('cmd', {cmd: command.substr(1)});
             }
+        } else if(directions.indexOf(command.toLowerCase()) >= 0) {
+            if(this.connected)
+                this.socket.emit('cmd', {cmd: 'move ' + command});
+        } else if(this.connected) {
+            if(command)
+                this.socket.emit('cmd', {cmd: 'say ' + command});
+            else
+                this.socket.emit('cmd', {cmd: 'look'});
         }
+
         // save in history
         if(command) {
             this.sendHistory.push(command);
             this.sendHistPtr = this.sendHistory.length;
         }
-        // echo
-        if(command=='') command = '/look';
-        this.parseInput("&gt; <span style='color:#666'>" + command + "</span>");
+
         // clear and focus
         $('#inputGameCommands').val('');
         $('#inputGameCommands').focus();

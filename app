@@ -158,9 +158,11 @@ function init() {
             // check version?
             if(data.version !== false) {
                 fs.stat('./index.php', function(err, stat){
-                    if(data.version != stat.mtime) {
-                        console.log('version mismatch. client has ' + data.version + ' and server has ' + stat.mtime);
-                        player.msg("<b>Notice!</b> Your client is out-of-date. Please refresh to get the latest version.");
+                    var ver = String(stat.mtime.getTime());
+                    ver = ver.substr(0, ver.length - 3);
+                    if(data.version != ver) {
+                        console.log('version mismatch. client has ' + data.version + ' and server has ' + ver);
+                        player.msg("<b>Notice!</b> Your client is out-of-date. Please refresh (or shift+f5) to get the latest version.");
                         socket.disconnect();
                         return;
                     }

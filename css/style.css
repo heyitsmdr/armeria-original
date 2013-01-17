@@ -8,6 +8,9 @@ body {
     font-size: 13px;
     color: #fff;
 }
+b {
+    font-weight: 500;
+}
 #fog {
     position: absolute;
     z-index: -1;
