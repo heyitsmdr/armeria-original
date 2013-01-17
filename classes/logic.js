@@ -606,13 +606,16 @@ var Logic = function() {
         var tabledata = [];
         var count = 0;
         PLAYERS.eachOnline(function(p){
+            var title = 'PLAYER';
+            if(p.character.builder)
+                title = '<span style="color:#3ff">BUILDER</span>';
             tabledata.push([
             {
                 data: '[',
                 style: 'text-align:center'
             },
             {
-                data: 'BUILDER',
+                data: title,
                 style: 'text-align:center'
             },
             {
