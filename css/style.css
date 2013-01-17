@@ -182,7 +182,7 @@ input:focus {
 }
 /* Right Frames */
 #outerFrameGame {
-    height: 85%;
+    height: 80%;
     padding: 5px;
     margin-bottom: 27px;
 }
@@ -218,7 +218,7 @@ input:focus {
 #outerFrameInput {
     position: absolute;
     width: 85%;
-    height: 15%;
+    height: 20%;
 }
 #frameInput {
     padding: 5px;
@@ -313,7 +313,8 @@ input:focus {
 }
 #playerVitalsTable td {
     width: 25%;
-    border: solid thin #333;
+    border: solid thin #111;
+    border-radius: 10px;
     vertical-align: middle;
     text-align: center;
     background-color: rgba(0, 0, 0, 0.3);
@@ -322,18 +323,53 @@ input:focus {
 #playerVitalsTable td div.bar {
     width: 100%;
     height: 18px;
+    moz-box-shadow: inset 0 0 5px #111;
+    -webkit-box-shadow: inset 0 0 5px #111;
+    box-shadow: inset 0 0 5px #111;
 }
 #playerVitalsTable td div.health {
-    background-color: rgba(255, 30, 0, 0.4);
+    background: #911a05; /* Old browsers */
+    background: -moz-linear-gradient(top, #911a05 0%, #9b200d 50%, #7d1305 51%, #7c1608 71%, #7a170e 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#911a05), color-stop(50%,#9b200d), color-stop(51%,#7d1305), color-stop(71%,#7c1608), color-stop(100%,#7a170e)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #911a05 0%,#9b200d 50%,#7d1305 51%,#7c1608 71%,#7a170e 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #911a05 0%,#9b200d 50%,#7d1305 51%,#7c1608 71%,#7a170e 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #911a05 0%,#9b200d 50%,#7d1305 51%,#7c1608 71%,#7a170e 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #911a05 0%,#9b200d 50%,#7d1305 51%,#7c1608 71%,#7a170e 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#911a05', endColorstr='#7a170e',GradientType=0 ); /* IE6-9 */
 }
 #playerVitalsTable td div.magic {
-    background-color: rgba(0, 67, 255, 0.4);
+    background: #1007bd; /* Old browsers */
+    background: -moz-linear-gradient(top, #1007bd 0%, #1711cb 50%, #0906a4 51%, #0d0ba3 71%, #1214a0 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1007bd), color-stop(50%,#1711cb), color-stop(51%,#0906a4), color-stop(71%,#0d0ba3), color-stop(100%,#1214a0)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #1007bd 0%,#1711cb 50%,#0906a4 51%,#0d0ba3 71%,#1214a0 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #1007bd 0%,#1711cb 50%,#0906a4 51%,#0d0ba3 71%,#1214a0 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #1007bd 0%,#1711cb 50%,#0906a4 51%,#0d0ba3 71%,#1214a0 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #1007bd 0%,#1711cb 50%,#0906a4 51%,#0d0ba3 71%,#1214a0 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1007bd', endColorstr='#1214a0',GradientType=0 ); /* IE6-9 */
 }
 #playerVitalsTable td div.energy {
-    background-color: rgba(51, 255, 51, 0.4);
+    background: #247c04; /* Old browsers */
+    background: -moz-linear-gradient(top, #247c04 0%, #2e850b 50%, #236a04 51%, #256b07 71%, #2b680c 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#247c04), color-stop(50%,#2e850b), color-stop(51%,#236a04), color-stop(71%,#256b07), color-stop(100%,#2b680c)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #247c04 0%,#2e850b 50%,#236a04 51%,#256b07 71%,#2b680c 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #247c04 0%,#2e850b 50%,#236a04 51%,#256b07 71%,#2b680c 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #247c04 0%,#2e850b 50%,#236a04 51%,#256b07 71%,#2b680c 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #247c04 0%,#2e850b 50%,#236a04 51%,#256b07 71%,#2b680c 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#247c04', endColorstr='#2b680c',GradientType=0 ); /* IE6-9 */
 }
 #playerVitalsTable td div.exp {
-    background-color: rgba(255, 0, 255, 0.4);
+    background: #5306a0; /* Old browsers */
+    background: -moz-linear-gradient(top, #5306a0 0%, #5b0fad 50%, #44058b 51%, #46098b 71%, #440f89 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5306a0), color-stop(50%,#5b0fad), color-stop(51%,#44058b), color-stop(71%,#46098b), color-stop(100%,#440f89)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #5306a0 0%,#5b0fad 50%,#44058b 51%,#46098b 71%,#440f89 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #5306a0 0%,#5b0fad 50%,#44058b 51%,#46098b 71%,#440f89 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #5306a0 0%,#5b0fad 50%,#44058b 51%,#46098b 71%,#440f89 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #5306a0 0%,#5b0fad 50%,#44058b 51%,#46098b 71%,#440f89 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5306a0', endColorstr='#440f89',GradientType=0 ); /* IE6-9 */
+}
+#playerVitalsTable td div.barText {
+    width: 100%;
+    border-top: solid thin #333;
 }
 #inputGameCommands {
     width: 100%;

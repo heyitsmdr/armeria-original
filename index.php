@@ -128,10 +128,22 @@
                     <div id="playerVitals">
                         <table border="0" frame="void" id="playerVitalsTable">
                            <tr>
-                               <td><div id="barHealth" class="bar health">Health: 0 / 0</div></td>
-                               <td><div id="barMagic" class="bar magic">Magic: 0 / 0</div></td>
-                               <td><div id="barEnergy" class="bar energy">Energy: 0 / 0</div></td>
-                               <td><div id="barExp" class="bar exp">Exp: 0 / 0</div></td>
+                               <td>
+                                    <div id="barHealth" class="bar health"></div>
+                                    <div class="barText">Health: 0 / 0</div>
+                                </td>
+                               <td>
+                                    <div id="barMagic" class="bar magic"></div>
+                                    <div class="barText">Magic: 0 / 0</div>
+                                </td>
+                               <td>
+                                    <div id="barEnergy" class="bar energy"></div>
+                                    <div class="barText">Energy: 0 / 0</div>
+                                </td>
+                               <td>
+                                    <div id="barExp" class="bar exp"></div>
+                                    <div class="barText">Exp: 0 / 0</div>
+                                </td>
                            </tr>
                         </table>
                     </div>

@@ -647,6 +647,10 @@ var Logic = function() {
             player.msg('Your title has been removed.');
         }
     };
+    self.quit = function(player) {
+        player.msg('Ok. Thanks for playing! See you next time in the world of Armeria.');
+        player.socket.disconnect();
+    };
     /* ## END: BASIC ## */
 
     /*  ## ITEM MANAGEMENT ## */

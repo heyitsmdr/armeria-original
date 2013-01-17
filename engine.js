@@ -107,6 +107,10 @@ var GameEngine = new function() {
         $(document).on('mouseenter', '.player', this.roomListToolTipEnter);
         $(document).on('mouseleave', '.player', this.toolTipLeave);
         $(document).on('mousemove', '.player', this.toolTipMove);
+        // bind inline links
+        $(document).on('mouseenter', '.inlineLink', this.inlineLinkToolTipEnter);
+        $(document).on('mouseleave', '.inlineLink', this.toolTipLeave);
+        $(document).on('mousemove', '.inlineLink', this.toolTipMove);
         // request animation frame
         var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
         window.requestAnimationFrame = requestAnimationFrame;
@@ -332,8 +336,8 @@ var GameEngine = new function() {
     }
 
     this.parseLinks = function(text) {
-        var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-        return text.replace(urlRegex, function(url) { return '<a href="' + url + '" target="_new">' + url + '</a>'; });
+        var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=\(\)~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+        return text.replace(urlRegex, function(url) { return '<a class="inlineLink" href="' + url + '" target="_new">' + url + '</a>'; });
     };
 
     this.parseInput = function(newString, parseLinks){
@@ -365,8 +369,9 @@ var GameEngine = new function() {
         // looking?
         if(command=='') command = '/look';
 
-        // echo
-        this.parseInput("&gt; <span style='color:#666'>" + command + "</span>");
+        // echo (if a command)
+        if(command.toLowerCase().substr(0, 1)=='/')
+            this.parseInput("&gt; <span style='color:#666'>" + command + "</span>");
 
         if(command.substr(0, 1) == '/') {
             if (command.toLowerCase().substr(0, 9) == '/editmode') {
@@ -579,5 +584,13 @@ var GameEngine = new function() {
         $('#itemTooltipBox').fadeIn(75);
         if(GameEngine.connected)
             GameEngine.socket.emit('ptip', { id: $(this).data('id'), type: $(this).data('type') });
+    };
+
+    this.inlineLinkToolTipEnter = function() {
+        var url = $(this).html().toLowerCase();
+        if( url.indexOf('.jpg') > 0 || url.indexOf('.jpeg') > 0 || url.indexOf('.png') > 0 || url.indexOf('.gif') > 0 ) {
+            $('#itemTooltipBox').fadeIn(75);
+            $('#itemTooltipBox').html('<img src="' + $(this).html() + '" style="max-height:300px;max-width:300px">');
+        }
     };
 };
