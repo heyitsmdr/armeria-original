@@ -30,7 +30,7 @@
           window.fbAsyncInit = function() {
             FB.init({
               appId      : '388221831260979', // App ID
-              channelUrl : '//ethryx.net/channel.html', // Channel File
+              channelUrl : '//playarmeria.com/channel.html', // Channel File
               status     : true, // check login status
               cookie     : true, // enable cookies to allow the server to access the session
               xfbml      : true  // parse XFBML
@@ -86,16 +86,16 @@
                     <div id="frameStats" class="shadow border222">
                         <table id="playerStats" cellpadding="3" cellspacing="3" class="shadow2">
                             <tr>
-                        		<td class="shadow2inset"><span class="statName">ABC</span><br/>69</td>
-                        		<td class="shadow2inset"><span class="statName">ABC</span><br/>69</td>
+                        		<td class="shadow2inset"><span class="statName">Strength</span><br/><span class="statData">0</span></td>
+                        		<td class="shadow2inset"><span class="statName">P Damage</span><br/><span class="statData">0</span></td>
                         	</tr>
                         	<tr>
-                        		<td class="shadow2inset"><span class="statName">ABC</span><br/>69</td>
-                        		<td class="shadow2inset"><span class="statName">ABC</span><br/>69</td>
+                        		<td class="shadow2inset"><span class="statName">Intelligence</span><br/><span class="statData">0</span></td>
+                        		<td class="shadow2inset"><span class="statName">M Damage</span><br/><span class="statData">0</span></td>
                         	</tr>
                         	<tr>
-                        		<td class="shadow2inset"><span class="statName">ABC</span><br/>69</td>
-                        		<td class="shadow2inset"><span class="statName">ABC</span><br/>69</td>
+                        		<td class="shadow2inset"><span class="statName">Charisma</span><br/><span class="statData">0</span></td>
+                        		<td class="shadow2inset"><span class="statName">Resistance</span><br/><span class="statData">0</span></td>
                         	</tr>
                         </table>
                     </div>
@@ -124,10 +124,10 @@
                     <div id="playerVitals">
                         <table border="0" frame="void" id="playerVitalsTable">
                            <tr>
-                               <td>Health: ---/---</td>
-                               <td>Magicz: ---/---</td>
-                               <td>Energy: ---/---</td>
-                               <td>Valuable Time Spent: ---/---</td>
+                               <td><div id="barHealth" class="bar health">Health: 0 / 0</div></td>
+                               <td><div id="barMagic" class="bar magic">Magic: 0 / 0</div></td>
+                               <td><div id="barEnergy" class="bar energy">Energy: 0 / 0</div></td>
+                               <td><div id="barExp" class="bar exp">Exp: 0 / 0</div></td>
                            </tr>
                         </table>
                     </div>
