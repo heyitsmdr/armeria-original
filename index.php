@@ -82,24 +82,24 @@
                 </div>
             </div>
             <div id="outerFrameStats">
-                <div id="innerFrameStats" class="shadow border222">
-                    <div id="frameStats" class="shadow2">
-                        <table id="playerStats" cellpadding="3" cellspacing="3">
+                <!--<div id="innerFrameStats" class="shadow border222">-->
+                    <div id="frameStats" class="shadow border222">
+                        <table id="playerStats" cellpadding="3" cellspacing="3" class="shadow2">
                             <tr>
-                        		<td><span class="statName">ABC</span><br/>69</td>
-                        		<td><span class="statName">ABC</span><br/>69</td>
+                        		<td class="shadow2inset"><span class="statName">ABC</span><br/>69</td>
+                        		<td class="shadow2inset"><span class="statName">ABC</span><br/>69</td>
                         	</tr>
                         	<tr>
-                        		<td><span class="statName">ABC</span><br/>69</td>
-                        		<td><span class="statName">ABC</span><br/>69</td>
+                        		<td class="shadow2inset"><span class="statName">ABC</span><br/>69</td>
+                        		<td class="shadow2inset"><span class="statName">ABC</span><br/>69</td>
                         	</tr>
                         	<tr>
-                        		<td><span class="statName">ABC</span><br/>69</td>
-                        		<td><span class="statName">ABC</span><br/>69</td>
+                        		<td class="shadow2inset"><span class="statName">ABC</span><br/>69</td>
+                        		<td class="shadow2inset"><span class="statName">ABC</span><br/>69</td>
                         	</tr>
                         </table>
                     </div>
-                </div>
+                <!--</div>-->
             </div>
         </div>
         <div id="wrapGameArea">
@@ -121,6 +121,16 @@
             </div>
             <div id="outerFrameInput">
                 <div id="frameInput" class="shadow border222">
+                    <div id="playerVitals">
+                        <table border="0" frame="void" id="playerVitalsTable">
+                           <tr>
+                               <td>Health: ---/---</td>
+                               <td>Magicz: ---/---</td>
+                               <td>Energy: ---/---</td>
+                               <td>Valuable Time Spent: ---/---</td>
+                           </tr>
+                        </table>
+                    </div>
                     <input type="text" id="inputGameCommands" placeholder="Type commands here.." class="shadow2 border333"/>
                 </div>
             </div>
