@@ -8,16 +8,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
         <!-- Stylesheets -->
         <link id="cssReset" rel="stylesheet" type="text/css" href="css/reset.css">
-        <!--<link id="cssStandard" rel="stylesheet" type="text/css" href="css/style.css?buildTime=<?=filemtime('./css/style.css')?>">-->
-        <link rel="stylesheet/less" type="text/css" href="css/style.less?buildTime=<?=filemtime('./css/style.less')?>">
 
-        <link rel="stylesheet/less" type="text/css" href="css/style.less" />
-        <script>
-            less = {
-                    env: "development"
-            };
-        </script>
-        <script src="./css/less-1.3.3.min.js" type="text/javascript"></script>
+        <?php require 'less.php'; ?>
 
 
         <link rel="stylesheet" type="text/css" href="libraries/gritter/css/jquery.gritter.css">
