@@ -534,7 +534,7 @@ var GameEngine = new function() {
         GameEngine.mapctx.fill();
     };
 
-    this.editModeToggle = function(state) {
+    /*this.editModeToggle = function(state) {
         //TODO: Need to check if user is builder or not. Will also hide the edit button from the beginning if they are not.
         switch(state) {
             case 'on':
@@ -562,7 +562,7 @@ var GameEngine = new function() {
                 $("#editMode").attr("style", "background-color: rgba(120, 0, 0, 0.3);");
                 break;
         }
-    };
+    };*/
 
     this.itemToolTipEnter = function() {
         $('#itemTooltipBox').html('Loading...');

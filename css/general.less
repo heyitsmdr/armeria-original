@@ -1,0 +1,221 @@
+/*
+    Armeria Game Engine
+    Created by Mike Du Russel & Josh Schmille
+    Copyright 2012 - 2013
+    Questions? info@playarmeria.com
+*/
+
+//COLORS
+@base-color: #333;
+@base-color-increment: #222;
+@base-light: (@base-color + @base-color-increment);
+@base-lighter: (@base-light + @base-color-increment);
+@base-lighest: (@base-lighter + @base-color-increment);
+@base-dark: (@base-color - @base-color-increment);
+@base-darker: (@base-dark - @base-color-increment);
+@base-darkest: (@base-darker - @base-color-increment);
+
+@base-dark-bg: rgba(0, 0, 0, 0.3);
+@base-light-bg: rgba(255, 255, 255, 0.1);
+
+@font-base-color: #fff;
+@font-color-increment: #222;
+@font-base-color-dark: (@font-base-color - @font-color-increment);
+@font-base-color-darker: (@font-base-color-dark - @font-color-increment);
+@font-base-color-darkest: (@font-base-color-darker - @font-color-increment);
+
+//FONTS
+@base-font: "Open Sans", "Inconsolata", "Monaco", "Consolas", "Andale Mono", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
+@special-font: "Paprika", serif;
+
+body {
+  -webkit-text-size-adjust: none;
+  overflow: hidden;
+  background-color: @base-color;
+  background-image: url('../images/layout/bg.png');
+  font-family: @base-font;
+  font-size: 13px;
+  color: @font-base-color;
+}
+
+//SHADOWS
+.Box-shadow (false, @rest...) {
+    -webkit-box-shadow: @rest;
+    -moz-box-shadow: @rest;
+    box-shadow: @rest;
+}
+.Box-shadow (true, @rest...) {
+    -webkit-box-shadow: inset  @rest;
+    -moz-box-shadow: inset  @rest;
+    box-shadow: inset  @rest;
+}
+
+//BORDERS
+.Border222 {
+  border: solid thin #222;
+  border-top: solid thin #444;
+  .Border-radius(1px);
+}
+.Border333 {
+  border: solid thin #333;
+  border-bottom: solid thin #555;
+}
+
+//BORDER RADIUS
+.Border-radius (@radius: 1px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  border-radius: @radius;
+}
+
+//GENERAL STYLES
+#wrapSidebar {
+  height:100%;
+  width: 15%;
+  float: left;
+}
+#wrapGameArea {
+  height: 100%;
+  width: 85%;
+  float: right;
+}
+#frameLogo {
+  width: 320px;
+  height: 40px;
+  background-image: url('../images/layout/logo.png');
+  background-repeat: no-repeat;
+  text-indent: -9999px;
+  direction: ltr;
+  background-position: 5px 5px;
+}
+b {
+    font-weight: 600;
+}
+#fog {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/layout/fog.png'),url('../images/layout/fog2.png');
+    background-position: 0 0,0 0,0 0,0 0;
+    opacity: 1;
+}
+#itemTooltipBox {
+    display: none;
+    z-index: 99999;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    height: auto;
+    width: auto;
+    padding: 8px;
+    border: 1px solid #444444;
+
+    .tipIdentifier {
+        font-size: 15px;
+        font-weight: 700;
+        color: #ffffff;
+    }
+}
+input {
+    font-family: 'Paprika', serif;
+    font-size: 12px;
+    color: #fff;
+    &:focus {
+        outline: none;
+        border: solid thin #444;
+    }
+}
+/* Links */
+a {
+    color: #faad28;
+    text-decoration: none;
+
+    &:hover {
+        color: #f7c46c;
+    }
+}
+/* Colors */
+span.yellow {
+    color: #f5f567;
+    span.byellow {font-weight: bold;}
+}
+span.red {
+    color: #f74848;
+    span.bred {font-weight: bold;}
+}
+span.green {
+    color: #48f748;
+    span.bgreen {font-weight: bold;}
+}
+span.purple {
+    color: #f736f1;
+    span.bpurple {font-weight: bold;}
+}
+span.orange {
+    color: #fc0;
+    span.borange {font-weight: bold;}
+}
+span.pink {
+    color: #f39;
+    span.bpink {font-weight: bold;}
+}
+/* In-Game Tables */
+table.embed {
+    width: 50%;
+}
+table.embed td {
+    padding: 3px;
+}
+table.embed td.title {
+    font-size: 14px;
+    background-color: rgba(255, 0, 0, 0.3);
+}
+table.embed td.head {
+    color:#f66;
+    background-color: rgba(255, 0, 0, 0.2);
+}
+table.embed td.prop {
+    color:#fff;
+    background-color: rgba(255, 0, 0, 0.1);
+}
+table.embed td.value {
+    color:#fff;
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+
+//MOBILE CRAP TODO: Redesign site properly for mobile to cut out extra space.
+@media screen and (max-width: 720px) {
+    #frameGameMap {
+        display: none;
+    }
+}
+@media screen and (min-device-width : 320px) and (max-width : 480px) {
+    body {
+        overflow: hidden;
+        background-color: #333;
+        background-image: url('../images/layout/bg.png');
+        font-family: "Open Sans", "Inconsolata", "Monaco", "Consolas", "Andale Mono", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
+        font-size: 13px;
+        color: #fff;
+    }
+    #wrapSidebar {
+        display: none;
+    }
+    #wrapGameArea {
+        width: 100%;
+    }
+    #movementControls {
+        display: block;
+        position: absolute;
+        right: 5%;
+        bottom: 5%;
+        width: 200px;
+        height: 200px;
+        z-index: 999;
+    }
+}

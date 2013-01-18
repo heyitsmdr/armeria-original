@@ -1,0 +1,67 @@
+#frameGameMap {
+    visibility: visible;
+    width: 248px;
+    height: 268px;
+    float: right;
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    /*border: solid thin #222;
+    border-top: solid thin #555;*/
+    background-color: rgba(52,52,52,0.8);
+    background-image: url('../images/layout/bg.png');
+    .Box-shadow(false, 0, 1px, 7px, #000);
+    .Border222;
+}
+#frameGameMap:hover {
+    opacity: 0.15;
+}
+/*
+    Armeria Game Engine
+    Created by Mike Du Russel & Josh Schmille
+    Copyright 2012 - 2013
+    Questions? info@playarmeria.com
+*/
+
+#frameGameMap p {
+    text-align: center;
+    line-height: 16px;
+    vertical-align: middle;
+    font-family: @base-font;
+    margin-top: 248px;
+}
+#gameMap {
+    width: 240px;
+    height: 240px;
+    margin: 3px;
+    border: solid thin #222;
+    border-top: solid thin #111;
+    border-bottom: solid thin #444;
+    background-color: rgba(0,0,0,0.1);
+    overflow: hidden;
+    position: absolute;
+}
+#gameMapCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+#playerMark {
+    position: relative;
+    width: 240px;
+    height: 240px;
+    background-image: url('../images/tiles/playerMark.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    box-shadow:inset 0 0 10px #000;
+    -moz-box-shadow:inset 0 0 10px #000;
+    -webkit-box-shadow:inset 0 0 10px #000;
+    z-index: 998;
+}
+#mapShadow {
+    position: relative;
+    top: -240px;
+    width: 240px;
+    height: 240px;
+    .Box-shadow(true, 0, 0, 10px, #000);
+}

@@ -1,0 +1,52 @@
+/*
+    Armeria Game Engine
+    Created by Mike Du Russel & Josh Schmille
+    Copyright 2012 - 2013
+    Questions? info@playarmeria.com
+*/
+
+#outerFrameStats {
+    height: 25%;
+}
+#frameStats {
+    background-color: @base-light-bg;
+
+    height: 100%;
+    border: solid thin #333;
+    border-top: solid thin #666;
+    padding: 5px;
+    overflow: hidden;
+    .Box-shadow(false, 0, 1px, 7px, #000);
+
+    td {
+        .Box-shadow(true, 0, 0, 5px, #111);
+    }
+}
+#playerStats {
+    width: 100%;
+    height: 100%;
+    border: solid thin #555;
+    border-spacing: 3px 3px;
+    border-collapse: separate;
+    background-color: @base-dark-bg;
+    .Box-shadow(false, 0, 0, 5px, #000);
+    overflow: hidden;
+
+    td {
+        border: solid thin #333;
+        vertical-align: middle;
+        text-align: center;
+        background-color: @base-dark-bg;
+
+        span.statName {
+            color: orange;
+            font-size: 1.15em;
+            text-align: center;
+        }
+
+        .statData {
+            font-size: 1.1em;
+            font-weight: normal;
+        }
+    }
+}
