@@ -3,7 +3,7 @@
 	position:fixed;
 	top:20px;
 	right:20px;
-	width:301px;
+	width:311px;
 	z-index:9999;
 }
 #gritter-notice-wrapper.top-left {
@@ -28,6 +28,7 @@
 	background:url('../images/ie-spacer.gif'); /* ie7/8 fix */ 
 }
 .gritter-top {
+    display: none;
 	background:url(../images/gritter.png) no-repeat left -30px;
 	height:10px;
 }
@@ -35,6 +36,7 @@
 	background-position:right -30px;
 }
 .gritter-bottom {
+    display: none;
 	background:url(../images/gritter.png) no-repeat left bottom;
 	height:8px;
 	margin:0;
@@ -44,14 +46,23 @@
 }
 .gritter-item {
 	display:block;
-	background:url(../images/gritter.png) no-repeat left -40px;
-	color:#eee;
-	padding:2px 11px 8px 11px;
+	/*background:url(../images/gritter.png) no-repeat left -40px;*/
+    background-color: rgba(0,0,0,0.6);
+    -webkit-box-shadow: 0 0 5px #000;
+    -moz-box-shadow: 0 0 5px #000;
+    box-shadow: 0 0 5px #000;
+    border: solid thin #666;
+    color:#eee;
+	padding:5px 15px 5px 5px;
 	font-size: 11px;
 	font-family:verdana;
 }
+.gritter-item:hover {
+    background-color: rgba(0,0,0,0.7);
+    border: solid thin #777;
+    cursor: default;
+}
 .hover .gritter-item {
-	background-position:right -40px;
 }
 .gritter-item p {
 	padding:0;
@@ -61,12 +72,15 @@
 .gritter-close {
 	display:none;
 	position:absolute;
-	top:5px;
-	left:3px;
+	top:0;
+	right:0;
 	background:url(../images/gritter.png) no-repeat left top;
 	cursor:pointer;
 	width:30px;
 	height:30px;
+}
+.gritter-close:hover {
+    background:url(../images/gritter.png) no-repeat right top;
 }
 .gritter-title {
 	font-size:14px;
@@ -79,6 +93,15 @@
 	width:48px;
 	height:48px;
 	float:left;
+
+    padding: 3px;
+    margin: 0;
+    margin-right: 10px;
+    border: solid thin #444;
+    -webkit-box-shadow: 0 0 10px #000;
+    -moz-box-shadow: 0 0 10px #000;
+    box-shadow: 0 0 10px #000;
+
 }
 .gritter-with-image,
 .gritter-without-image {

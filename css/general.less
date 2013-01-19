@@ -38,6 +38,16 @@ body {
   color: @font-base-color;
 }
 
+
+.Box-sizing(@sizing: border-box) {
+    -ms-box-sizing: @sizing;
+    -moz-box-sizing: @sizing;
+    -webkit-box-sizing: @sizing;
+    box-sizing: @sizing;
+}
+
+div { .Box-sizing(border-box); }
+
 //SHADOWS
 .Box-shadow (false, @rest...) {
     -webkit-box-shadow: @rest;
