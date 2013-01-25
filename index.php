@@ -144,6 +144,14 @@
                            </tr>
                         </table>
                     </div>
+                    <div id="defaultChannel">
+                        <select id="defaultChannelDropdown">
+                          <option value="say ">Say</option>
+                          <option value="builder ">Builder</option>
+                          <option value="gossip ">Gossip</option>
+                          <option value="reply ">Whisper</option>
+                        </select>
+                    </div>
                     <input type="text" id="inputGameCommands" placeholder="Type commands here.."/>
                 </div>
             </div>

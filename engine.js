@@ -411,9 +411,26 @@ var GameEngine = new function() {
                 this.socket.emit('cmd', {cmd: 'move ' + command});
         } else if(this.connected) {
             if(command)
-                this.socket.emit('cmd', {cmd: 'say ' + command});
+                this.socket.emit('cmd', {cmd: $("#defaultChannelDropdown").val() + command});       //Default channel
             else
                 this.socket.emit('cmd', {cmd: 'look'});
+        }
+
+        // set default channel based on user action
+        var selected = command.split(" ");
+        switch(selected[0].substr(0, 2)) {
+            case '/s': 
+                $("#defaultChannelDropdown").val('say ');
+                break;
+            case '/b':
+                $("#defaultChannelDropdown").val('builder ');
+                break;
+            case '/g':
+                $("#defaultChannelDropdown").val('gossip ');
+                break;
+            case '/r':
+                $("#defaultChannelDropdown").val('reply ');
+                break;
         }
 
         // save in history
