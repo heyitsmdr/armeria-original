@@ -11,7 +11,6 @@
 
         <?php require 'less.php'; ?>
 
-
         <link rel="stylesheet" type="text/css" href="libraries/gritter/css/jquery.gritter.css">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,800,700,600' rel='stylesheet' type='text/css'>
         <!-- Scripts -->
@@ -20,6 +19,7 @@
         <script src="engine.js?buildTime=<?=filemtime('./css/style.less')?>"></script>
         <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
         <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
+
         <script src="http://www.playarmeria.com:<?=$port?>/socket.io/socket.io.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
@@ -106,8 +106,8 @@
         <div id="wrapGameArea">
             <div id="outerFrameGame">
                 <div id="innerFrameGame">
-                    <div id="frameGame">
-                        
+                    <div id="frameGame" class="custom-scroll">
+
                     </div>
                     <div id="frameGameMap">
                         <div id="gameMap">

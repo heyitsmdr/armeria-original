@@ -177,6 +177,24 @@ var GameEngine = new function() {
             {def: 'stoneRL', sx: 6, sy: 7},
             {def: 'stoneRBL', sx: 6, sy: 8},
 
+            {def: 'lavaTL', sx: 0, sy: 9},
+            {def: 'lavaT', sx: 1, sy: 9},
+            {def: 'lavaTR', sx: 2, sy: 9},
+            {def: 'lavaL', sx: 0, sy: 10},
+            {def: 'lava', sx: 1, sy: 10},
+            {def: 'lavaR', sx: 2, sy: 10},
+            {def: 'lavaBL', sx: 0, sy: 11},
+            {def: 'lavaB', sx: 1, sy: 11},
+            {def: 'lavaRB', sx: 2, sy: 11},
+            {def: 'lavaTBL', sx: 3, sy: 9},
+            {def: 'lavaTB', sx: 4, sy: 9},
+            {def: 'lavaTRB', sx: 5, sy: 9},
+            {def: 'lavaTRBL', sx: 3, sy: 10},
+            {def: 'lavaTRL', sx: 6, sy: 9},
+            {def: 'lavaRL', sx: 6, sy: 10},
+            {def: 'lavaRBL', sx: 6, sy: 11},
+            {def: 'lavaEdge', sx: 4, sy: 10},
+
             {def: 'wp', sx: 0, sy: 19},
             {def: 'house', sx: 1, sy: 19}
         ];
