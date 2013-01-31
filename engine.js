@@ -379,6 +379,24 @@ var GameEngine = new function() {
         GameEngine.newLine(1);
     }
 
+    matchcmd = function(cmd, cmdlist) {
+        var cmd_real = cmd;
+        for(var i = 0; i < cmdlist.length; i++) {
+            if(typeof cmdlist[i] == 'object') {
+                for(var j = 0; j < cmdlist[i].length; j++) {
+                    if(cmdlist[i][j].length >= cmd.length && cmdlist[i][j].substr(0,cmd.length) == cmd.toLowerCase()) {
+                        return cmdlist[i][0];
+                    }
+                }
+            }
+            else if(cmdlist[i].length >= cmd.length && cmdlist[i].substr(0,cmd.length) == cmd.toLowerCase()) {
+                return cmdlist[i];
+            }
+        }
+
+        return cmd_real;
+    }
+
     this.parseCommand = function() {
         var command = $('#inputGameCommands').val();
 
@@ -417,21 +435,25 @@ var GameEngine = new function() {
         }
 
         // set default channel based on user action
-        var selected = command.split(" ");
-        switch(selected[0].substr(0, 2)) {
-            case '/s': 
-                $("#defaultChannelDropdown").val('say ');
-                break;
-            case '/b':
-                $("#defaultChannelDropdown").val('builder ');
-                break;
-            case '/g':
-                $("#defaultChannelDropdown").val('gossip ');
-                break;
-            case '/r':
-                $("#defaultChannelDropdown").val('reply ');
-                break;
-        }
+        var sections = command.substr(1).split(' ');
+            var cmd = matchcmd(sections[0], new Array('say', 'reply', 'builder', 'gossip'));
+            sections.shift();
+            var cmd_args = sections.join(' ');
+
+            switch(cmd.toLowerCase()) {
+                case 'say':
+                    $("#defaultChannelDropdown").val('say ');
+                    break;
+                case 'builder':
+                    $("#defaultChannelDropdown").val('builder ');
+                    break;
+                case 'gossip':
+                    $("#defaultChannelDropdown").val('gossip ');
+                    break;
+                case 'reply':
+                    $("#defaultChannelDropdown").val('reply ');
+                    break;
+            }
 
         // save in history
         if(command) {
@@ -568,36 +590,6 @@ var GameEngine = new function() {
         GameEngine.mapctx.arc(120, 120, 240, 0, Math.PI*2, false);
         GameEngine.mapctx.fill();
     };
-
-    /*this.editModeToggle = function(state) {
-        //TODO: Need to check if user is builder or not. Will also hide the edit button from the beginning if they are not.
-        switch(state) {
-            case 'on':
-                $("#act_Attack").attr("onClick","movementButtonClick('/modify room')");
-                $("#dir_N").attr("onClick","movementButtonClick('/create room north -move')");
-                $("#dir_U").attr("onClick","movementButtonClick('/create room up -move')");
-                $("#dir_W").attr("onClick","movementButtonClick('/create room west -move')");
-                $("#act_Look").attr("onClick","movementButtonClick('/look')");
-                $("#dir_E").attr("onClick","movementButtonClick('/create room east -move')");
-                $("#dir_S").attr("onClick","movementButtonClick('/create room south -move')");
-                $("#dir_D").attr("onClick","movementButtonClick('/create room down -move')");
-                $("#editMode").attr("onClick", "movementButtonClick('/editmode off')");
-                $("#editMode").attr("style", "background-color: rgba(0, 120, 0, 0.3);");
-                break;
-            case 'off':
-                $("#act_Attack").attr("onClick","movementButtonClick('/attack')");
-                $("#dir_N").attr("onClick","movementButtonClick('n')");
-                $("#dir_U").attr("onClick","movementButtonClick('u')");
-                $("#dir_W").attr("onClick","movementButtonClick('w')");
-                $("#act_Look").attr("onClick","movementButtonClick('/look')");
-                $("#dir_E").attr("onClick","movementButtonClick('e')");
-                $("#dir_S").attr("onClick","movementButtonClick('s')");
-                $("#dir_D").attr("onClick","movementButtonClick('d')");
-                $("#editMode").attr("onClick", "movementButtonClick('/editmode on')");
-                $("#editMode").attr("style", "background-color: rgba(120, 0, 0, 0.3);");
-                break;
-        }
-    };*/
 
     this.itemToolTipEnter = function() {
         $('#itemTooltipBox').html('Loading...');
