@@ -191,7 +191,7 @@ function init() {
         socket.on('cmd', function(data){
             // get base command
             var sections = data.cmd.split(' ');
-            var cmd = matchcmd(sections[0], new Array('say', 'move', ['look', 'examine'], 'me',
+            var cmd = matchcmd(sections[0], new Array('say', 'score', 'move', ['look', 'examine'], 'me',
                 'whisper', 'reply', 'attack', 'create', 'destroy', 'modify',
                 'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp'],
                 'inventory', 'who', 'spawn', 'areas', 'title', 'quit'));
@@ -201,6 +201,9 @@ function init() {
             switch(cmd.toLowerCase()) {
                 case 'say':
                     LOGIC.say(player, cmd_args);
+                    break;
+                case 'score':
+                    LOGIC.score(player);
                     break;
                 case 'move':
                     LOGIC.move(player, cmd_args);

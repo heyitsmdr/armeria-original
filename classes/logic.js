@@ -156,6 +156,61 @@ var Logic = function() {
             mob.emit('onSay', player, what);
         });
     }
+
+    self.score = function(player) {
+        player.msg("Score");
+
+        player.msg(LOGIC._createTable(
+                player.character.htmlname + " - " + player.character.race + " " + player.character.class,
+                [
+                    {
+                        property: "Level",
+                        value: player.character.level
+                    },
+                    {
+                        property: "Experience",
+                        value: player.character.stats.exp + " / " + player.character.stats.exptl
+                    },
+                    {
+                        property: "Health",
+                        value: player.character.stats.health + " / " + player.character.stats.maxhealth
+                    },
+                    {
+                        property: "Magic",
+                        value: player.character.stats.magic + " / " + player.character.stats.maxmagic
+                    },
+                    {
+                        property: "Energy",
+                        value: player.character.stats.energy + " / " + player.character.stats.maxenergy
+                    },
+                    {
+                        property: "Strength",
+                        value: player.character.stats.str
+                    },
+                    {
+                        property: "Intelligence",
+                        value: player.character.stats.int
+                    },
+                    {
+                        property: "Charisma",
+                        value: player.character.stats.cha
+                    },
+                    {
+                        property: "Physical Damage",
+                        value: player.character.stats.pdmg
+                    },
+                    {
+                        property: "Magical Damage",
+                        value: player.character.stats.mdmg
+                    },
+                    {
+                        property: "Resistance",
+                        value: player.character.stats.resistance
+                    }
+                ]));
+
+
+    }
     
     self.move = function(player, dir) {
         var x = player.character.location.x;
