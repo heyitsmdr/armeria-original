@@ -406,7 +406,7 @@ var GameEngine = new function() {
         if(command=='') command = '/look';
 
         // echo (if a command)
-        if(command.toLowerCase().substr(0, 1)=='/')
+        if(this.connected && command.toLowerCase().substr(0, 1)=='/')
             this.parseInput("&gt; <span style='color:#666'>" + command + "</span>");
 
         if(command.substr(0, 1) == '/') {
@@ -435,7 +435,8 @@ var GameEngine = new function() {
         }
 
         // set default channel based on user action
-        var sections = command.substr(1).split(' ');
+        if(this.connected) {
+            var sections = command.substr(1).split(' ');
             var cmd = matchcmd(sections[0], new Array('say', 'reply', 'builder', 'gossip'));
             sections.shift();
             var cmd_args = sections.join(' ');
@@ -443,17 +444,22 @@ var GameEngine = new function() {
             switch(cmd.toLowerCase()) {
                 case 'say':
                     $("#defaultChannelDropdown").val('say ');
+                    $('#defaultChannelDropdown').css({ 'color': '#fff' });
                     break;
                 case 'builder':
                     $("#defaultChannelDropdown").val('builder ');
+                    $('#defaultChannelDropdown').css({ 'color': '#fc0' });
                     break;
                 case 'gossip':
                     $("#defaultChannelDropdown").val('gossip ');
+                    $('#defaultChannelDropdown').css({ 'color': '#f39' });
                     break;
                 case 'reply':
                     $("#defaultChannelDropdown").val('reply ');
+                    $('#defaultChannelDropdown').css({ 'color': '#f736f1' });
                     break;
             }
+        }
 
         // save in history
         if(command) {

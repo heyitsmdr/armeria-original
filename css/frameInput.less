@@ -18,7 +18,7 @@
     .Box-shadow(false, 0, 1px, 7px, #000);
     .Border222;
 }
-#defaultChannel {
+/*#defaultChannel {
     clear: both;
     float:right;
     //width: 10%;
@@ -34,13 +34,39 @@
     .Border333;
     color: white;
     outline:0;
+}*/
+#defaultChannel {
+    position: absolute;
+    float: both;
+    top: 60px;
+    left: 15px;
+    //border: solid thin #00ff00;
+}
+#defaultChannelDropdown {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 55px;
+    height: 23px;
+    background-color: @base-dark-bg;
+    font-family: @base-font;
+    font-size: 13px;
+    .Box-shadow(true, 0, 0, 10px, #000);
+    border: solid thin #333;
+    color: white;
+    outline:0;
+    padding-right: 5px;
 }
 #inputGameCommands {
+    float: both;
+
     width: 100%;
     padding: 5px;
+    padding-left: 60px;
     background-color: @base-dark-bg;
     font-family: @base-font;
     font-size: 13px;
     .Box-shadow(true, 0, 0, 10px, #000);
     .Border333;
+    //border: solid thin #ff00ff;
 }

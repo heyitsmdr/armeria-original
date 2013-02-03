@@ -145,11 +145,11 @@
                         </table>
                     </div>
                     <div id="defaultChannel">
-                        <select id="defaultChannelDropdown">
-                          <option value="say ">Say</option>
-                          <option value="builder ">Builder</option>
-                          <option value="gossip ">Gossip</option>
-                          <option value="reply ">Whisper</option>
+                        <select id="defaultChannelDropdown" dir="rtl" disabled="disabled">
+                          <option value="say ">:Say</option>
+                          <option value="builder ">:Builder</option>
+                          <option value="gossip ">:Gossip</option>
+                          <option value="reply ">:Reply</option>
                         </select>
                     </div>
                     <input type="text" id="inputGameCommands" placeholder="Type commands here.."/>
