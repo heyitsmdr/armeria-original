@@ -10,8 +10,13 @@ var Logic = function() {
         var output = "<br><table class='embed'><tr><td colspan='2' class='title'>" + title + "</td>";
         output += "<tr><td class='head'>Property</td><td class='head'>Value</td></tr>";
         data.forEach(function(d){
-            output += "<tr><td class='prop'>" + d.property + "</td>";
-            output += "<td class='value'>" + d.value + "</td></tr>";
+            if (d.property == 'divider') {
+                output += "<tr><td class='propDivider'></td>";
+                output += "<td class='valueDivider'></td></tr>";
+            } else {
+                output += "<tr><td class='prop'>" + d.property + "</td>";
+                output += "<td class='value'>" + d.value + "</td></tr>";
+            }
         });
         output += "</table>";
         return output;
@@ -184,28 +189,36 @@ var Logic = function() {
                         value: player.character.stats.energy + " / " + player.character.stats.maxenergy
                     },
                     {
+                        property: "Age",
+                        value: player.character.age
+                    },
+                    {
+                        property: "divider",
+                        value: ""
+                    },
+                    {
                         property: "Strength",
-                        value: player.character.stats.str
+                        value: player.character.stats.str + " (+" + player.character.statmods.strmod + ")"
                     },
                     {
                         property: "Intelligence",
-                        value: player.character.stats.int
+                        value: player.character.stats.int  + " (+" + player.character.statmods.intmod + ")"
                     },
                     {
                         property: "Charisma",
-                        value: player.character.stats.cha
+                        value: player.character.stats.cha + " (+" + player.character.statmods.chamod + ")"
                     },
                     {
                         property: "Physical Damage",
-                        value: player.character.stats.pdmg
+                        value: player.character.stats.pdmg + " (+" + player.character.statmods.pdmgmod + ")"
                     },
                     {
                         property: "Magical Damage",
-                        value: player.character.stats.mdmg
+                        value: player.character.stats.mdmg + " (+" + player.character.statmods.mdmgmod + ")"
                     },
                     {
                         property: "Resistance",
-                        value: player.character.stats.resistance
+                        value: player.character.stats.resistance + " (+" + player.character.statmods.resistancemod + ")"
                     }
                 ]));
 
