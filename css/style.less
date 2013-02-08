@@ -1,4 +1,5 @@
 @import "colors";
+@import "font";
 //LAYOUT
 body{
 	overflow: hidden;
@@ -176,7 +177,7 @@ td.score-value{
 	width: 100%;
 	height: 100%;
 	outline: 0;
-	padding-left: 73px;
+	padding-left: 75px;
 	box-sizing:border-box;
   	-moz-box-sizing:border-box;
   	-webkit-box-sizing:border-box;
@@ -197,4 +198,24 @@ td.score-value{
 	padding-right: 3px;
 	padding-left: 3px;
 	width: 70px;
+}
+
+//TOOLTIPS
+#itemtooltip-container {
+  display: none;
+  z-index: 99999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  height: auto;
+  width: auto;
+  padding: 8px;
+  border: 1px solid #444444;
+
+  .tipIdentifier {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+  }
 }
