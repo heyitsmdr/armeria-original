@@ -35,11 +35,11 @@ var GameEngine = new function() {
         // intro
         GameEngine.parseInput("Welcome to Armeria! <a href='#' onclick='GameEngine.showIntro()'>What is Armeria?</a><br><br>Please <a href='#' onclick='GameEngine.FBLogin()'>Login</a> with Facebook or visit our <a href='http://forum.playarmeria.com'>Community Forums</a>.<br>");
         // bind ENTER to input box
-        $('#inputGameCommands').keypress(function(e){
+        $('#input').keypress(function(e){
             if(e.which == 13) GameEngine.parseCommand();
         });
         // bind UP/DOWN to input box (for history)
-        $('#inputGameCommands').keyup(function(e){
+        $('#input').keyup(function(e){
             if(e.which == 38) GameEngine.navigateHistory('back');
             if(e.which == 40) GameEngine.navigateHistory('forward');
         });
@@ -47,22 +47,22 @@ var GameEngine = new function() {
         $(document).keydown(function(e){
             switch(e.which) {
                 case 104:
-                    $('#inputGameCommands').val('n');
+                    $('#input').val('n');
                     break;
                 case 102:
-                    $('#inputGameCommands').val('e');
+                    $('#input').val('e');
                     break;
                 case 98:
-                    $('#inputGameCommands').val('s');
+                    $('#input').val('s');
                     break;
                 case 100:
-                    $('#inputGameCommands').val('w');
+                    $('#input').val('w');
                     break;
                 case 105:
-                    $('#inputGameCommands').val('u');
+                    $('#input').val('u');
                     break;
                 case 99:
-                    $('#inputGameCommands').val('d');
+                    $('#input').val('d');
                     break;
                 default:
                     return;
@@ -78,7 +78,7 @@ var GameEngine = new function() {
         // setup soundmanager2
         soundManager.setup({url: '/libraries/soundmanager2/swf/', ontimeout: function(){ console.log('SoundManager timed out.'); }});
         // grab 2d context for map and load tileset
-        GameEngine.mapcv = document.getElementById('gameMapCanvas');
+        GameEngine.mapcv = document.getElementById('map-canvas');
         GameEngine.mapctx = GameEngine.mapcv.getContext('2d');
         GameEngine.mapctx.lineWidth = 3;
         GameEngine.mapctx.lineJoin = 'round';
@@ -115,7 +115,7 @@ var GameEngine = new function() {
         var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
         window.requestAnimationFrame = requestAnimationFrame;
         // focus input box
-        $('#inputGameCommands').focus();
+        $('#input').focus();
     }
 
     this.setupTileset = function() {
@@ -311,12 +311,12 @@ var GameEngine = new function() {
         });
         this.socket.on('plist', function(data){
             // clear current list
-            $('#playerList').html('');
+            $('#roomlist').html('');
             data.forEach(function(listdata){
                 if(listdata.picture === false)
-                    $('#playerList').html("<li class='player' data-id='" + listdata.id + "' data-type='" + listdata.type + "'><p style='padding-left: 15px'>" + listdata.name + "</p></li>" + $('#playerList').html());
+                    $('#roomlist').html("<li class='player' data-id='" + listdata.id + "' data-type='" + listdata.type + "'><p style='padding-left: 15px'>" + listdata.name + "</p></li>" + $('#roomlist').html());
                 else
-                    $('#playerList').html("<li class='player' data-id='" + listdata.id + "' data-type='" + listdata.type + "'><img src='" + listdata.picture + "' width='40px' height='40px'><p>" + listdata.name + "</p></li>" + $('#playerList').html());
+                    $('#roomlist').html("<li class='player' data-id='" + listdata.id + "' data-type='" + listdata.type + "'><img src='" + listdata.picture + "' width='40px' height='40px'><p>" + listdata.name + "</p></li>" + $('#roomlist').html());
             });
         });
         this.socket.on('map', function(data){
@@ -349,7 +349,7 @@ var GameEngine = new function() {
             });
         });
         this.socket.on('itemtip', function(data){
-            $('#itemTooltipBox').html(data.content);
+            $('#itemtooltip-container').html(data.content);
         });
     }
 
@@ -359,8 +359,8 @@ var GameEngine = new function() {
     };
 
     this.parseInput = function(newString, parseLinks){
-        $('#frameGame').html($('#frameGame').html() + ((parseLinks)?this.parseLinks(newString):newString) + '<br>');
-        $('#frameGame').scrollTop(999999);
+        $('#game').html($('#game').html() + ((parseLinks)?this.parseLinks(newString):newString) + '<br>');
+        $('#game').scrollTop(999999);
     }
 
     this.newLine = function(count) {
@@ -398,7 +398,7 @@ var GameEngine = new function() {
     }
 
     this.parseCommand = function() {
-        var command = $('#inputGameCommands').val();
+        var command = $('#input').val();
 
         var directions = new Array('n','s','e','w','u','d');
 
@@ -413,10 +413,10 @@ var GameEngine = new function() {
             if (command.toLowerCase().substr(0, 9) == '/editmode') {
                 this.editModeToggle(command.substr(10));
             } else if (command.toLowerCase() == '/clear') {
-                $('#frameGame').html('');
+                $('#game').html('');
                 this.parseInput('Window cleared.');
-                $('#inputGameCommands').val('');
-                $('#inputGameCommands').focus();
+                $('#input').val('');
+                $('#input').focus();
                 return;
             } else if (command.toLowerCase() == '/version') {
                 this.parseInput('Your client is running version <b>' + this.version + '</b>.');
@@ -429,7 +429,7 @@ var GameEngine = new function() {
                 this.socket.emit('cmd', {cmd: 'move ' + command});
         } else if(this.connected) {
             if(command)
-                this.socket.emit('cmd', {cmd: $("#defaultChannelDropdown").val() + command});       //Default channel
+                this.socket.emit('cmd', {cmd: $("#defaultchannel-select").val() + command});       //Default channel
             else
                 this.socket.emit('cmd', {cmd: 'look'});
         }
@@ -443,20 +443,20 @@ var GameEngine = new function() {
 
             switch(cmd.toLowerCase()) {
                 case 'say':
-                    $("#defaultChannelDropdown").val('say ');
-                    $('#defaultChannelDropdown').css({ 'color': '#fff' });
+                    $("#defaultchannel-select").val('say ');
+                    $('#defaultchannel-select').css({ 'color': '#fff' });
                     break;
                 case 'builder':
-                    $("#defaultChannelDropdown").val('builder ');
-                    $('#defaultChannelDropdown').css({ 'color': '#fc0' });
+                    $("#defaultchannel-select").val('builder ');
+                    $('#defaultchannel-select').css({ 'color': '#fc0' });
                     break;
                 case 'gossip':
-                    $("#defaultChannelDropdown").val('gossip ');
-                    $('#defaultChannelDropdown').css({ 'color': '#f39' });
+                    $("#defaultchannel-select").val('gossip ');
+                    $('#defaultchannel-select').css({ 'color': '#f39' });
                     break;
                 case 'reply':
-                    $("#defaultChannelDropdown").val('reply ');
-                    $('#defaultChannelDropdown').css({ 'color': '#f736f1' });
+                    $("#defaultchannel-select").val('reply ');
+                    $('#defaultchannel-select').css({ 'color': '#f736f1' });
                     break;
             }
         }
@@ -468,8 +468,8 @@ var GameEngine = new function() {
         }
 
         // clear and focus
-        $('#inputGameCommands').val('');
-        $('#inputGameCommands').focus();
+        $('#input').val('');
+        $('#input').focus();
     }
 
     this.navigateHistory = function(direction) {
@@ -484,12 +484,12 @@ var GameEngine = new function() {
         if(ptr < 0) { ptr = 0; }
         if(ptr > (this.sendHistory.length - 1)) {
             this.sendHistPtr = this.sendHistory.length - 1;
-            $('#inputGameCommands').val('');
+            $('#input').val('');
             return;
         }
         // display
-        $('#inputGameCommands').val(this.sendHistory[ptr]);
-        document.getElementById('inputGameCommands').selectionStart = this.sendHistory[ptr].length;
+        $('#input').val(this.sendHistory[ptr]);
+        document.getElementById('input').selectionStart = this.sendHistory[ptr].length;
         this.sendHistPtr = ptr;
     }
 
@@ -598,23 +598,23 @@ var GameEngine = new function() {
     };
 
     this.itemToolTipEnter = function() {
-        $('#itemTooltipBox').html('Loading...');
-        $('#itemTooltipBox').fadeIn(75);
+        $('#itemtooltip-container').html('Loading...');
+        $('#itemtooltip-container').fadeIn(75);
         if(GameEngine.connected)
             GameEngine.socket.emit('itemtip', { id: $(this).data('id') });
     };
 
     this.toolTipLeave = function(){
-        $('#itemTooltipBox').fadeOut(75);
+        $('#itemtooltip-container').fadeOut(75);
     };
 
     this.toolTipMove = function(e){
-        $('#itemTooltipBox').offset({ top:e.pageY + 15, left: e.pageX + 15 });
+        $('#itemtooltip-container').offset({ top:e.pageY + 15, left: e.pageX + 15 });
     };
 
     this.roomListToolTipEnter = function() {
-        $('#itemTooltipBox').html('Loading...');
-        $('#itemTooltipBox').fadeIn(75);
+        $('#itemtooltip-container').html('Loading...');
+        $('#itemtooltip-container').fadeIn(75);
         if(GameEngine.connected)
             GameEngine.socket.emit('ptip', { id: $(this).data('id'), type: $(this).data('type') });
     };
@@ -622,8 +622,8 @@ var GameEngine = new function() {
     this.inlineLinkToolTipEnter = function() {
         var url = $(this).html().toLowerCase();
         if( url.indexOf('.jpg') > 0 || url.indexOf('.jpeg') > 0 || url.indexOf('.png') > 0 || url.indexOf('.gif') > 0 ) {
-            $('#itemTooltipBox').fadeIn(75);
-            $('#itemTooltipBox').html('<img src="' + $(this).html() + '" style="max-height:300px;max-width:300px">');
+            $('#itemtooltip-container').fadeIn(75);
+            $('#itemtooltip-container').html('<img src="' + $(this).html() + '" style="max-height:300px;max-width:300px">');
         }
     };
 };

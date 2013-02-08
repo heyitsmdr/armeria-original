@@ -1,3 +1,200 @@
-@import "general";
-@import "left";
-@import "right";
+@import "colors";
+//LAYOUT
+body{
+	overflow: hidden;
+}
+//LEFT
+#logo {
+	position: absolute;
+	top: 0;
+	left: 5px;
+	height: 41px;
+	width: 250px;
+	background: url('../images/layout/logo.png') no-repeat;
+	background-position: center;
+}
+#left-content{
+	position: absolute;
+	top: 41px;
+	bottom: 50px;
+	left: 5px;
+	width: 250px;
+	z-index: 99;
+}
+#roomlist-container{
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	left: 5px;
+	bottom: 215px;
+	overflow: auto;
+}
+.player{
+	margin-top: 2px;
+	width: 100%;
+	height: 50px;
+	z-index: 98;
+	overflow: hidden;
+}
+.player img{
+	float: left;
+	margin: 5px;
+	margin-right: 10px;
+	box-sizing:border-box;
+  	-moz-box-sizing:border-box;
+  	-webkit-box-sizing:border-box;
+}
+.player p{
+	line-height: 50px;
+}
+#score{
+	position: absolute;
+	right: 5px;
+	bottom: 5px;
+	left: 5px;
+	height: 195px;
+	padding: 5px;
+}
+td.score-property{
+	width: 55%;
+	padding-right: 3px;
+	text-align: right;
+}
+td.score-value{
+	width: 45%;
+	padding-left: 3px;
+	text-align: left;
+}
+
+
+//RIGHT
+#right-content{
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 50px;
+	left: 258px;
+}
+#game{
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	bottom: 36px;
+	left: 5px;
+	padding: 5px;
+	overflow: auto;
+}
+#minimap{
+	position: absolute;
+	top: 15px;
+	right: 30px;
+	width: 252px;
+	height: 280px;
+}
+#map-canvas{
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	height: 240px;
+	width: 240px;
+}
+#mapshadow{
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	left: 5px;
+	height: 241px;
+}
+#mapname{
+	position: absolute;
+	top: 250px;
+	right: 5px;
+	bottom: 3px;
+	left: 5px;
+	text-align: center;
+
+	p{line-height: 26px; vertical-align: middle;}
+}
+
+#playervitals-container{
+	position: absolute;
+	right: 5px;
+	bottom: 0;
+	left: 5px;
+	height: 36px;
+	z-index: 100;
+}
+.bar{
+	position: relative;
+	float: left;
+	width: 25%;
+	height: 100%;
+	box-sizing:border-box;
+  	-moz-box-sizing:border-box;
+  	-webkit-box-sizing:border-box;
+  	padding: 3px;
+}
+.bar-border{
+	position: relative;
+	height: 100%;
+	z-index: 100;
+	padding: 1px;
+}
+.bar-color{
+	height: 100%;
+	z-index: 1;
+	width: 100%;
+}
+.bar-shadow{
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	line-height: 33px;
+	text-align: center;
+}
+
+
+
+//BOTTOM
+#bottom-content{
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 43px;
+}
+#input-container{
+	position: absolute;
+	top: 0px;
+	right: 5px;
+	bottom: 5px;
+	left: 5px;
+}
+#input{
+	width: 100%;
+	height: 100%;
+	outline: 0;
+	padding-left: 73px;
+	box-sizing:border-box;
+  	-moz-box-sizing:border-box;
+  	-webkit-box-sizing:border-box;
+}
+/*@-moz-document url-prefix() {
+    #input {
+        width: 100%;
+		height: 100%;
+    }
+}*/
+#defaultchannel-select{
+	-webkit-appearance: none;
+	-moz-appearance: button;
+	position: absolute;
+	top: 3px;
+	bottom: 8px;
+	left: 10px;
+	padding-right: 3px;
+	padding-left: 3px;
+	width: 70px;
+}

@@ -1,10 +1,11 @@
+<!DOCTYPE html>
 <?php
     // port
     $port = file_get_contents('./port');
 ?>
-<html>
+<html lang="en">
     <head>
-        <title>Armeria: Social MUD</title>
+        <title>Armeria: Social MUD v2</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
         <!-- Stylesheets -->
         <link id="cssReset" rel="stylesheet" type="text/css" href="css/reset.css">
@@ -55,7 +56,7 @@
            }(document));
            
            function movementButtonClick(c){
-               $('#inputGameCommands').val(c);
+               $('#input').val(c);
                GameEngine.parseCommand();
            };
         </script>
@@ -76,84 +77,98 @@
         </script>
         
         <!-- Game Client -->
-        <div id="itemTooltipBox"></div>
-        <div id="wrapSidebar">
-            <div id="frameLogo">Logo</div>
-            <div id="outerFramePlayerList">
-                <div id="framePlayerList">
-                    <ul id="playerList"></ul>
-                </div>
+        <div id="itemtooltip-container"></div>
+        <div id="logo"></div>
+        <div id="left-content">
+            <div id="roomlist-container">
+                <ul id="roomlist"></ul>
             </div>
-            <div id="outerFrameStats">
-                <div id="frameStats">
-                    <table id="playerStats" cellpadding="3" cellspacing="3">
-                        <tr>
-                            <td><span class="statName">Strength</span><br/><span class="statData">0</span></td>
-                            <td><span class="statName">P Damage</span><br/><span class="statData">0</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class="statName">Intelligence</span><br/><span class="statData">0</span></td>
-                            <td><span class="statName">M Damage</span><br/><span class="statData">0</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class="statName">Charisma</span><br/><span class="statData">0</span></td>
-                            <td><span class="statName">Resistance</span><br/><span class="statData">0</span></td>
-                        </tr>
-                    </table>
-                </div>
+            <div id="score">
+              <table id="score-table" border="1" width="100%" cellpadding="3" cellspacing="3">
+                <tr>
+                  <td id="race" class="score-property">Human</td>
+                  <td id="class" class="score-value">Novice</td>
+                </tr>
+                <tr>
+                  <td class="score-property">Level:</td>
+                  <td id="level" class="score-value">0</td>
+                </tr>
+                <tr>
+                  <td class="score-property">Armor:</td>
+                  <td id="armor" class="score-value">0</td>
+                </tr>
+                <tr>
+                  <td class="score-property">Strength:</td>
+                  <td id="strength" class="score-value">0</td>
+                </tr>
+                <tr>
+                  <td class="score-property">Intelligence:</td>
+                  <td id="intelligence" class="score-value">0</td>
+                </tr>
+                <tr>
+                  <td class="score-property">Charisma:</td>
+                  <td id="charisma" class="score-value">0</td>
+                </tr>
+                <tr>
+                  <td class="score-property">Physical Damage:</td>
+                  <td id="physicaldamage" class="score-value">0</td>
+                </tr>
+                <tr>
+                  <td class="score-property">Magical Damage:</td>
+                  <td id="magicaldamage" class="score-value">0</td>
+                </tr>
+                <tr>
+                  <td class="score-property">Resistance:</td>
+                  <td id="resistance" class="score-value">0</td>
+                </tr>
+              </table>
             </div>
         </div>
-        <div id="wrapGameArea">
-            <div id="outerFrameGame">
-                <div id="innerFrameGame">
-                    <div id="frameGame" class="custom-scroll">
-
-                    </div>
-                    <div id="frameGameMap">
-                        <div id="gameMap">
-                            <canvas id="gameMapCanvas" width="240px" height="240px"></canvas>
-                            <div id="playerMark"></div>
-                            <div id="mapShadow"></div>
-                        </div>
-                        <p id="mapName"></p>
-                    </div>
-                    
+        <div id="right-content">
+            <div id="game"></div>
+                <div id="minimap">
+                    <canvas id="map-canvas" width="240" height="240"></canvas>
+                    <div id="player"></div>
+                    <div id="mapshadow"></div>
+                    <div id="mapname"><p id="mapname-p">Test Area</p></div>
                 </div>
+                
+                <div id="playervitals-container">
+                  <div class="bar">
+                    <div class="bar-border">
+                      <div id="bar-health" class="bar-color"></div>
+                      <div id="text-health" class="bar-shadow">100 / 100</div>
+                    </div>
+                  </div>
+                  <div class="bar">
+                    <div class="bar-border">
+                      <div id="bar-magic" class="bar-color"></div>
+                      <div id="text-magic" class="bar-shadow">100 / 100</div>
+                    </div>
+                  </div>
+                  <div class="bar">
+                    <div class="bar-border">
+                      <div id="bar-energy" class="bar-color"></div>
+                      <div id="text-energy" class="bar-shadow">100 / 100</div>
+                    </div>
+                  </div>
+                  <div class="bar">
+                    <div class="bar-border">
+                      <div id="bar-exp" class="bar-color"></div>
+                      <div id="text-exp" class="bar-shadow">100 / 100</div>
+                    </div>
+                  </div>
             </div>
-            <div id="outerFrameInput">
-                <div id="frameInput">
-                    <div id="playerVitals">
-                        <table border="0" frame="void" id="playerVitalsTable">
-                           <tr>
-                               <td>
-                                    <div id="barHealth" class="bar health"></div>
-                                    <div class="barText">Health: 0 / 0</div>
-                                </td>
-                               <td>
-                                    <div id="barMagic" class="bar magic"></div>
-                                    <div class="barText">Magic: 0 / 0</div>
-                                </td>
-                               <td>
-                                    <div id="barEnergy" class="bar energy"></div>
-                                    <div class="barText">Energy: 0 / 0</div>
-                                </td>
-                               <td>
-                                    <div id="barExp" class="bar exp"></div>
-                                    <div class="barText">Exp: 0 / 0</div>
-                                </td>
-                           </tr>
-                        </table>
-                    </div>
-                    <div id="defaultChannel">
-                        <select id="defaultChannelDropdown" dir="rtl" disabled="disabled">
-                          <option value="say ">:Say</option>
-                          <option value="builder ">:Builder</option>
-                          <option value="gossip ">:Gossip</option>
-                          <option value="reply ">:Reply</option>
-                        </select>
-                    </div>
-                    <input type="text" id="inputGameCommands" placeholder="Type commands here.."/>
-                </div>
+        </div>
+        <div id="bottom-content">
+            <div id="input-container"><input type="text" id="input" placeholder="Type commands here.."/></div>
+            <div id="defaultchannel">
+                <select id="defaultchannel-select" dir="rtl" disabled="disabled">
+                  <option value="say ">:Say</option>
+                  <option value="builder ">:Builder</option>
+                  <option value="gossip ">:Gossip</option>
+                  <option value="reply ">:Reply</option>
+                </select>
             </div>
         </div>
     </body>
