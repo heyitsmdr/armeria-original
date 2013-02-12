@@ -86,8 +86,7 @@
             <div id="score">
               <table id="score-table" border="1" width="100%" cellpadding="3" cellspacing="3">
                 <tr>
-                  <td id="race" class="score-property">Human</td>
-                  <td id="class" class="score-value">Novice</td>
+                  <td id="raceclass" colspan="2">Human Novice</td>
                 </tr>
                 <tr>
                   <td class="score-property">Level:</td>
@@ -110,11 +109,11 @@
                   <td id="charisma" class="score-value">0</td>
                 </tr>
                 <tr>
-                  <td class="score-property">Physical Damage:</td>
+                  <td class="score-property">P. Damage:</td>
                   <td id="physicaldamage" class="score-value">0</td>
                 </tr>
                 <tr>
-                  <td class="score-property">Magical Damage:</td>
+                  <td class="score-property">M. Damage:</td>
                   <td id="magicaldamage" class="score-value">0</td>
                 </tr>
                 <tr>
