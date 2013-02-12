@@ -29,7 +29,7 @@ var Characters = function() {
             name: charname,
             location: {
                 map: 'Test Area',
-                x: 0,
+                x: 1,
                 y: 0,
                 z: 0
             }
@@ -69,18 +69,23 @@ var Character = function(config) {
     var self = this;
     
     // saved
-    self.id;         // int
-    self.name;       // string
-    self.htmlname;   // string
-    self.location;   // array (map, x, y, z)
-    self.picture;    // string
-    self.builder;    // boolean
-    self.channels;   // array of strings
-    self.roomdesc;   // string
-    self.stats = {}; // array (health, maxhealth, etc)
-    self.level;      // int
-    self.inventory;  // array of strings
-    self.title;      // string
+    self.id;        // int
+    self.name;      // string
+    self.htmlname;  // string
+    self.location;  // array (map, x, y, z)
+    self.picture;   // string
+    self.builder;   // boolean
+    self.channels;  // array of strings
+    self.roomdesc;  // string
+    self.gender;    // string
+    self.race;      // string
+    self.class;     // string
+    self.stats;     // array (health maxhealth magic maxmagic energy maxenergy str int cha armor resistance)
+    self.statmods;  // array (strmod intmod chamod pdmgmod mdmgmod resistancemod)
+    self.level;     // int
+    self.age;       // int
+    self.inventory; // array of strings
+    self.title;     // string
 
     // not saved
     self.online = false;    // boolean
@@ -93,26 +98,18 @@ var Character = function(config) {
         self.id = config.id || 0;
         self.name = config.name || 'Someone';
         self.htmlname = config.htmlname || "<span class='yellow'>" + self.name + "</span>";
-        self.location = config.location || {map: 'somemap', x: 0, y: 0, z: 0};
+        self.location = config.location || {map: 'Test Area', x: 1, y: 0, z: 0};
         self.picture = config.picture || '';
-        self.builder = config.builder || false;
+        self.builder = config.builder || true;
         self.channels = config.channels || [];
         self.roomdesc = config.roomdesc || 'is here.';
-        // load stats individually
-        self.stats.health = config.health || 100;
-        self.stats.maxhealth = config.maxhealth || 100;
-        self.stats.magic = config.magic || 100;
-        self.stats.maxmagic = config.maxmagic || 100;
-        self.stats.energy = config.energy || 100;
-        self.stats.maxenergy = config.maxenergy || 100;
-        self.stats.str = config.str || 10;
-        self.stats.int = config.int || 10;
-        self.stats.cha = config.cha || 10;
-        self.stats.pdmg = config.pdmg || 10;
-        self.stats.mdmg = config.mdmg || 10;
-        self.stats.resistance = config.resistance || 10;
-        // end stat loading
+        self.gender = config.gender || 'Male';
+        self.race = config.race || 'Human';
+        self.class = config.class || 'Novice'
+        self.stats = config.stats || {health: 100, maxhealth: 100, magic: 100, maxmagic: 100, energy: 100, maxenergy: 100, exp: 0, exptl: 200, str: 10, int: 10, cha: 10, pdmg: 10, mdmg: 10, armor: 10, resistance: 10};
+        self.statmods = config.statmods || {strmod: 0, intmod: 0, chamod: 0, pdmgmod: 0, mdmgmod: 0, resistancemod: 0};
         self.level = config.level || 1;
+        self.age = config.age || 18;
         self.inventory = config.inventory || [];
         self.title = config.title || '';
         console.log('[init] character loaded: ' + self.name);
@@ -128,8 +125,13 @@ var Character = function(config) {
             builder: self.builder,
             channels: self.channels,
             roomdesc: self.roomdesc,
+            gender: self.gender,
+            race: self.race,
+            class: self.class,
             stats: self.stats,
+            statmods: self.statmods,
             level: self.level,
+            age: self.age,
             inventory: self.inventory,
             title: self.title
         }, null, '\t');    
@@ -178,8 +180,6 @@ var Character = function(config) {
         });
         // update local player
         self.player.update({minimap: 1, maploc: 1});
-        // update stats
-        self.player.emit('stats', self.stats);
         // announce to room
         self.room.announceExcept(self.player, self.htmlname + " has just logged in to Armeria!");
         // look around
@@ -245,15 +245,6 @@ var Character = function(config) {
             if(libobj !== false)
                 callback(libobj);
         });
-    };
-
-    self.removeInventoryItem = function(item) {
-        var i = self.inventory.indexOf(item);
-        self.inventory.splice(i, 1);
-    };
-
-    self.addInventoryItem = function(item) {
-        self.inventory.push(item);
     };
 
     self.init(config);
