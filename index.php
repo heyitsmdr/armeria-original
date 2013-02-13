@@ -26,6 +26,28 @@
             $(document).ready(function(){
                 GameEngine.init(<?=$port?>);
                 GameEngine.version = '<?=filemtime(__FILE__)?>';
+
+
+                // div hiding defaults
+                $('div.showhide,#left-content-show').hide();
+
+                // hide left-content
+                $('#left-content-hide').click(function(){
+                  $('div.showhide,#left-content-hide').hide();
+                  $('div.showhide,#left-content').hide();
+                  $('div.showhide,#left-content-show').show();
+                  $("#right-content").css({"left":"0"});
+                  $("#logo").css({"display":"none"});
+                });
+
+                // show left-content
+                $('#left-content-show').click(function(){
+                  $('div.showhide,#left-content-show').hide();
+                  $('div.showhide,#left-content').show();
+                  $('div.showhide,#left-content-hide').show();
+                  $("#right-content").css({"left":"208px"});
+                  $("#logo").css({"display":"block"});
+                });
             });
         </script>
     </head>
@@ -54,11 +76,6 @@
              js.src = "//connect.facebook.net/en_US/all.js";
              ref.parentNode.insertBefore(js, ref);
            }(document));
-           
-           function movementButtonClick(c){
-               $('#input').val(c);
-               GameEngine.parseCommand();
-           };
         </script>
         <!-- Google Analytics -->
         <script type="text/javascript">
@@ -78,6 +95,9 @@
         
         <!-- Game Client -->
         <div id="itemtooltip-container"></div>
+        <div id="left-content-hide"></div>
+        <div id="left-content-show"></div>
+        <div id="minimap-toggle"></div>
         <div id="logo"></div>
         <div id="left-content">
             <div id="roomlist-container">
@@ -168,6 +188,12 @@
                   <option value="gossip ">:Gossip</option>
                   <option value="reply ">:Reply</option>
                 </select>
+            </div>
+            <div id="buttons">
+              <button type="north" value="N">N</button>
+              <button type="east" value="E"/>E</button>
+              <button type="south" value="S"/>S</button>
+              <button type="west" value="W"/>W</button>
             </div>
         </div>
     </body>

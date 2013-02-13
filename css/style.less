@@ -4,8 +4,30 @@
 body{
 	overflow: hidden;
 }
+//SPECIAL
+#left-content-hide{
+	position: absolute;
+	top: 41px;
+	left: 202px;
+	width: 15px;
+	height: 30px;
+	z-index: 101;
+}
+#left-content-show{
+	position: absolute;
+	top: 41px;
+	left: 0;
+	width: 15px;
+	height: 30px;
+	opacity: 0.8;
+	z-index: 101;
+}
+#left-content-show:hover{
+	opacity: 1;
+}
 //LEFT
 #logo {
+	display: block;
 	position: absolute;
 	top: 0;
 	left: 5px;
@@ -186,12 +208,6 @@ td.score-value{
   	-moz-box-sizing:border-box;
   	-webkit-box-sizing:border-box;
 }
-/*@-moz-document url-prefix() {
-    #input {
-        width: 100%;
-		height: 100%;
-    }
-}*/
 #defaultchannel-select{
 	-webkit-appearance: none;
 	-moz-appearance: button;
@@ -202,6 +218,22 @@ td.score-value{
 	padding-right: 3px;
 	padding-left: 3px;
 	width: 70px;
+}
+#buttons{
+	position: absolute;
+	top: 4px;
+	right: 10px;
+	bottom: 5px;
+}
+#buttons button{
+	width: 30px;
+	height: 30px;
+	margin-left: 10px;
+	.Bg(dark, 0.1);
+	.Box-shadow(false, 0, 0, 5px, 0, rgba(0,0,0,0.5));
+	border: solid thin #333;
+	border-top: solid thin #444;
+	color: white;
 }
 
 //TOOLTIPS
