@@ -5,7 +5,7 @@
 ?>
 <html lang="en">
     <head>
-        <title>Armeria: Social MUD v2</title>
+        <title>Armeria: Social MUD</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
         <!-- Stylesheets -->
         <link id="cssReset" rel="stylesheet" type="text/css" href="css/reset.css">
