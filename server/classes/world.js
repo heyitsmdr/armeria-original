@@ -283,31 +283,43 @@ var Map = function(config, fn) {
                 player.character.room.north = value;
                 shouldSave = true;
                 shouldOk = true;
+                if (!value)
+                    player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallN";
                 break;
             case 'south':
                 player.character.room.south = value;
                 shouldSave = true;
                 shouldOk = true;
+                if (!value)
+                    player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallS";
                 break;
             case 'east':
                 player.character.room.east = value;
                 shouldSave = true;
                 shouldOk = true;
+                if (!value)
+                    player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallE";
                 break;
             case 'west':
                 player.character.room.west = value;
                 shouldSave = true;
                 shouldOk = true;
+                if (!value)
+                    player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallW";
                 break;
             case 'up':
                 player.character.room.up = value;
                 shouldSave = true;
                 shouldOk = true;
+                if (value)
+                    player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallU";
                 break;
             case 'down':
                 player.character.room.down = value;
                 shouldSave = true;
                 shouldOk = true;
+                if (value)
+                    player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallD";
                 break;
             default:
                 player.msg(LOGIC._createTable(
@@ -352,6 +364,10 @@ var Map = function(config, fn) {
                     {
                         property: "Down",
                         value: player.character.room.down
+                    },
+                    {
+                        property: "Wall Type",
+                        value: player.character.room.wall
                     }
                 ]));
         }
@@ -402,6 +418,7 @@ var Room = function(config, mapobj) {
     self.west;          // string for linking
     self.up;            // string for linking
     self.down;          // string for linking
+    self.wall;          // string for wall type
 
     self.init = function(config, mapobj) {
         self.map = mapobj;
@@ -418,6 +435,7 @@ var Room = function(config, mapobj) {
         self.west = config.west || true;
         self.up = config.up || false;
         self.down = config.down || false;
+        self.wall = config.wall || 'grass';
     }
     
     self.getSaveData = function() {
@@ -434,7 +452,8 @@ var Room = function(config, mapobj) {
             east: self.east,
             west: self.west,
             up: self.up,
-            down: self.down
+            down: self.down,
+            wall: self.wall
         };    
     }
     
