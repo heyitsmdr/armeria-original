@@ -195,6 +195,13 @@ var GameEngine = new function() {
             {def: 'lavaRBL', sx: 6, sy: 11},
             {def: 'lavaEdge', sx: 4, sy: 10},
 
+            {def: 'grassWallN', sx: 0, sy: 19},
+            {def: 'grassWallS', sx: 0, sy: 19},
+            {def: 'grassWallE', sx: 0, sy: 19},
+            {def: 'grassWallW', sx: 0, sy: 19},
+            {def: 'grassWallU', sx: 0, sy: 19},
+            {def: 'grassWallD', sx: 0, sy: 19},
+
             {def: 'wp', sx: 0, sy: 19},
             {def: 'house', sx: 1, sy: 19}
         ];
