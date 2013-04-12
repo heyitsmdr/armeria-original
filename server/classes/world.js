@@ -282,44 +282,98 @@ var Map = function(config, fn) {
             case 'north':
                 player.character.room.north = value;
                 shouldSave = true;
-                shouldOk = true;
+                shouldSendMapToArea = true;
+                shouldAnnounce = true;
                 if (!value)
                     player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallN";
+                else
+                {
+                    var ter = player.character.room.type.toString();
+                    ter = ter.replace(player.character.room.wall + "WallN", '');
+                    ter = ter.replace(/ +(?= )/g,'');
+                    ter = ter.trim();
+                    player.character.room.type = ter;
+                }
                 break;
             case 'south':
                 player.character.room.south = value;
                 shouldSave = true;
-                shouldOk = true;
+                shouldSendMapToArea = true;
+                shouldAnnounce = true;
                 if (!value)
                     player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallS";
+                else
+                {
+                    var ter = player.character.room.type.toString();
+                    ter = ter.replace(player.character.room.wall + "WallS", '');
+                    ter = ter.replace(/ +(?= )/g,'');
+                    ter = ter.trim();
+                    player.character.room.type = ter;
+                }
                 break;
             case 'east':
                 player.character.room.east = value;
                 shouldSave = true;
-                shouldOk = true;
+                shouldSendMapToArea = true;
+                shouldAnnounce = true;
                 if (!value)
                     player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallE";
+                else
+                {
+                    var ter = player.character.room.type.toString();
+                    ter = ter.replace(player.character.room.wall + "WallE", '');
+                    ter = ter.replace(/ +(?= )/g,'');
+                    ter = ter.trim();
+                    player.character.room.type = ter;
+                }
                 break;
             case 'west':
                 player.character.room.west = value;
                 shouldSave = true;
-                shouldOk = true;
+                shouldSendMapToArea = true;
+                shouldAnnounce = true;
                 if (!value)
                     player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallW";
+                else
+                {
+                    var ter = player.character.room.type.toString();
+                    ter = ter.replace(player.character.room.wall + "WallW", '');
+                    ter = ter.replace(/ +(?= )/g,'');
+                    ter = ter.trim();
+                    player.character.room.type = ter;
+                }
                 break;
             case 'up':
                 player.character.room.up = value;
                 shouldSave = true;
-                shouldOk = true;
+                shouldSendMapToArea = true;
+                shouldAnnounce = true;
                 if (value)
                     player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallU";
+                else
+                {
+                    var ter = player.character.room.type.toString();
+                    ter = ter.replace(player.character.room.wall + "WallU", '');
+                    ter = ter.replace(/ +(?= )/g,'');
+                    ter = ter.trim();
+                    player.character.room.type = ter;
+                }
                 break;
             case 'down':
                 player.character.room.down = value;
                 shouldSave = true;
-                shouldOk = true;
+                shouldSendMapToArea = true;
+                shouldAnnounce = true;
                 if (value)
                     player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallD";
+                else
+                {
+                    var ter = player.character.room.type.toString();
+                    ter = ter.replace(player.character.room.wall + "WallD", '');
+                    ter = ter.replace(/ +(?= )/g,'');
+                    ter = ter.trim();
+                    player.character.room.type = ter;
+                }
                 break;
             default:
                 player.msg(LOGIC._createTable(
