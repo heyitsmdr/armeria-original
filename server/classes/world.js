@@ -243,6 +243,19 @@ var Map = function(config, fn) {
         });
     };
 
+    // Used to add extra tiles to a room, based on input. Ex. Adds northern wall if north exit is set to false.
+    function addFlavor(p, add, bool) {
+        if (bool)
+            p.character.room.type = p.character.room.type + " " + p.character.room.wall + add;
+        else {
+            var ter = p.character.room.type.toString();
+            ter = ter.replace(p.character.room.wall + add, '');
+            ter = ter.replace(/ +(?= )/g,'');
+            ter = ter.trim();
+            p.character.room.type = ter;
+        }
+    }
+
     self.modifyRoom = function(player, modargs) {
         var id = modargs.split(' ')[0];
         var value = modargs.split(' ').splice(1).join(' ');
@@ -253,6 +266,7 @@ var Map = function(config, fn) {
         var shouldSendMap = false;
         var shouldSendMapToArea = false;
         var shouldOk = false;
+        var what = "";
         // boolean fix
         if(value=='true') value = true;
         if(value=='false') value = false;
@@ -284,96 +298,84 @@ var Map = function(config, fn) {
                 shouldSave = true;
                 shouldSendMapToArea = true;
                 shouldAnnounce = true;
+
+                // Adds northern wall tile to current room if exit is false.
+                what = "WallN";
                 if (!value)
-                    player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallN";
+                    addFlavor(player, what, true);
                 else
-                {
-                    var ter = player.character.room.type.toString();
-                    ter = ter.replace(player.character.room.wall + "WallN", '');
-                    ter = ter.replace(/ +(?= )/g,'');
-                    ter = ter.trim();
-                    player.character.room.type = ter;
-                }
+                    addFlavor(player, what, false);
+
                 break;
             case 'south':
                 player.character.room.south = value;
                 shouldSave = true;
                 shouldSendMapToArea = true;
                 shouldAnnounce = true;
+
+                // Adds southern wall tile to current room if exit is false.
+                what = "WallS";
                 if (!value)
-                    player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallS";
+                    addFlavor(player, what, true);
                 else
-                {
-                    var ter = player.character.room.type.toString();
-                    ter = ter.replace(player.character.room.wall + "WallS", '');
-                    ter = ter.replace(/ +(?= )/g,'');
-                    ter = ter.trim();
-                    player.character.room.type = ter;
-                }
+                    addFlavor(player, what, false);
+
                 break;
             case 'east':
                 player.character.room.east = value;
                 shouldSave = true;
                 shouldSendMapToArea = true;
                 shouldAnnounce = true;
+
+                // Adds eastern wall tile to current room if exit is false.
+                what = "WallE";
                 if (!value)
-                    player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallE";
+                    addFlavor(player, what, true);
                 else
-                {
-                    var ter = player.character.room.type.toString();
-                    ter = ter.replace(player.character.room.wall + "WallE", '');
-                    ter = ter.replace(/ +(?= )/g,'');
-                    ter = ter.trim();
-                    player.character.room.type = ter;
-                }
+                    addFlavor(player, what, false);
+
                 break;
             case 'west':
                 player.character.room.west = value;
                 shouldSave = true;
                 shouldSendMapToArea = true;
                 shouldAnnounce = true;
+
+                // Adds western wall tile to current room if exit is false.
+                what = "WallW";
                 if (!value)
-                    player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallW";
+                    addFlavor(player, what, true);
                 else
-                {
-                    var ter = player.character.room.type.toString();
-                    ter = ter.replace(player.character.room.wall + "WallW", '');
-                    ter = ter.replace(/ +(?= )/g,'');
-                    ter = ter.trim();
-                    player.character.room.type = ter;
-                }
+                    addFlavor(player, what, false);
+
                 break;
             case 'up':
                 player.character.room.up = value;
                 shouldSave = true;
                 shouldSendMapToArea = true;
                 shouldAnnounce = true;
+
+                // Adds up exit tile to current room if exit is true.
+                what = "WallU";
                 if (value)
-                    player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallU";
+                    addFlavor(player, what, true);
                 else
-                {
-                    var ter = player.character.room.type.toString();
-                    ter = ter.replace(player.character.room.wall + "WallU", '');
-                    ter = ter.replace(/ +(?= )/g,'');
-                    ter = ter.trim();
-                    player.character.room.type = ter;
-                }
+                    addFlavor(player, what, false);
+
                 break;
             case 'down':
                 player.character.room.down = value;
                 shouldSave = true;
                 shouldSendMapToArea = true;
                 shouldAnnounce = true;
-                if (value)
-                    player.character.room.type = player.character.room.type + " " + player.character.room.wall + "WallD";
+
+                // Adds down exit tile to current room if exit is true.
+                what = "WallD";
+                if (!value)
+                    addFlavor(player, what, true);
                 else
-                {
-                    var ter = player.character.room.type.toString();
-                    ter = ter.replace(player.character.room.wall + "WallD", '');
-                    ter = ter.replace(/ +(?= )/g,'');
-                    ter = ter.trim();
-                    player.character.room.type = ter;
-                }
+                    addFlavor(player, what, false);
+
                 break;
             default:
                 player.msg(LOGIC._createTable(
