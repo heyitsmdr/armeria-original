@@ -149,6 +149,7 @@
                     <canvas id="map-canvas" width="240" height="240"></canvas>
                     <div id="player"></div>
                     <div id="mapshadow"></div>
+                    <div id="playerMark"></div>
                     <div id="mapname"><p id="mapname-p">Test Area</p></div>
                 </div>
                 
