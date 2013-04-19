@@ -30,23 +30,36 @@
 
                 // div hiding defaults
                 $('div.showhide,#left-content-show').hide();
+                $('div.showhide,#minimap-show').hide();
 
                 // hide left-content
                 $('#left-content-hide').click(function(){
                   $('div.showhide,#left-content-hide').hide();
-                  $('div.showhide,#left-content').hide();
-                  $('div.showhide,#left-content-show').show();
-                  $("#right-content").css({"left":"0"});
-                  $("#logo").css({"display":"none"});
+                  $('div.showhide,#left-content').hide(200, function(){$('div.showhide,#left-content-show').fadeIn(300);});
+                  $("#right-content").animate({left:"0"}, 200);
+                  //$("#logo").css({"display":"none"});
+                  $('div.showhide,#logo').fadeOut(200);
                 });
 
                 // show left-content
                 $('#left-content-show').click(function(){
                   $('div.showhide,#left-content-show').hide();
-                  $('div.showhide,#left-content').show();
-                  $('div.showhide,#left-content-hide').show();
-                  $("#right-content").css({"left":"208px"});
-                  $("#logo").css({"display":"block"});
+                  $('div.showhide,#left-content').show(200, function(){$('div.showhide,#left-content-hide').fadeIn(300);});
+                  $("#right-content").animate({left:"208px"}, 200);
+                  //$("#logo").css({"display":"block"});
+                  $('div.showhide,#logo').fadeIn(200);
+                });
+
+                //hide minimap
+                $('#minimap-hide').click(function(){
+                  $('div.showhide,#minimap-hide').hide();
+                  $('div.showhide,#minimap').hide(200, function(){$('div.showhide,#minimap-show').fadeIn(300);});
+                });
+
+                //show minimap
+                $('#minimap-show').click(function(){
+                  $('div.showhide,#minimap-show').hide();
+                  $('div.showhide,#minimap').show(200, function(){$('div.showhide,#minimap-hide').fadeIn(300);});
                 });
             });
         </script>
@@ -143,6 +156,8 @@
               </table>
             </div>
         </div>
+        <div id="minimap-hide"></div>
+        <div id="minimap-show"><p>Show Minimap</p></div>
         <div id="right-content">
             <div id="game"></div>
                 <div id="minimap">
