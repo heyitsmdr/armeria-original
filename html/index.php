@@ -7,9 +7,16 @@
     <head>
         <title>Armeria: Social MUD</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+
+        <link rel="apple-touch-icon" sizes="57x57" href="57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="114.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="144.png" />
+
         <!-- Stylesheets -->
         <link id="cssReset" rel="stylesheet" type="text/css" href="css/reset.css">
-
         <?php require 'less.php'; ?>
 
         <link rel="stylesheet" type="text/css" href="libraries/gritter/css/jquery.gritter.css">
