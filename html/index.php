@@ -14,6 +14,19 @@
         <link rel="apple-touch-icon" sizes="72x72" href="72.png" />
         <link rel="apple-touch-icon" sizes="114x114" href="114.png" />
         <link rel="apple-touch-icon" sizes="144x144" href="144.png" />
+        <!-- iOS Device Startup Images -->
+        <!-- iPhone/iPod Touch Portrait – 320 x 460 (standard resolution) -->
+        <link rel="apple-touch-startup-image" href="320x460.png" media="screen and (max-device-width: 320px)" />
+
+        <!-- iPhone/iPod Touch Portrait – 640 x 920 pixels (high-resolution) -->
+        <link rel="apple-touch-startup-image" media="(max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2)" href="640x920.png" />
+
+        <!-- For iPad Landscape 1024x748 -->
+          <!-- Note: iPad landscape startup image has to be exactly 748x1024 pixels (portrait, with contents rotated).-->
+        <link rel="apple-touch-startup-image" sizes="1024x748" href="1024x748.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)" />
+
+        <!-- For iPad Portrait 768x1004 -->
+        <link rel="apple-touch-startup-image" sizes="768x1004" href="768x1004.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)"/>
 
         <!-- Stylesheets -->
         <link id="cssReset" rel="stylesheet" type="text/css" href="css/reset.css">
