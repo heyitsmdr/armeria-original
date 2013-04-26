@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
     // port
-    $port = file_get_contents('./port');
+    $port = preg_replace('~[\r\n]+~', '', file_get_contents('./port'));
 ?>
 <html lang="en">
     <head>
