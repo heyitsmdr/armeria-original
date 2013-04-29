@@ -442,7 +442,7 @@ var GameEngine = new function() {
         }
 
         // set default channel based on user action
-        if(this.connected) {
+        if(this.connected && command.toLowerCase().substr(0, 1)=='/') {
             var sections = command.substr(1).split(' ');
             var cmd = matchcmd(sections[0], new Array('say', 'reply', 'builder', 'gossip'));
             sections.shift();
