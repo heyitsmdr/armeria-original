@@ -248,6 +248,10 @@ var GameEngine = new function() {
             GameEngine.parseInput("You're already connected.");
             return false;
         }
+        if(this.connecting) {
+            GameEngine.parseInput("You're client is already trying to connect.");
+            return false;
+        }
         if(GameEngine.serverOffline) {
             GameEngine.parseInput("The server is offline. Please refresh and try again soon.");
             return false;
