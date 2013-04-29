@@ -229,6 +229,7 @@ var GameEngine = new function() {
             } else {
                 // cancelled
                 GameEngine.parseInput("Permission denied. Can't login.");
+                GameEngine.connecting = true;
             }
         });
     }
@@ -249,7 +250,6 @@ var GameEngine = new function() {
             return false;
         }
         if(this.connecting) {
-            GameEngine.parseInput("You're client is already trying to connect.");
             return false;
         }
         if(GameEngine.serverOffline) {
@@ -257,6 +257,7 @@ var GameEngine = new function() {
             return false;
         }
         try {
+            GameEngine.connecting = true;
             FB.getLoginStatus(function(response) {
                 if (response.status === 'connected') {
                     // save access token
@@ -277,16 +278,15 @@ var GameEngine = new function() {
         }
         catch(err) {
             this.parseInput("Facebook API has not been initiated yet. Please try again in a few seconds.");
+            GameEngine.connecting = true;
         }
         return false;
     }
 
     this.connect = function() {
         if(!this.fbinfo) return;
-        if(this.connecting) return;
         this.parseInput("<br>Connecting to game server..");
         try {
-            this.connecting = true;
             this.socket = io.connect('http://ethryx.net:' + GameEngine.port, {
                 'reconnect': true,
                 'reconnection delay': 1000,
