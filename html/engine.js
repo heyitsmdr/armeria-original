@@ -6,6 +6,7 @@
  */
 
 var GameEngine = new function() {
+    this.debug = {datainput: false};
     this.version = false;       // Version
     this.port = 2772;           // Port
     this.socket = false;        // Socket.IO
@@ -344,6 +345,7 @@ var GameEngine = new function() {
             GameEngine.mapPosition(data.x, data.y, data.z, true);
         });
         this.socket.on('maplocnoanim', function(data){
+            if(GameEngine.debug.datainput){ console.log('maplocnoanim: '+data); }
             GameEngine.mapPosition(data.x, data.y, data.z, false);
         });
         this.socket.on('mapnomove', function(data){
@@ -549,25 +551,25 @@ var GameEngine = new function() {
         }
     }
 
-    this.mapGridAt = function(x, y) {
+    this.mapGridAt = function(x, y, z) {
         if(!this.mapdata) return;
         for(var i = 0; i < this.mapdata.length; i++) {
-            if(this.mapdata[i].x == x && this.mapdata[i].y == y && this.mapdata[i].z == this.mapz) return this.mapdata[i];
+            if(this.mapdata[i].x == x && this.mapdata[i].y == y && this.mapdata[i].z == z) return this.mapdata[i];
         }
         return false;
     }
 
     this.mapPosition = function(x, y, z, anim) {
         if(!this.mapdata) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - local map cache empty'); return;}
-        if(!this.mapGridAt(x, y)) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - destination doesnt exist in local map cache'); return;}
+        if(!this.mapGridAt(x, y, z)) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - destination doesnt exist in local map cache'); return;}
         if(this.mapz != z) {
-            this.mapz = z;
+            this.mapz = z; // save current floor level for renderMap
         }
         // calculate offsets
         this.mapdestoffsetx = 105 - (x * 30);
         this.mapdestoffsety = 105 - (y * 30);
         // lighting?
-        this.maproom = this.mapGridAt(x, y);
+        this.maproom = this.mapGridAt(x, y, z);
         // use animation?
         if(anim && GameEngine.mapanim === false) {
             GameEngine.mapanim = setInterval(function(){

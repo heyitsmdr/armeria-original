@@ -179,7 +179,7 @@ var Character = function(config) {
             });
         });
         // update local player
-        self.player.update({minimap: 1, maploc: 1});
+        self.player.update({minimap: 1, maplocnoanim: 1});
         // announce to room
         self.room.announceExcept(self.player, self.htmlname + " has just logged in to Armeria!");
         // look around
