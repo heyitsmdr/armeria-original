@@ -338,7 +338,7 @@ var GameEngine = new function() {
         });
         this.socket.on('map', function(data){
             GameEngine.mapRender(data.data);
-            $('#mapName').html(data.name);
+            $('#mapname-p').html(data.name);
         });
         this.socket.on('maploc', function(data){
             GameEngine.mapPosition(data.x, data.y, data.z, true);
