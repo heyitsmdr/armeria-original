@@ -6,12 +6,14 @@
  */
 
 var GameEngine = new function() {
+    this.debug = {datainput: false};
     this.version = false;       // Version
     this.port = 2772;           // Port
     this.socket = false;        // Socket.IO
     this.fbinfo = false;        // Facebook Information Array
     this.fbaccesstoken = false; // Facebook Access Token
     this.connected = false;     // Connected or not (boolean)
+    this.connecting = false;    // Connection in process (to block certain functions)
     this.mapdata = false;       // Entire minimap data
     this.mapz = 0;              // Map Z-Coordinate
     this.maproom = false;       // Object within this.mapdata that contains the current room
@@ -228,6 +230,7 @@ var GameEngine = new function() {
             } else {
                 // cancelled
                 GameEngine.parseInput("Permission denied. Can't login.");
+                GameEngine.connecting = true;
             }
         });
     }
@@ -247,11 +250,15 @@ var GameEngine = new function() {
             GameEngine.parseInput("You're already connected.");
             return false;
         }
+        if(this.connecting) {
+            return false;
+        }
         if(GameEngine.serverOffline) {
             GameEngine.parseInput("The server is offline. Please refresh and try again soon.");
             return false;
         }
         try {
+            GameEngine.connecting = true;
             FB.getLoginStatus(function(response) {
                 if (response.status === 'connected') {
                     // save access token
@@ -272,6 +279,7 @@ var GameEngine = new function() {
         }
         catch(err) {
             this.parseInput("Facebook API has not been initiated yet. Please try again in a few seconds.");
+            GameEngine.connecting = true;
         }
         return false;
     }
@@ -288,6 +296,7 @@ var GameEngine = new function() {
             this._socketEvents();
         } catch (err) {
             this.parseInput('<b>Shucks!</b> The server seems to be offline. Try refreshing in a few moments and re-login.');
+            this.connecting = false;
         }
     }
 
@@ -307,10 +316,12 @@ var GameEngine = new function() {
         });
         this.socket.on('disconnect', function(){
             GameEngine.connected = false;
+            GameEngine.connecting = false;
             GameEngine.parseInput("The connection has been lost!");
         });
         this.socket.on('reconnect_failed', function(){
             GameEngine.parseInput("Failed to reconnect after ten attempts.");
+            GameEngine.connecting = false;
         });
         /* Custom Events */
         this.socket.on('txt', function(data){
@@ -328,12 +339,13 @@ var GameEngine = new function() {
         });
         this.socket.on('map', function(data){
             GameEngine.mapRender(data.data);
-            $('#mapName').html(data.name);
+            $('#mapname-p').html(data.name);
         });
         this.socket.on('maploc', function(data){
             GameEngine.mapPosition(data.x, data.y, data.z, true);
         });
         this.socket.on('maplocnoanim', function(data){
+            if(GameEngine.debug.datainput){ console.log('maplocnoanim: '+data); }
             GameEngine.mapPosition(data.x, data.y, data.z, false);
         });
         this.socket.on('mapnomove', function(data){
@@ -539,25 +551,25 @@ var GameEngine = new function() {
         }
     }
 
-    this.mapGridAt = function(x, y) {
+    this.mapGridAt = function(x, y, z) {
         if(!this.mapdata) return;
         for(var i = 0; i < this.mapdata.length; i++) {
-            if(this.mapdata[i].x == x && this.mapdata[i].y == y && this.mapdata[i].z == this.mapz) return this.mapdata[i];
+            if(this.mapdata[i].x == x && this.mapdata[i].y == y && this.mapdata[i].z == z) return this.mapdata[i];
         }
         return false;
     }
 
     this.mapPosition = function(x, y, z, anim) {
         if(!this.mapdata) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - local map cache empty'); return;}
-        if(!this.mapGridAt(x, y)) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - destination doesnt exist in local map cache'); return;}
+        if(!this.mapGridAt(x, y, z)) { console.log('GameEngine.mapPosition('+x+','+y+','+z+'): failed - destination doesnt exist in local map cache'); return;}
         if(this.mapz != z) {
-            this.mapz = z;
+            this.mapz = z; // save current floor level for renderMap
         }
         // calculate offsets
         this.mapdestoffsetx = 105 - (x * 30);
         this.mapdestoffsety = 105 - (y * 30);
         // lighting?
-        this.maproom = this.mapGridAt(x, y);
+        this.maproom = this.mapGridAt(x, y, z);
         // use animation?
         if(anim && GameEngine.mapanim === false) {
             GameEngine.mapanim = setInterval(function(){

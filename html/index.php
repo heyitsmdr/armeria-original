@@ -185,7 +185,7 @@
                     <div id="player"></div>
                     <div id="mapshadow"></div>
                     <div id="playerMark"></div>
-                    <div id="mapname"><p id="mapname-p">Test Area</p></div>
+                    <div id="mapname"><p id="mapname-p">Registration Area</p></div>
                 </div>
                 
                 <div id="playervitals-container">
