@@ -35,7 +35,7 @@ var GameEngine = new function() {
         // set port
         GameEngine.port = port;
         // intro
-        GameEngine.parseInput("Welcome to Armeria! <a href='#' onclick='GameEngine.showIntro()'>What is Armeria?</a><br><br>Please <a href='#' onclick='GameEngine.FBLogin()'>Login</a> with Facebook or visit our <a href='GameEngine.noForums()'>Community Forums</a>.<br>");
+        GameEngine.parseInput("Welcome to Armeria! <a href='#' onclick='GameEngine.showIntro()'>What is Armeria?</a><br><br>Please <a href='#' onclick='GameEngine.FBLogin()'>Login</a> with Facebook or visit our <a href='#' onclick='GameEngine.noForums()'>Community Forums</a>.<br>");
         // bind ENTER to input box
         $('#input').keypress(function(e){
             if(e.which == 13) GameEngine.parseCommand();
@@ -122,6 +122,7 @@ var GameEngine = new function() {
 
     this.noForums = function() {
         $.gritter.add({title: 'Community Forums', text: 'There are no community forums at this time.'});
+        return false;
     }
     
     this.setupTileset = function() {
