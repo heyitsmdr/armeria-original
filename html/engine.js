@@ -7,6 +7,7 @@
 
 var GameEngine = new function() {
     this.debug = {datainput: false};
+    this.funcvars = {};         // Various static variables for functions
     this.version = false;       // Version
     this.port = 2772;           // Port
     this.socket = false;        // Socket.IO
@@ -394,6 +395,8 @@ var GameEngine = new function() {
     }
 
     this.showIntro = function() {
+        if(GameEngine.funcvars.shownintro)
+            return;
         GameEngine.parseInput("<span style='font-size:14px;font-weight:bold;'>WHAT IS ARMERIA?</span>");
         GameEngine.parseInput("Armeria is a social multi-user dungeon, otherwise known as a MUD. Players in this world are known by their name in real-life. Armeria is not only a highly interactive game, but also a social environment. You can sit back, talk with others, listen to music in the pubs or go out and kill some monsters, complete quests, craft new items and best of all, make some money!");
         GameEngine.parseInput("<br><span style='font-size:14px;font-weight:bold;'>WHY DO I WANT MONEY?</span>");
@@ -401,6 +404,7 @@ var GameEngine = new function() {
         GameEngine.parseInput("<br><span style='font-size:14px;font-weight:bold;'>WHAT IF I'VE NEVER PLAYED A 'MUD' BEFORE?</span>");
         GameEngine.parseInput("That's perfectly fine! We designed this game from the ground up to have a small learning curve for newcommers. However, don't let that steer you away. The game can get very in-depth and has complex and rewarding systems that you would expect in any other MUD.");
         GameEngine.newLine(1);
+        GameEngine.funcvars.shownintro = true;
     }
 
     matchcmd = function(cmd, cmdlist) {
