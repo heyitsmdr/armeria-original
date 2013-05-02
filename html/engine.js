@@ -627,22 +627,28 @@ var GameEngine = new function() {
 
     this.itemToolTipEnter = function() {
         $('#itemtooltip-container').html('Loading...');
-        $('#itemtooltip-container').fadeIn(75);
+        $('#itemtooltip-container').show();
         if(GameEngine.connected)
             GameEngine.socket.emit('itemtip', { id: $(this).data('id') });
     };
 
     this.toolTipLeave = function(){
-        $('#itemtooltip-container').fadeOut(75);
+        $('#itemtooltip-container').hide();
     };
 
     this.toolTipMove = function(e){
-        $('#itemtooltip-container').offset({ top:e.pageY + 15, left: e.pageX + 15 });
+        var _top = e.pageY + 15;
+        var _left = e.pageX + 15;
+        if( (_top + $('#itemtooltip-container').height()) > $(window).height() )
+            _top -= $('#itemtooltip-container').height() + 30;
+        if( (_left + $('#itemtooltip-container').width()) > $(window).width() )
+            _left -= $('#itemtooltip-container').width() + 30;
+        $('#itemtooltip-container').offset({ top: _top, left: _left });
     };
 
     this.roomListToolTipEnter = function() {
         $('#itemtooltip-container').html('Loading...');
-        $('#itemtooltip-container').fadeIn(75);
+        $('#itemtooltip-container').show();
         if(GameEngine.connected)
             GameEngine.socket.emit('ptip', { id: $(this).data('id'), type: $(this).data('type') });
     };
@@ -650,7 +656,7 @@ var GameEngine = new function() {
     this.inlineLinkToolTipEnter = function() {
         var url = $(this).html().toLowerCase();
         if( url.indexOf('.jpg') > 0 || url.indexOf('.jpeg') > 0 || url.indexOf('.png') > 0 || url.indexOf('.gif') > 0 ) {
-            $('#itemtooltip-container').fadeIn(75);
+            $('#itemtooltip-container').show();
             $('#itemtooltip-container').html('<img src="' + $(this).html() + '" style="max-height:300px;max-width:300px">');
         }
     };
