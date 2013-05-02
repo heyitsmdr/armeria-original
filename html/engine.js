@@ -114,6 +114,11 @@ var GameEngine = new function() {
         $(document).on('mouseenter', '.inlineLink', this.inlineLinkToolTipEnter);
         $(document).on('mouseleave', '.inlineLink', this.toolTipLeave);
         $(document).on('mousemove', '.inlineLink', this.toolTipMove);
+        // tooltips for health, mana, stamina, experience
+        GameEngine.registerToolTip('div#text-health.bar-shadow', '<strong>Health:</strong> This is the life of your character. Lose it, and die.');
+        GameEngine.registerToolTip('div#text-magic.bar-shadow', '<strong>Magic:</strong> If your character is magical, this is how much magic you have.');
+        GameEngine.registerToolTip('div#text-energy.bar-shadow', '<strong>Energy:</strong> This is how much energy you have.');
+        GameEngine.registerToolTip('div#text-exp.bar-shadow', '<strong>Experience:</strong> This is how much experience you need to level up.');
         // request animation frame
         var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
         window.requestAnimationFrame = requestAnimationFrame;
@@ -126,6 +131,15 @@ var GameEngine = new function() {
         return false;
     }
     
+    this.registerToolTip = function(selector, data) {
+        $(document).on('mouseenter', selector, function(){
+            $('#itemtooltip-container').show();
+            $('#itemtooltip-container').html( data );
+        });
+        $(document).on('mouseleave', selector, GameEngine.toolTipLeave);
+        $(document).on('mousemove', selector, GameEngine.toolTipMove);
+    }
+
     this.setupTileset = function() {
         /* TILE DEFINITIONS */
 
