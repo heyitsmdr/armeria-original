@@ -1,6 +1,6 @@
 .c9revisions/
 port
-data/
+server/data
 git.php
 servercontroller.php
 out.log
