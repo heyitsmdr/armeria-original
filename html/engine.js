@@ -7,6 +7,7 @@
 
 var GameEngine = new function() {
     this.debug = {datainput: false};
+    this.funcvars = {};         // Various static variables for functions
     this.version = false;       // Version
     this.port = 2772;           // Port
     this.socket = false;        // Socket.IO
@@ -35,7 +36,7 @@ var GameEngine = new function() {
         // set port
         GameEngine.port = port;
         // intro
-        GameEngine.parseInput("Welcome to Armeria! <a href='#' onclick='GameEngine.showIntro()'>What is Armeria?</a><br><br>Please <a href='#' onclick='GameEngine.FBLogin()'>Login</a> with Facebook or visit our <a href='http://forum.playarmeria.com'>Community Forums</a>.<br>");
+        GameEngine.parseInput("Welcome to Armeria! <a href='#' onclick='GameEngine.showIntro()'>What is Armeria?</a><br><br>Please <a href='#' onclick='GameEngine.FBLogin()'>Login</a> with Facebook or visit our <a href='#' onclick='GameEngine.noForums()'>Community Forums</a>.<br>");
         // bind ENTER to input box
         $('#input').keypress(function(e){
             if(e.which == 13) GameEngine.parseCommand();
@@ -113,11 +114,30 @@ var GameEngine = new function() {
         $(document).on('mouseenter', '.inlineLink', this.inlineLinkToolTipEnter);
         $(document).on('mouseleave', '.inlineLink', this.toolTipLeave);
         $(document).on('mousemove', '.inlineLink', this.toolTipMove);
+        // tooltips for health, mana, stamina, experience
+        GameEngine.registerToolTip('div#text-health.bar-shadow', '<strong>Health:</strong> This is the life of your character. Lose it, and die.');
+        GameEngine.registerToolTip('div#text-magic.bar-shadow', '<strong>Magic:</strong> If your character is magical, this is how much magic you have.');
+        GameEngine.registerToolTip('div#text-energy.bar-shadow', '<strong>Energy:</strong> This is how much energy you have.');
+        GameEngine.registerToolTip('div#text-exp.bar-shadow', '<strong>Experience:</strong> This is how much experience you need to level up.');
         // request animation frame
         var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
         window.requestAnimationFrame = requestAnimationFrame;
         // focus input box
         $('#input').focus();
+    }
+
+    this.noForums = function() {
+        $.gritter.add({title: 'Community Forums', text: 'There are no community forums at this time.'});
+        return false;
+    }
+    
+    this.registerToolTip = function(selector, data) {
+        $(document).on('mouseenter', selector, function(){
+            $('#itemtooltip-container').show();
+            $('#itemtooltip-container').html( data );
+        });
+        $(document).on('mouseleave', selector, GameEngine.toolTipLeave);
+        $(document).on('mousemove', selector, GameEngine.toolTipMove);
     }
 
     this.setupTileset = function() {
@@ -389,13 +409,16 @@ var GameEngine = new function() {
     }
 
     this.showIntro = function() {
+        if(GameEngine.funcvars.shownintro)
+            return;
         GameEngine.parseInput("<span style='font-size:14px;font-weight:bold;'>WHAT IS ARMERIA?</span>");
         GameEngine.parseInput("Armeria is a social multi-user dungeon, otherwise known as a MUD. Players in this world are known by their name in real-life. Armeria is not only a highly interactive game, but also a social environment. You can sit back, talk with others, listen to music in the pubs or go out and kill some monsters, complete quests, craft new items and best of all, make some money!");
-        GameEngine.parseInput("<span style='font-size:14px;font-weight:bold;'>WHY DO I WANT MONEY?</span>");
+        GameEngine.parseInput("<br><span style='font-size:14px;font-weight:bold;'>WHY DO I WANT MONEY?</span>");
         GameEngine.parseInput("Armeria uses a real-world currency system. You start the game with a loan (to help you get started). You can both spend money in real-life to get gold in-game and sell gold in-game to get money in real-life (with limitations, of course).");
-        GameEngine.parseInput("<span style='font-size:14px;font-weight:bold;'>WHAT IF I'VE NEVER PLAYED A 'MUD' BEFORE?</span>");
+        GameEngine.parseInput("<br><span style='font-size:14px;font-weight:bold;'>WHAT IF I'VE NEVER PLAYED A 'MUD' BEFORE?</span>");
         GameEngine.parseInput("That's perfectly fine! We designed this game from the ground up to have a small learning curve for newcommers. However, don't let that steer you away. The game can get very in-depth and has complex and rewarding systems that you would expect in any other MUD.");
         GameEngine.newLine(1);
+        GameEngine.funcvars.shownintro = true;
     }
 
     matchcmd = function(cmd, cmdlist) {
@@ -618,22 +641,28 @@ var GameEngine = new function() {
 
     this.itemToolTipEnter = function() {
         $('#itemtooltip-container').html('Loading...');
-        $('#itemtooltip-container').fadeIn(75);
+        $('#itemtooltip-container').show();
         if(GameEngine.connected)
             GameEngine.socket.emit('itemtip', { id: $(this).data('id') });
     };
 
     this.toolTipLeave = function(){
-        $('#itemtooltip-container').fadeOut(75);
+        $('#itemtooltip-container').hide();
     };
 
     this.toolTipMove = function(e){
-        $('#itemtooltip-container').offset({ top:e.pageY + 15, left: e.pageX + 15 });
+        var _top = e.pageY + 15;
+        var _left = e.pageX + 15;
+        if( (_top + $('#itemtooltip-container').height()) > $(window).height() )
+            _top -= $('#itemtooltip-container').height() + 30;
+        if( (_left + $('#itemtooltip-container').width()) > $(window).width() )
+            _left -= $('#itemtooltip-container').width() + 30;
+        $('#itemtooltip-container').offset({ top: _top, left: _left });
     };
 
     this.roomListToolTipEnter = function() {
         $('#itemtooltip-container').html('Loading...');
-        $('#itemtooltip-container').fadeIn(75);
+        $('#itemtooltip-container').show();
         if(GameEngine.connected)
             GameEngine.socket.emit('ptip', { id: $(this).data('id'), type: $(this).data('type') });
     };
@@ -641,7 +670,7 @@ var GameEngine = new function() {
     this.inlineLinkToolTipEnter = function() {
         var url = $(this).html().toLowerCase();
         if( url.indexOf('.jpg') > 0 || url.indexOf('.jpeg') > 0 || url.indexOf('.png') > 0 || url.indexOf('.gif') > 0 ) {
-            $('#itemtooltip-container').fadeIn(75);
+            $('#itemtooltip-container').show();
             $('#itemtooltip-container').html('<img src="' + $(this).html() + '" style="max-height:300px;max-width:300px">');
         }
     };

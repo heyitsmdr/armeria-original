@@ -84,7 +84,7 @@
             });
         </script>
     </head>
-    <body>
+    <body oncontextmenu="return false">
         <!-- Animated Fog -->
         <div id="fog"></div>
         <!-- Facebook Integration -->
