@@ -224,6 +224,13 @@ var GameEngine = new function() {
             {def: 'grassWallU', sx: 0, sy: 19},
             {def: 'grassWallD', sx: 0, sy: 19},
 
+            {def: 'stoneWallN', sx: 3, sy: 18},
+            {def: 'stoneWallS', sx: 3, sy: 16},
+            {def: 'stoneWallE', sx: 2, sy: 17},
+            {def: 'stoneWallW', sx: 3, sy: 17},
+            {def: 'stoneWallU', sx: 2, sy: 19},
+            {def: 'stoneWallD', sx: 2, sy: 19},
+
             {def: 'wp', sx: 0, sy: 19},
             {def: 'house', sx: 1, sy: 19}
         ];
