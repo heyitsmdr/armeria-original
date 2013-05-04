@@ -260,7 +260,7 @@ var Map = function(config, fn) {
         var id = modargs.split(' ')[0];
         var value = modargs.split(' ').splice(1).join(' ');
         if(id)
-            id = matchcmd(id, new Array('name', 'description', 'terrain', 'environment'));
+            id = matchcmd(id, new Array('name', 'description', 'terrain', 'environment', 'walltype'));
         var shouldSave = false;
         var shouldAnnounce = false;
         var shouldSendMap = false;
@@ -376,6 +376,12 @@ var Map = function(config, fn) {
                 else
                     addFlavor(player, what, false);
 
+                break;
+            case 'walltype':
+                player.character.room.wall = value;
+                shouldSave = true;
+                shouldSendMapToArea = false;
+                shouldAnnounce = true;
                 break;
             default:
                 player.msg(LOGIC._createTable(
