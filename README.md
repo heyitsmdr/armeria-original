@@ -11,15 +11,11 @@ Local Development
 For local development, we use [Vagrant](http://www.vagrantup.com). This allows us to replicate
 the same testing environment on every computer. 
 
-### Installation
-
-Install Vagrant, clone the repo and run the following commands:
-
-    vagrant box add precise32 http://files.vagrantup.com/precise32.box
-    
 ### Working
 
-Once you have Vagrant installed and the box added, you can initialize the development environment
-by going to the git directory and running the following command:
+Once Vagrant is installed and the repo is cloned, run the following commands:
 
     vagrant up
+
+The first time you run this, the virtual box image will be downloaded and installed. Then,
+Vagrant will set up the development environment.
