@@ -32,9 +32,9 @@ var GameEngine = new function() {
     this.sendHistory = [];      // Array of strings that you sent to the server (for up/down history)
     this.sendHistPtr = false;   // Pointer for navigating the history
 
-    this.init = function(port) {
+    this.init = function() {
         // set port
-        GameEngine.port = port;
+        GameEngine.port = 2772;
         // intro
         GameEngine.parseInput("Welcome to Armeria! <a href='#' onclick='GameEngine.showIntro()'>What is Armeria?</a><br><br>Please <a href='#' onclick='GameEngine.FBLogin()'>Login</a> with Facebook or visit our <a href='#' onclick='GameEngine.noForums()'>Community Forums</a>.<br>");
         // bind ENTER to input box
