@@ -49,10 +49,10 @@
         <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
         <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
 
-        <script src="http://www.playarmeria.com:<?=$port?>/socket.io/socket.io.js"></script>
+        <script src="http://playarmeria.com:2772/socket.io/socket.io.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
-                GameEngine.init(2772);
+                GameEngine.init();
                 GameEngine.version = '<?=filemtime(__FILE__)?>';
 
                 // div hiding defaults

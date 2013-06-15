@@ -48,7 +48,8 @@ apt-get install -y npm
 apt-get install -y build-essential
 
 # install npm packages
-cd /vagrant
+cd /vagrant/server
+npm update
 npm install # uses package.json
 
 # restart services
