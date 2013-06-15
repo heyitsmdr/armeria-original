@@ -82,7 +82,8 @@ function init() {
     });
 
     // listen
-    var port = parseInt(fs.readFileSync('./port').toString('utf8'));
+    // var port = parseInt(fs.readFileSync('./port').toString('utf8'));
+    var port = 2772;
     console.log('server listening on ' + port);
     var io = require('socket.io').listen(port);
 

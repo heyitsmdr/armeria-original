@@ -30,7 +30,15 @@
 
         <!-- Stylesheets -->
         <link id="cssReset" rel="stylesheet" type="text/css" href="css/reset.css">
-        <?php require 'less.php'; ?>
+        
+        <!-- LESS -->
+        <link rel="stylesheet/less" type="text/css" href="css/style.less" />
+        <script>
+          less = {
+              env: "development"
+          };
+        </script>
+        <script src="./css/less-1.3.3.min.js" type="text/javascript"></script>
 
         <link rel="stylesheet" type="text/css" href="libraries/gritter/css/jquery.gritter.css">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,800,700,600' rel='stylesheet' type='text/css'>
@@ -44,9 +52,8 @@
         <script src="http://www.playarmeria.com:<?=$port?>/socket.io/socket.io.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
-                GameEngine.init(<?=$port?>);
+                GameEngine.init(2772);
                 GameEngine.version = '<?=filemtime(__FILE__)?>';
-
 
                 // div hiding defaults
                 $('div.showhide,#left-content-show').hide();
