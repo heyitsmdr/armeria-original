@@ -6,6 +6,12 @@ This is the main repository for Armeria. Please keep everything secret unless to
 Local Development
 -----------------
 
+### Requirements
+
+* Git - http://git-scm.com
+* Vagrant - http://vagrantup.com
+* VirtualBox - http://virtualbox.org
+
 ### Intro
 
 For local development, we use [Vagrant](http://www.vagrantup.com). This allows us to replicate
