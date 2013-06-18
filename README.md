@@ -60,11 +60,11 @@ and, if it's running the background, you can stop it with:
     cd /vagrant/server
     ./app stop
 
- ### Accessing the Server
+## Accessing the Server
 
- Now that the server is running, you can access it from your local machine by going here:
+Now that the server is running, you can access it from your local machine by going here:
 
- http://local.playarmeria.com:8080/
+http://local.playarmeria.com:8080/
 
- You don't have to add anything to your HOSTS (or equivalent) file since the DNS entry for
- `local.playarmeria.com` points to `127.0.0.1`.
+You don't have to add anything to your HOSTS (or equivalent) file since the DNS entry for
+`local.playarmeria.com` points to `127.0.0.1`.
