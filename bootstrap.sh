@@ -52,6 +52,9 @@ cd /vagrant/server
 npm update
 npm install # uses package.json
 
+# install curl
+apt-get install -y curl
+
 # restart services
 service php5-fpm restart
 service nginx restart
