@@ -36,7 +36,7 @@ var GameEngine = new function() {
         // set port
         GameEngine.port = 2772;
         // intro
-        GameEngine.parseInput("Welcome to Armeria! <a href='#' onclick='GameEngine.showIntro()'>What is Armeria?</a><br><br>Please <a href='#' onclick='GameEngine.FBLogin()'>Login</a> with Facebook or visit our <a href='#' onclick='GameEngine.noForums()'>Community Forums</a>.<br>");
+        GameEngine.parseInput("Welcome to Armeria!<br><br>Please <a href='#' onclick='GameEngine.FBLogin()'>Login</a> with Facebook or visit our <a href='#' onclick='GameEngine.noForums()'>Community Forums</a>.<br>");
         // bind ENTER to input box
         $('#input').keypress(function(e){
             if(e.which == 13) GameEngine.parseCommand();
@@ -422,19 +422,6 @@ var GameEngine = new function() {
         for(var i = 0; i < count; i++) {
             this.parseInput("");
         }
-    }
-
-    this.showIntro = function() {
-        if(GameEngine.funcvars.shownintro)
-            return;
-        GameEngine.parseInput("<span style='font-size:14px;font-weight:bold;'>WHAT IS ARMERIA?</span>");
-        GameEngine.parseInput("Armeria is a social multi-user dungeon, otherwise known as a MUD. Players in this world are known by their name in real-life. Armeria is not only a highly interactive game, but also a social environment. You can sit back, talk with others, listen to music in the pubs or go out and kill some monsters, complete quests, craft new items and best of all, make some money!");
-        GameEngine.parseInput("<br><span style='font-size:14px;font-weight:bold;'>WHY DO I WANT MONEY?</span>");
-        GameEngine.parseInput("Armeria uses a real-world currency system. You start the game with a loan (to help you get started). You can both spend money in real-life to get gold in-game and sell gold in-game to get money in real-life (with limitations, of course).");
-        GameEngine.parseInput("<br><span style='font-size:14px;font-weight:bold;'>WHAT IF I'VE NEVER PLAYED A 'MUD' BEFORE?</span>");
-        GameEngine.parseInput("That's perfectly fine! We designed this game from the ground up to have a small learning curve for newcommers. However, don't let that steer you away. The game can get very in-depth and has complex and rewarding systems that you would expect in any other MUD.");
-        GameEngine.newLine(1);
-        GameEngine.funcvars.shownintro = true;
     }
 
     matchcmd = function(cmd, cmdlist) {
