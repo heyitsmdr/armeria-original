@@ -18,6 +18,8 @@ server {
 
 	error_page 404 /404.html;
 	
+    sendfile off;
+    
 	location / {
         try_files \$uri \$uri/ /index.html;
     }
