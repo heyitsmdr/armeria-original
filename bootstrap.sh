@@ -52,7 +52,7 @@ apt-get install -y build-essential
 # install npm packages
 cd /vagrant/server
 npm update
-npm install # uses package.json
+npm install --no-bin-links # uses package.json
 
 # install curl
 apt-get install -y curl
