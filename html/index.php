@@ -35,7 +35,7 @@
         <link rel="stylesheet/less" type="text/css" href="css/style.less" />
         <script>
           less = {
-              env: "development"
+            env: "development"
           };
         </script>
         <script src="./css/less-1.3.3.min.js" type="text/javascript"></script>
@@ -45,7 +45,7 @@
         <!-- Scripts -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
-        <script src="engine.js?buildTime=<?=filemtime('./css/style.less')?>"></script>
+        <script src="engine.js?buildTime=<?=filemtime('./engine.js')?>"></script>
         <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
         <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
 
@@ -238,6 +238,38 @@
               <button type="south" value="S"/>S</button>
               <button type="west" value="W"/>W</button>
             </div>
+        </div>
+
+        <!-- Editor -->
+        <div id="editor-container">
+          <div id="editor-map">
+            <table width="100%" height="100%">
+              <tr>
+                <td align="center" style="vertical-align:middle;">
+                  map here.
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div id="editor-properties">
+            <!-- Builder Properties -->
+            <div class="prop-cat">
+              Builder Settings
+            </div>
+            <!-- Area Properties -->
+            <div class="prop-cat">
+              Area Properties
+            </div>
+            <div class="prop-set">
+              <span class="prop-name">Area Name</span>
+              <span class="prop-value"><input type="text" id="propAreaName"></span>
+            </div>
+
+            <!-- Selected Room Properties -->
+            <div class="prop-cat">
+              Selected Room Properties
+            </div>
+          </div>
         </div>
     </body>
 </html>

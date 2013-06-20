@@ -8,4 +8,8 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = "armeria"
   config.vm.network :forwarded_port, host: 8080, guest: 80
   config.vm.network :forwarded_port, host: 2772, guest: 2772
+
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
+  end
 end

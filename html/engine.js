@@ -36,7 +36,7 @@ var GameEngine = new function() {
         // set port
         GameEngine.port = 2772;
         // intro
-        GameEngine.parseInput("Welcome to Armeria! <a href='#' onclick='GameEngine.showIntro()'>What is Armeria?</a><br><br>Please <a href='#' onclick='GameEngine.FBLogin()'>Login</a> with Facebook or visit our <a href='#' onclick='GameEngine.noForums()'>Community Forums</a>.<br>");
+        GameEngine.parseInput("Welcome to Armeria!<br><br>Please <a href='#' onclick='GameEngine.FBLogin()'>Login</a> with Facebook or visit our <a href='#' onclick='GameEngine.noForums()'>Community Forums</a>.<br>");
         // bind ENTER to input box
         $('#input').keypress(function(e){
             if(e.which == 13) GameEngine.parseCommand();
@@ -66,6 +66,9 @@ var GameEngine = new function() {
                     break;
                 case 99:
                     $('#input').val('d');
+                    break;
+                case 27:
+                    $('#input').val('/build');
                     break;
                 default:
                     return;
@@ -424,19 +427,6 @@ var GameEngine = new function() {
         }
     }
 
-    this.showIntro = function() {
-        if(GameEngine.funcvars.shownintro)
-            return;
-        GameEngine.parseInput("<span style='font-size:14px;font-weight:bold;'>WHAT IS ARMERIA?</span>");
-        GameEngine.parseInput("Armeria is a social multi-user dungeon, otherwise known as a MUD. Players in this world are known by their name in real-life. Armeria is not only a highly interactive game, but also a social environment. You can sit back, talk with others, listen to music in the pubs or go out and kill some monsters, complete quests, craft new items and best of all, make some money!");
-        GameEngine.parseInput("<br><span style='font-size:14px;font-weight:bold;'>WHY DO I WANT MONEY?</span>");
-        GameEngine.parseInput("Armeria uses a real-world currency system. You start the game with a loan (to help you get started). You can both spend money in real-life to get gold in-game and sell gold in-game to get money in real-life (with limitations, of course).");
-        GameEngine.parseInput("<br><span style='font-size:14px;font-weight:bold;'>WHAT IF I'VE NEVER PLAYED A 'MUD' BEFORE?</span>");
-        GameEngine.parseInput("That's perfectly fine! We designed this game from the ground up to have a small learning curve for newcommers. However, don't let that steer you away. The game can get very in-depth and has complex and rewarding systems that you would expect in any other MUD.");
-        GameEngine.newLine(1);
-        GameEngine.funcvars.shownintro = true;
-    }
-
     matchcmd = function(cmd, cmdlist) {
         var cmd_real = cmd;
         for(var i = 0; i < cmdlist.length; i++) {
@@ -478,6 +468,8 @@ var GameEngine = new function() {
                 return;
             } else if (command.toLowerCase() == '/version') {
                 this.parseInput('Your client is running version <b>' + this.version + '</b>.');
+            } else if (command.toLowerCase() == '/build') {
+                this.toggleEditor();
             } else {
                 if(this.connected)
                     this.socket.emit('cmd', {cmd: command.substr(1)});
@@ -549,6 +541,10 @@ var GameEngine = new function() {
         $('#input').val(this.sendHistory[ptr]);
         document.getElementById('input').selectionStart = this.sendHistory[ptr].length;
         this.sendHistPtr = ptr;
+    }
+
+    this.builderRender = function(size) {
+
     }
 
     this.mapRender = function(mapdata, offsetx, offsety) {
@@ -689,5 +685,12 @@ var GameEngine = new function() {
             $('#itemtooltip-container').show();
             $('#itemtooltip-container').html('<img src="' + $(this).html() + '" style="max-height:300px;max-width:300px">');
         }
+    };
+
+    this.toggleEditor = function() {
+        if( $('#editor-container').css('display') == 'none' )
+            $('#editor-container').stop().fadeIn('fast');
+        else
+            $('#editor-container').stop().fadeOut('fast');
     };
 };
