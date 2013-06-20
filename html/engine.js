@@ -67,6 +67,9 @@ var GameEngine = new function() {
                 case 99:
                     $('#input').val('d');
                     break;
+                case 27:
+                    $('#input').val('/build');
+                    break;
                 default:
                     return;
             }
@@ -465,6 +468,8 @@ var GameEngine = new function() {
                 return;
             } else if (command.toLowerCase() == '/version') {
                 this.parseInput('Your client is running version <b>' + this.version + '</b>.');
+            } else if (command.toLowerCase() == '/build') {
+                this.toggleEditor();
             } else {
                 if(this.connected)
                     this.socket.emit('cmd', {cmd: command.substr(1)});
@@ -676,5 +681,12 @@ var GameEngine = new function() {
             $('#itemtooltip-container').show();
             $('#itemtooltip-container').html('<img src="' + $(this).html() + '" style="max-height:300px;max-width:300px">');
         }
+    };
+
+    this.toggleEditor = function() {
+        if( $('#editor-container').css('display') == 'none' )
+            $('#editor-container').stop().fadeIn('fast');
+        else
+            $('#editor-container').stop().fadeOut('fast');
     };
 };
