@@ -543,6 +543,10 @@ var GameEngine = new function() {
         this.sendHistPtr = ptr;
     }
 
+    this.builderRender = function(size) {
+
+    }
+
     this.mapRender = function(mapdata, offsetx, offsety) {
         if(mapdata === false) {
             mapdata = this.mapdata;

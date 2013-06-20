@@ -242,11 +242,20 @@
 
         <!-- Editor -->
         <div id="editor-container">
-          <span id="editor-close"><a href="#" onclick="GameEngine.toggleEditor();return false;">x</a></span>
           <div id="editor-map">
-
+            <table width="100%" height="100%">
+              <tr>
+                <td align="center" style="vertical-align:middle;">
+                  map here.
+                </td>
+              </tr>
+            </table>
           </div>
           <div id="editor-properties">
+            <!-- Builder Properties -->
+            <div class="prop-cat">
+              Builder Settings
+            </div>
             <!-- Area Properties -->
             <div class="prop-cat">
               Area Properties
