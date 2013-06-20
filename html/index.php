@@ -188,7 +188,7 @@
         <div id="right-content">
             <div id="game"></div>
                 <div id="minimap">
-                    <canvas id="map-canvas" width="240" height="240"></canvas>
+                    <canvas id="map-canvas" width="256" height="256"></canvas>
                     <div id="player"></div>
                     <div id="mapshadow"></div>
                     <div id="playerMark"></div>
