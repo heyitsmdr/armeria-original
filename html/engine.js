@@ -249,8 +249,8 @@ var GameEngine = new function() {
 
         // Calculate Real sx and sy
         this.mapts.forEach(function(ts){
-            ts.sx *= 30;
-            ts.sy *= 30;
+            ts.sx *= 32;
+            ts.sy *= 32;
         });
 
     }
@@ -566,10 +566,10 @@ var GameEngine = new function() {
             var y = parseInt(mapdata[i].y);
             var z = parseInt(mapdata[i].z);
             if(z != GameEngine.mapz) continue; // skip
-            var left = (x * 30) + offsetx;
-            var top = (y * 30) + offsety;
+            var left = (x * 32) + offsetx;
+            var top = (y * 32) + offsety;
             // only render within viewport
-            if(left > -30 && left < 255 && top > -30 && top < 255) {
+            if(left > -32 && left < 255 && top > -32 && top < 255) {
                 var layers = mapdata[i].terrain.split(' ');
                 for(var j = 0; j < layers.length; j++) {
                     var founddef = false;
@@ -580,7 +580,7 @@ var GameEngine = new function() {
                         }
                     }
                     if(founddef === false) founddef = 4; // default to grass
-                    GameEngine.mapctx.drawImage(GameEngine.maptileset, GameEngine.mapts[founddef].sx, GameEngine.mapts[founddef].sy, 30, 30, left, top, 30, 30);
+                    GameEngine.mapctx.drawImage(GameEngine.maptileset, GameEngine.mapts[founddef].sx, GameEngine.mapts[founddef].sy, 32, 32, left, top, 32, 32);
                 }
             }
         }
@@ -601,8 +601,8 @@ var GameEngine = new function() {
             this.mapz = z; // save current floor level for renderMap
         }
         // calculate offsets
-        this.mapdestoffsetx = 105 - (x * 30);
-        this.mapdestoffsety = 105 - (y * 30);
+        this.mapdestoffsetx = 112 - (x * 32);
+        this.mapdestoffsety = 112 - (y * 32);
         // lighting?
         this.maproom = this.mapGridAt(x, y, z);
         // use animation?
