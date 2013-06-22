@@ -246,7 +246,7 @@
             <table width="100%" height="100%">
               <tr>
                 <td align="center" style="vertical-align:middle;">
-                  map here.
+                  <div id="editor-grids"></div>
                 </td>
               </tr>
             </table>

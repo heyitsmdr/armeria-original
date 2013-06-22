@@ -547,6 +547,17 @@ var GameEngine = new function() {
 
     }
 
+    this.mapGetTilesetDefinition = function(definition) {
+        for(var k = 0; k < GameEngine.mapts.length; k++) {
+            if(GameEngine.mapts[k].def.toLowerCase() == definition.toLowerCase()) {
+                return GameEngine.mapts[k];
+            }
+        }
+
+        // default to grass
+        return GameEngine.mapts[4];
+    };
+
     this.mapRender = function(mapdata, offsetx, offsety) {
         if(mapdata === false) {
             mapdata = this.mapdata;
@@ -689,8 +700,59 @@ var GameEngine = new function() {
 
     this.toggleEditor = function() {
         if( $('#editor-container').css('display') == 'none' )
-            $('#editor-container').stop().fadeIn('fast');
+            $('#editor-container').stop().fadeIn('fast', function(){
+                $('#editor-grids').html(GameEngine.editorRender(16,16));
+            });
         else
             $('#editor-container').stop().fadeOut('fast');
+    };
+
+    /**
+        Note: sizeh and sizew must be divisible by 2.
+        Todo: Move styles to stylesheet
+    **/
+    this.editorRender = function(sizeh, sizew, location) {
+        if(!location)
+            location = GameEngine.maproom;
+        if(!location) {
+            console.log('GameEngine.editorRender() failed -- location was false');
+            return false;
+        }
+
+        var xrangemin = location.x - (sizew / 2);
+        var xrangemax = location.x + (sizew / 2);
+        var yrangemin = location.y - (sizeh / 2);
+        var yrangemax = location.y + (sizeh / 2);
+
+        var render = '<table cellspacing="0" cellpadding="0">';
+
+        for(var y = yrangemin; y <= yrangemax; y++) {
+            render += '<tr>';
+            for(var x = xrangemin; x <= xrangemax; x++) {
+                if(x == location.x && y == location.y)
+                    render += '<td gamex="'+x+'" gamey="'+y+'" style="width:32px;height:32px;border:2px solid #f00">';
+                else
+                    render += '<td gamex="'+x+'" gamey="'+y+'" style="width:32px;height:32px;border:1px solid #fff">';
+
+                var cell = GameEngine.mapGridAt(x, y, GameEngine.mapz);
+                if(cell) {
+                    var terrain = cell.terrain.split(' ');
+                    var zindex = 100;
+                    terrain.forEach(function(t){
+                        zindex++;
+                        var def = GameEngine.mapGetTilesetDefinition(t);
+                        var bg = 'background-image:url(images/tiles/tileset.png);background-position: -' + def.sx + 'px -' + def.sy + 'px;';
+                        render += '<div style="position:absolute;width:32px;height:32px;z-index:' + zindex + ';' + bg + '"></div>';
+                    });
+                }
+
+                render += '</td>';
+            }
+            render += '</tr>'
+        }
+
+        render += '</table>';
+
+        return render;
     };
 };
