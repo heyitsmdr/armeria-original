@@ -543,10 +543,6 @@ var GameEngine = new function() {
         this.sendHistPtr = ptr;
     }
 
-    this.builderRender = function(size) {
-
-    }
-
     this.mapGetTilesetDefinition = function(definition) {
         for(var k = 0; k < GameEngine.mapts.length; k++) {
             if(GameEngine.mapts[k].def.toLowerCase() == definition.toLowerCase()) {
