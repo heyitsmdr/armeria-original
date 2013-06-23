@@ -68,7 +68,7 @@ var GameEngine = new function() {
                     $('#input').val('d');
                     break;
                 case 27:
-                    $('#input').val('/build');
+                    $('#input').val('/edit');
                     break;
                 default:
                     return;
@@ -468,7 +468,7 @@ var GameEngine = new function() {
                 return;
             } else if (command.toLowerCase() == '/version') {
                 this.parseInput('Your client is running version <b>' + this.version + '</b>.');
-            } else if (command.toLowerCase() == '/build') {
+            } else if (command.toLowerCase() == '/edit') {
                 this.toggleEditor();
             } else {
                 if(this.connected)
