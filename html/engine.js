@@ -711,7 +711,7 @@ var GameEngine = new function() {
         if(!location)
             location = GameEngine.maproom;
         if(!location) {
-            console.log('GameEngine.editorRender() failed -- location was false');
+            console.log('GameEngine.editorRender(' + sizeh + ',' + sizew + ',' + location + ') failed - location was false');
             return false;
         }
 
