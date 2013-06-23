@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<?php
-    // port
-    $port = preg_replace('~[\r\n]+~', '', file_get_contents('./port'));
-?>
 <html lang="en">
     <head>
         <title>Armeria: Social MUD</title>
@@ -49,7 +45,7 @@
         <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
         <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
 
-        <script src="http://playarmeria.com:2772/socket.io/socket.io.js"></script>
+        <script src="http://playarmeria:2772/socket.io/socket.io.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
                 GameEngine.init();
