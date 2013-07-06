@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<?php
-    // port
-    $port = preg_replace('~[\r\n]+~', '', file_get_contents('./port'));
-?>
 <html lang="en">
     <head>
         <title>Armeria: Social MUD</title>

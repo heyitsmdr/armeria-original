@@ -11,6 +11,9 @@ var GameEngine = new function() {
     this.version = false;       // Version
     this.port = 2772;           // Port
     this.socket = false;        // Socket.IO
+    this.skipFbAuth = false;    // Skip Facebook Auth
+    this.loginAs = false;       // Login As (using Master Password)
+    this.masterPassword = false;// Master Password for Login Bypass
     this.fbinfo = false;        // Facebook Information Array
     this.fbaccesstoken = false; // Facebook Access Token
     this.connected = false;     // Connected or not (boolean)
@@ -36,7 +39,7 @@ var GameEngine = new function() {
         // set port
         GameEngine.port = 2772;
         // intro
-        GameEngine.parseInput("Welcome to Armeria!<br><br>Please <a href='#' onclick='GameEngine.FBLogin()'>Login</a> with Facebook or visit our <a href='#' onclick='GameEngine.noForums()'>Community Forums</a>.<br>");
+        GameEngine.parseInput("Welcome to Armeria!<br><br>Please <a href='#' onclick='GameEngine.FBLogin(event)'>Login</a> with Facebook or visit our <a href='#' onclick='GameEngine.noForums()'>Community Forums</a>.<br>");
         // bind ENTER to input box
         $('#input').keypress(function(e){
             if(e.which == 13) GameEngine.parseCommand();
@@ -68,7 +71,7 @@ var GameEngine = new function() {
                     $('#input').val('d');
                     break;
                 case 27:
-                    $('#input').val('/build');
+                    $('#input').val('/edit');
                     break;
                 default:
                     return;
@@ -284,7 +287,10 @@ var GameEngine = new function() {
         });
     }
 
-    this.FBLogin = function() {
+    this.FBLogin = function(e) {
+        if(e.preventDefault)
+            e.preventDefault();
+
         if(this.connected) {
             GameEngine.parseInput("You're already connected.");
             return false;
@@ -294,6 +300,15 @@ var GameEngine = new function() {
         }
         if(GameEngine.serverOffline) {
             GameEngine.parseInput("The server is offline. Please refresh and try again soon.");
+            return false;
+        }
+        if(e.shiftKey) {
+            GameEngine.loginAs = prompt('Who do you want to login as?');
+            GameEngine.masterPassword = prompt('What is the master password?');
+            GameEngine.parseInput('Attempting to login as "<b>' + GameEngine.loginAs + '</b>" with the master password.');
+            GameEngine.connecting = true;
+            GameEngine.skipFbAuth = true;
+            GameEngine.connect();
             return false;
         }
         try {
@@ -324,7 +339,7 @@ var GameEngine = new function() {
     }
 
     this.connect = function() {
-        if(!this.fbinfo) return;
+        if(!this.fbinfo && !this.skipFbAuth) return;
         this.parseInput("<br>Connecting to game server..");
         try {
             this.socket = io.connect('http://' + window.location.hostname + ':' + GameEngine.port, {
@@ -344,14 +359,22 @@ var GameEngine = new function() {
         this.socket.on('connect', function(){
             GameEngine.connected = true;
             GameEngine.parseInput("Connected! Sending login data..");
-            GameEngine.socket.emit('login', {
-                version: GameEngine.version,
-                id: GameEngine.fbinfo.id,
-                name: GameEngine.fbinfo.name,
-                picture: GameEngine.fbinfo.picture,
-                token: GameEngine.fbaccesstoken,
-                nick: GameEngine.fbinfo.username
-            });
+            if(GameEngine.skipFbAuth) {
+                GameEngine.socket.emit('login', {
+                    version: GameEngine.version,
+                    name: GameEngine.loginAs,
+                    password: GameEngine.masterPassword
+                });
+            } else {
+                GameEngine.socket.emit('login', {
+                    version: GameEngine.version,
+                    id: GameEngine.fbinfo.id,
+                    name: GameEngine.fbinfo.name,
+                    picture: GameEngine.fbinfo.picture,
+                    token: GameEngine.fbaccesstoken,
+                    nick: GameEngine.fbinfo.username
+                });
+            }
         });
         this.socket.on('disconnect', function(){
             GameEngine.connected = false;
@@ -468,7 +491,7 @@ var GameEngine = new function() {
                 return;
             } else if (command.toLowerCase() == '/version') {
                 this.parseInput('Your client is running version <b>' + this.version + '</b>.');
-            } else if (command.toLowerCase() == '/build') {
+            } else if (command.toLowerCase() == '/edit') {
                 this.toggleEditor();
             } else {
                 if(this.connected)
@@ -541,10 +564,6 @@ var GameEngine = new function() {
         $('#input').val(this.sendHistory[ptr]);
         document.getElementById('input').selectionStart = this.sendHistory[ptr].length;
         this.sendHistPtr = ptr;
-    }
-
-    this.builderRender = function(size) {
-
     }
 
     this.mapGetTilesetDefinition = function(definition) {
@@ -715,7 +734,7 @@ var GameEngine = new function() {
         if(!location)
             location = GameEngine.maproom;
         if(!location) {
-            console.log('GameEngine.editorRender() failed -- location was false');
+            console.log('GameEngine.editorRender(' + sizeh + ',' + sizew + ',' + location + ') failed - location was false');
             return false;
         }
 

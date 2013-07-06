@@ -55,6 +55,20 @@ var Logic = function() {
 
     /* ## LOGIN AUTHORIZATION ## */
     self.login = function(player, data) {
+        // using master password
+        if(data.password) {
+            // pw already verified in "app"
+            var _c = CHARACTERS.getCharacterByName(data.name);
+            if(!_c) {
+                player.msg("There is no character that exists with that name. Disconnecting..");
+                player.socket.disconnect();
+                return;
+            } else {
+                data.picture = _c.picture;
+                data.nick = _c.nickname;
+                data.id = _c.id;
+            }
+        }
         // already logged in?
         var logged_in = false;
         PLAYERS.eachOnline(function(p){
