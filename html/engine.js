@@ -24,7 +24,7 @@ var GameEngine = new function() {
     this.mapctx = false;        // Minimap Canvas 2D Context
     this.mapcv = false;         // Minimap Canvas
     this.maptileset = false;    // Image
-    this.mapts = false;         // Image Properties
+    this.mapts = [];         // Image Properties
     this.mapanim = false;       // Map Animation for setInterval
     this.mapoffsetx = 0;        // Minimap offset - x
     this.mapoffsety = 0;        // Minimap offset - y
@@ -149,112 +149,17 @@ var GameEngine = new function() {
     this.setupTileset = function() {
         /* TILE DEFINITIONS */
 
-        GameEngine.mapts = [
-            {def: 'grassTL', sx: 0, sy: 0},
-            {def: 'grassT', sx: 1, sy: 0},
-            {def: 'grassTR', sx: 2, sy: 0},
-            {def: 'grassL', sx: 0, sy: 1},
-            {def: 'grass', sx: 1, sy: 1},
-            {def: 'grassR', sx: 2, sy: 1},
-            {def: 'grassBL', sx: 0, sy: 2},
-            {def: 'grassB', sx: 1, sy: 2},
-            {def: 'grassRB', sx: 2, sy: 2},
-            {def: 'grassTBL', sx: 3, sy: 0},
-            {def: 'grassTB', sx: 4, sy: 0},
-            {def: 'grassTRB', sx: 5, sy: 0},
-            {def: 'grassTRBL', sx: 3, sy: 1},
-            {def: 'grassTRL', sx: 6, sy: 0},
-            {def: 'grassRL', sx: 6, sy: 1},
-            {def: 'grassRBL', sx: 6, sy: 2},
-            {def: 'flowers', sx: 4, sy: 1},
-            {def: 'grassWorn', sx: 5, sy: 1},
-            {def: 'grassTall', sx: 3, sy: 2},
-            {def: 'dirt', sx: 7, sy: 0},
-
-            {def: 'waterTL', sx: 0, sy: 3},
-            {def: 'waterT', sx: 1, sy: 3},
-            {def: 'waterTR', sx: 2, sy: 3},
-            {def: 'waterL', sx: 0, sy: 4},
-            {def: 'water', sx: 1, sy: 4},
-            {def: 'waterR', sx: 2, sy: 4},
-            {def: 'waterBL', sx: 0, sy: 5},
-            {def: 'waterB', sx: 1, sy: 5},
-            {def: 'waterRB', sx: 2, sy: 5},
-            {def: 'waterTBL', sx: 3, sy: 3},
-            {def: 'waterTB', sx: 4, sy: 3},
-            {def: 'waterTRB', sx: 5, sy: 3},
-            {def: 'waterTRBL', sx: 3, sy: 4},
-            {def: 'waterTRL', sx: 6, sy: 3},
-            {def: 'waterRL', sx: 6, sy: 4},
-            {def: 'waterRBL', sx: 6, sy: 5},
-
-            {def: 'stoneTL', sx: 0, sy: 6},
-            {def: 'stoneT', sx: 1, sy: 6},
-            {def: 'stoneTR', sx: 2, sy: 6},
-            {def: 'stoneL', sx: 0, sy: 7},
-            {def: 'stone', sx: 1, sy: 7},
-            {def: 'stoneR', sx: 2, sy: 7},
-            {def: 'stoneBL', sx: 0, sy: 8},
-            {def: 'stoneB', sx: 1, sy: 8},
-            {def: 'stoneRB', sx: 2, sy: 8},
-            {def: 'stoneTBL', sx: 3, sy: 6},
-            {def: 'stoneTB', sx: 4, sy: 6},
-            {def: 'stoneTRB', sx: 5, sy: 6},
-            {def: 'stoneTRBL', sx: 3, sy: 7},
-            {def: 'stoneTRL', sx: 6, sy: 6},
-            {def: 'stoneRL', sx: 6, sy: 7},
-            {def: 'stoneRBL', sx: 6, sy: 8},
-
-            {def: 'lavaTL', sx: 0, sy: 9},
-            {def: 'lavaT', sx: 1, sy: 9},
-            {def: 'lavaTR', sx: 2, sy: 9},
-            {def: 'lavaL', sx: 0, sy: 10},
-            {def: 'lava', sx: 1, sy: 10},
-            {def: 'lavaR', sx: 2, sy: 10},
-            {def: 'lavaBL', sx: 0, sy: 11},
-            {def: 'lavaB', sx: 1, sy: 11},
-            {def: 'lavaRB', sx: 2, sy: 11},
-            {def: 'lavaTBL', sx: 3, sy: 9},
-            {def: 'lavaTB', sx: 4, sy: 9},
-            {def: 'lavaTRB', sx: 5, sy: 9},
-            {def: 'lavaTRBL', sx: 3, sy: 10},
-            {def: 'lavaTRL', sx: 6, sy: 9},
-            {def: 'lavaRL', sx: 6, sy: 10},
-            {def: 'lavaRBL', sx: 6, sy: 11},
-            {def: 'lavaEdge', sx: 4, sy: 10},
-
-            {def: 'woodFloor', sx: 8, sy: 0},
-
-            {def: 'woodWallN', sx: 5, sy: 18},
-            {def: 'woodWallS', sx: 5, sy: 16},
-            {def: 'woodWallE', sx: 4, sy: 17},
-            {def: 'woodWallW', sx: 5, sy: 17},
-            {def: 'woodWallU', sx: 4, sy: 19},
-            {def: 'woodWallD', sx: 4, sy: 19},
-
-            {def: 'grassWallN', sx: 1, sy: 18},
-            {def: 'grassWallS', sx: 1, sy: 16},
-            {def: 'grassWallE', sx: 0, sy: 17},
-            {def: 'grassWallW', sx: 1, sy: 17},
-            {def: 'grassWallU', sx: 0, sy: 19},
-            {def: 'grassWallD', sx: 0, sy: 19},
-
-            {def: 'stoneWallN', sx: 3, sy: 18},
-            {def: 'stoneWallS', sx: 3, sy: 16},
-            {def: 'stoneWallE', sx: 2, sy: 17},
-            {def: 'stoneWallW', sx: 3, sy: 17},
-            {def: 'stoneWallU', sx: 2, sy: 19},
-            {def: 'stoneWallD', sx: 2, sy: 19},
-
-            {def: 'wp', sx: 0, sy: 19},
-            {def: 'house', sx: 1, sy: 19}
+        GameEngine.mapts['floors'] = [
+            {def: 'grass', sx: 0, sy: 0},
+            {def: 'dirt', sx: 0, sy: 1},
+            {def: 'edge-bottom', sx: 1, sy: 0},
+            {def: 'edge-left', sx: 2, sy: 0},
+            {def: 'edge-top', sx: 3, sy: 0},
+            {def: 'edge-right', sx: 4, sy: 0}
         ];
 
         // Calculate Real sx and sy
-        this.mapts.forEach(function(ts){
-            ts.sx *= 32;
-            ts.sy *= 32;
-        });
+        GameEngine.mapts['floors'].forEach(function(ts){ ts.sx *= 32; ts.sy *= 32; });
 
     }
 
