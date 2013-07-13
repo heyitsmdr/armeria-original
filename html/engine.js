@@ -23,8 +23,8 @@ var GameEngine = new function() {
     this.maproom = false;       // Object within this.mapdata that contains the current room
     this.mapctx = false;        // Minimap Canvas 2D Context
     this.mapcv = false;         // Minimap Canvas
-    this.maptileset = false;    // Image
-    this.mapts = [];         // Image Properties
+    this.maptileset = [];      // Images of Tilesets
+    this.mapts = [];            // Image Properties
     this.mapanim = false;       // Map Animation for setInterval
     this.mapoffsetx = 0;        // Minimap offset - x
     this.mapoffsety = 0;        // Minimap offset - y
@@ -92,8 +92,6 @@ var GameEngine = new function() {
         GameEngine.mapctx.lineWidth = 3;
         GameEngine.mapctx.lineJoin = 'round';
         GameEngine.mapctx.strokeStyle = '#ffffff';
-        GameEngine.maptileset = new Image();
-        GameEngine.maptileset.src = "images/tiles/tileset.png";
         GameEngine.setupTileset();
         // setup error reporting
         window.onerror = function(msg, url, linenumber){
@@ -148,6 +146,7 @@ var GameEngine = new function() {
 
     this.setupTileset = function() {
         /* TILE DEFINITIONS */
+        var TILESETS = ['floors'];
 
         /* NOTE: Edges are automatically calculated since they will always be
                  to the right of the tile (if edges = true). */
@@ -157,12 +156,32 @@ var GameEngine = new function() {
             {def: 'dirt', sx: 0, sy: 1, edges: true}
         ];
 
-        // Calculate Real sx and sy
-        GameEngine.mapts['floors'].forEach(function(ts){ ts.sx *= 32; ts.sy *= 32; });
-
-        // Calculate edges (if appropriate)
-        GameEngine.mapts['floors'].forEach(function(ts){if(ts.edges){ /*code here*/ }});
+        // Calculate Real sx and sy && Calculate edges (if needed) && Load images
+        TILESETS.forEach(function(tset){
+            GameEngine.tsSetReal( GameEngine.mapts[tset] );
+            GameEngine.mapts[tset].forEach(function(ts){ if(ts.edges){ GameEngine.tsSetEdges( ts ); }});
+            GameEngine.maptileset[tset] = new Image();
+            GameEngine.maptileset[tset].src = "images/tiles/" + tset + ".png";
+        });
     }
+
+    this.tsSetReal = function(ts) {
+        ts.forEach(function(tile){
+            tile.sx *= 32;
+            tile.sy *= 32;
+        });
+    };
+
+    this.tsSetEdges = function(tile) {
+        tile.edgeTop = tile.sx + 32;
+        tile.edgeRight = tile.sx + 64;
+        tile.edgeBottom = tile.sx + 96;
+        tile.edgeLeft = tile.sx + 128;
+        tile.cornerTopLeft = tile.sx + 160;
+        tile.cornerTopRight = tile.sx + 192;
+        tile.cornerBottomRight = tile.sx + 224;
+        tile.cornerBottomLeft = tile.sx + 256;
+    };
 
     this._doFBLogin = function() {
         this.parseInput("Facebook not authorized. Asking for permission..");
@@ -473,14 +492,16 @@ var GameEngine = new function() {
     }
 
     this.mapGetTilesetDefinition = function(definition) {
-        for(var k = 0; k < GameEngine.mapts.length; k++) {
-            if(GameEngine.mapts[k].def.toLowerCase() == definition.toLowerCase()) {
-                return GameEngine.mapts[k];
+        var tileset = definition.split('.')[0];
+        var tile = definition.split('.')[1];
+        for(var k = 0; k < GameEngine.mapts[tileset].length; k++) {
+            if(GameEngine.mapts[tileset][k].def.toLowerCase() == tile.toLowerCase()) {
+                return GameEngine.mapts[tileset][k];
             }
         }
 
         // default to grass
-        return GameEngine.mapts[4];
+        return GameEngine.mapts[tileset][0];
     };
 
     this.mapRender = function(mapdata, offsetx, offsety) {
@@ -506,18 +527,30 @@ var GameEngine = new function() {
             var top = (y * 32) + offsety;
             // only render within viewport
             if(left > -32 && left < 255 && top > -32 && top < 255) {
-                var layers = mapdata[i].terrain.split(' ');
-                for(var j = 0; j < layers.length; j++) {
-                    var founddef = false;
-                    for(var k = 0; k < GameEngine.mapts.length; k++) {
-                        if(GameEngine.mapts[k].def.toLowerCase() == layers[j].toLowerCase()) {
-                            founddef = k;
-                            break;
-                        }
-                    }
-                    if(founddef === false) founddef = 4; // default to grass
-                    GameEngine.mapctx.drawImage(GameEngine.maptileset, GameEngine.mapts[founddef].sx, GameEngine.mapts[founddef].sy, 32, 32, left, top, 32, 32);
-                }
+                var layerBase = mapdata[i].terrain.split(' ')[0];
+                var layerPrimary = mapdata[i].terrain.split(' ')[1];
+                var layerEdgeCorners = mapdata[i].terrain.split(' ')[2];
+
+                var defBase = GameEngine.mapGetTilesetDefinition( layerBase );
+                var defPrimary = GameEngine.mapGetTilesetDefinition( layerPrimary );
+
+                var tsBase = layerBase.split('.')[0];
+                var tsPrimary = layerPrimary.split('.')[0];
+
+                // render primary
+                GameEngine.mapctx.globalCompositeOperation = 'source-over';
+                GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.sx, defPrimary.sy, 32, 32, left, top, 32, 32);
+
+                // render edges
+                GameEngine.mapctx.globalCompositeOperation = 'destination-out';
+                if(layerEdgeCorners.substr(0, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeTop, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(1, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeRight, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(2, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeBottom, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(3, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeLeft, defPrimary.sy, 32, 32, left, top, 32, 32); }
+
+                // render base
+                GameEngine.mapctx.globalCompositeOperation = 'destination-over';
+                GameEngine.mapctx.drawImage(GameEngine.maptileset[tsBase], defBase.sx, defBase.sy, 32, 32, left, top, 32, 32);
             }
         }
     }
