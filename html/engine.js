@@ -149,13 +149,12 @@ var GameEngine = new function() {
     this.setupTileset = function() {
         /* TILE DEFINITIONS */
 
+        /* NOTE: Edges are automatically calculated since they will always be
+                 to the right of the tile. */
+
         GameEngine.mapts['floors'] = [
             {def: 'grass', sx: 0, sy: 0},
-            {def: 'dirt', sx: 0, sy: 1},
-            {def: 'edge-bottom', sx: 1, sy: 0},
-            {def: 'edge-left', sx: 2, sy: 0},
-            {def: 'edge-top', sx: 3, sy: 0},
-            {def: 'edge-right', sx: 4, sy: 0}
+            {def: 'dirt', sx: 0, sy: 1}
         ];
 
         // Calculate Real sx and sy
