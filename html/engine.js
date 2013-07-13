@@ -150,16 +150,18 @@ var GameEngine = new function() {
         /* TILE DEFINITIONS */
 
         /* NOTE: Edges are automatically calculated since they will always be
-                 to the right of the tile. */
+                 to the right of the tile (if edges = true). */
 
         GameEngine.mapts['floors'] = [
-            {def: 'grass', sx: 0, sy: 0},
-            {def: 'dirt', sx: 0, sy: 1}
+            {def: 'grass', sx: 0, sy: 0, edges: true},
+            {def: 'dirt', sx: 0, sy: 1, edges: true}
         ];
 
         // Calculate Real sx and sy
         GameEngine.mapts['floors'].forEach(function(ts){ ts.sx *= 32; ts.sy *= 32; });
 
+        // Calculate edges (if appropriate)
+        GameEngine.mapts['floors'].forEach(function(ts){if(ts.edges){ /*code here*/ }});
     }
 
     this._doFBLogin = function() {
