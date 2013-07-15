@@ -660,6 +660,13 @@ var GameEngine = new function() {
         }
     };
 
+    this.editorToggleExtra = function() {
+        if( $('#terrain-extra').css('display') == 'none' )
+            $('#terrain-extra').show('slide', {direction: 'up'});
+        else
+            $('#terrain-extra').hide('slide', {direction: 'up'});
+    };
+
     this.toggleEditor = function() {
         if( $('#editor-container').css('display') == 'none' )
             $('#editor-container').stop().fadeIn('fast', function(){

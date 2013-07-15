@@ -278,7 +278,11 @@
             </div>
             <div class="prop-set">
               <div class="prop-name">Terrain</div>
-              <div class="prop-value">Test</div>
+              <div class="prop-value"><a href="#" onclick="GameEngine.editorToggleExtra('terrain-extra')">Test</a></div>
+            </div>
+            <div class="prop-extra" id="terrain-extra">
+              asd
+              asd
             </div>
             <div class="prop-set">
               <div class="prop-name">Environment</div>
