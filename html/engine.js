@@ -23,7 +23,7 @@ var GameEngine = new function() {
     this.maproom = false;       // Object within this.mapdata that contains the current room
     this.mapctx = false;        // Minimap Canvas 2D Context
     this.mapcv = false;         // Minimap Canvas
-    this.maptileset = [];      // Images of Tilesets
+    this.maptileset = [];       // Images of Tilesets
     this.mapts = [];            // Image Properties
     this.mapanim = false;       // Map Animation for setInterval
     this.mapoffsetx = 0;        // Minimap offset - x
@@ -357,6 +357,9 @@ var GameEngine = new function() {
         this.socket.on('itemtip', function(data){
             $('#itemtooltip-container').html(data.content);
         });
+        this.socket.on('editor', function(data){
+            GameEngine.toggleEditor(data);
+        });
     }
 
     this.parseLinks = function(text) {
@@ -416,8 +419,6 @@ var GameEngine = new function() {
                 return;
             } else if (command.toLowerCase() == '/version') {
                 this.parseInput('Your client is running version <b>' + this.version + '</b>.');
-            } else if (command.toLowerCase() == '/edit') {
-                this.toggleEditor();
             } else {
                 if(this.connected)
                     this.socket.emit('cmd', {cmd: command.substr(1)});
@@ -667,11 +668,22 @@ var GameEngine = new function() {
             $('#terrain-extra').hide('slide', {direction: 'up'});
     };
 
-    this.toggleEditor = function() {
+    this.toggleEditor = function(data) {
         if( $('#editor-container').css('display') == 'none' )
             $('#editor-container').stop().fadeIn('fast', function(){
+                // ready
                 GameEngine.editorInit(16,16);
                 GameEngine.editorRender(false);
+                // data
+                $('#room-name').html( data.roomData.name );
+
+                $('#room-desc').html( data.roomData.desc );
+                GameEngine.registerToolTip('#room-desc', data.roomData.desc);
+
+                $('#room-terrain').html( data.roomData.type );
+                GameEngine.registerToolTip('#room-terrain', data.roomData.type);
+
+                $('#room-environment').html( data.roomData.environment );
             });
         else
             $('#editor-container').stop().fadeOut('fast');

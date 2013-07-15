@@ -684,6 +684,7 @@ var Logic = function() {
         }
 
     };
+
     self.who = function(player) {
         var tabledata = [];
         var count = 0;
@@ -713,6 +714,7 @@ var Logic = function() {
         player.msg('<br>' + self._createInvisTable(tabledata, '600px'));
         player.msg('There ' + ((count>1)?'are ':'is ') + count + ' visible player' + ((count>1)?'s':'') + ' online.');
     };
+
     self.areas = function(player) {
         var areadata = '';
         WORLD.eachMap(function(map){
@@ -720,6 +722,7 @@ var Logic = function() {
         });
         player.msg('The known areas in the world are:' + areadata);
     };
+
     self.title = function(player, newtitle) {
         if(newtitle) {
             player.character.title = newtitle;
@@ -729,9 +732,15 @@ var Logic = function() {
             player.msg('Your title has been removed.');
         }
     };
+
     self.quit = function(player) {
         player.msg('Ok. Thanks for playing! See you next time in the world of Armeria.');
         player.socket.disconnect();
+    };
+
+    self.edit = function(player) {
+        if(!player.character.builder) { return self._invalidcmd(player); }
+        player.emit("editor", {roomData: player.character.room.getSaveData()});
     };
     /* ## END: BASIC ## */
 

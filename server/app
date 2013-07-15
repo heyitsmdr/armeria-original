@@ -203,7 +203,7 @@ function init() {
             var cmd = matchcmd(sections[0], new Array('say', 'score', 'move', ['look', 'examine'], 'me',
                 'whisper', 'reply', 'attack', 'create', 'destroy', 'modify',
                 'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp'],
-                'inventory', 'who', 'spawn', 'areas', 'title', 'quit'));
+                'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit'));
             sections.shift();
             var cmd_args = sections.join(' ');
 
@@ -276,6 +276,9 @@ function init() {
                     break;
                 case 'quit':
                     LOGIC.quit(player);
+                    break;
+                case 'edit':
+                    LOGIC.edit(player);
                     break;
                 default:
                     if(!LOGIC.emote(player, cmd.toLowerCase()))

@@ -261,7 +261,7 @@
             </div>
             <div class="prop-set">
               <div class="prop-name">Area Name</div>
-              <div class="prop-value">Something..</div>
+              <div class="prop-value">..</div>
             </div>
 
             <!-- Selected Room Properties -->
@@ -270,23 +270,25 @@
             </div>
             <div class="prop-set">
               <div class="prop-name">Name</div>
-              <div class="prop-value">Test</div>
+              <div class="prop-value" id="room-name">..</div>
             </div>
             <div class="prop-set">
               <div class="prop-name">Description</div>
-              <div class="prop-value">Test</div>
+              <div class="prop-value" id="room-desc">..</div>
             </div>
             <div class="prop-set">
               <div class="prop-name">Terrain</div>
-              <div class="prop-value"><a href="#" onclick="GameEngine.editorToggleExtra('terrain-extra')">Test</a></div>
+              <div class="prop-value"><a href="#" onclick="GameEngine.editorToggleExtra('terrain-extra')" id="room-terrain">..</a></div>
             </div>
             <div class="prop-extra" id="terrain-extra">
-              asd
-              asd
+              <strong>Base:</strong><br />
+              <strong>Primary:</strong><br />
+              <strong>Corners:</strong><br />
+              <strong>Edges:</strong>
             </div>
             <div class="prop-set">
               <div class="prop-name">Environment</div>
-              <div class="prop-value">Test</div>
+              <div class="prop-value" id="room-environment">..</div>
             </div>
 
           </div>
