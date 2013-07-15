@@ -541,12 +541,16 @@ var GameEngine = new function() {
                 GameEngine.mapctx.globalCompositeOperation = 'source-over';
                 GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.sx, defPrimary.sy, 32, 32, left, top, 32, 32);
 
-                // render edges
+                // render edges and corners
                 GameEngine.mapctx.globalCompositeOperation = 'destination-out';
                 if(layerEdgeCorners.substr(0, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeTop, defPrimary.sy, 32, 32, left, top, 32, 32); }
                 if(layerEdgeCorners.substr(1, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeRight, defPrimary.sy, 32, 32, left, top, 32, 32); }
                 if(layerEdgeCorners.substr(2, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeBottom, defPrimary.sy, 32, 32, left, top, 32, 32); }
                 if(layerEdgeCorners.substr(3, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeLeft, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(4, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.cornerTopLeft, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(5, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.cornerTopRight, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(6, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.cornerBottomRight, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(7, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.cornerBottomLeft, defPrimary.sy, 32, 32, left, top, 32, 32); }
 
                 // render base
                 GameEngine.mapctx.globalCompositeOperation = 'destination-over';
