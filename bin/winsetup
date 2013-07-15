@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Used to setup vagrant on Windows (due to symlink issues)
+
+# cleanup
+rm -rf /vagrant/server/node_modules
+rm -rf /vagrant/server/npm-debug.log
+
+# move to vpn
+mv /vagrant/server /tmp
+
+# install
+cd /tmp/server
+npm install
+
+# move back
+mv /tmp/server /vagrant
