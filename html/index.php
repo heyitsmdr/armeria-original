@@ -263,7 +263,7 @@
 
             <!-- Selected Room Properties -->
             <div class="prop-cat">
-              Selected Room Properties
+              Current Room Properties
             </div>
           </div>
         </div>

@@ -663,7 +663,8 @@ var GameEngine = new function() {
     this.toggleEditor = function() {
         if( $('#editor-container').css('display') == 'none' )
             $('#editor-container').stop().fadeIn('fast', function(){
-                $('#editor-grids').html(GameEngine.editorRender(16,16));
+                GameEngine.editorInit(16,16);
+                GameEngine.editorRender(false);
             });
         else
             $('#editor-container').stop().fadeOut('fast');
@@ -673,48 +674,66 @@ var GameEngine = new function() {
         Note: sizeh and sizew must be divisible by 2.
         Todo: Move styles to stylesheet
     **/
-    this.editorRender = function(sizeh, sizew, location) {
+    this.editorInit = function(sizeh, sizew) {
+        var width = (sizew + 1) * 32;
+        var height = (sizeh + 1) * 32;
+        $('#editor-grids').html('<canvas id="editor-canvas" width="' + width + '" height="' + height + '"></canvas>');
+    };
+
+    this.editorRender = function(location) {
         if(!location)
             location = GameEngine.maproom;
         if(!location) {
-            console.log('GameEngine.editorRender(' + sizeh + ',' + sizew + ',' + location + ') failed - location was false');
+            console.log('GameEngine.editorRender(' + location + ') failed - location was false');
             return false;
         }
 
+        var ctx = document.getElementById('editor-canvas').getContext('2d');
+
+        var sizew = (document.getElementById('editor-canvas').width / 32) - 1;
+        var sizeh = (document.getElementById('editor-canvas').height / 32) - 1;
         var xrangemin = location.x - (sizew / 2);
         var xrangemax = location.x + (sizew / 2);
         var yrangemin = location.y - (sizeh / 2);
         var yrangemax = location.y + (sizeh / 2);
 
-        var render = '<table cellspacing="0" cellpadding="0">';
-
         for(var y = yrangemin; y <= yrangemax; y++) {
-            render += '<tr>';
             for(var x = xrangemin; x <= xrangemax; x++) {
-                if(x == location.x && y == location.y)
-                    render += '<td gamex="'+x+'" gamey="'+y+'" style="width:32px;height:32px;border:2px solid #f00">';
-                else
-                    render += '<td gamex="'+x+'" gamey="'+y+'" style="width:32px;height:32px;border:1px solid #fff">';
+                var left = x * 32;
+                var top = y * 32;
+                var grid = GameEngine.mapGridAt(x, y, location.z);
+                if(!grid)
+                    continue;
 
-                var cell = GameEngine.mapGridAt(x, y, GameEngine.mapz);
-                if(cell) {
-                    var terrain = cell.terrain.split(' ');
-                    var zindex = 100;
-                    terrain.forEach(function(t){
-                        zindex++;
-                        var def = GameEngine.mapGetTilesetDefinition(t);
-                        var bg = 'background-image:url(images/tiles/tileset.png);background-position: -' + def.sx + 'px -' + def.sy + 'px;';
-                        render += '<div style="position:absolute;width:32px;height:32px;z-index:' + zindex + ';' + bg + '"></div>';
-                    });
-                }
+                var layerBase = grid.terrain.split(' ')[0];
+                var layerPrimary = grid.terrain.split(' ')[1];
+                var layerEdgeCorners = grid.terrain.split(' ')[2];
 
-                render += '</td>';
+                var defBase = GameEngine.mapGetTilesetDefinition( layerBase );
+                var defPrimary = GameEngine.mapGetTilesetDefinition( layerPrimary );
+
+                var tsBase = layerBase.split('.')[0];
+                var tsPrimary = layerPrimary.split('.')[0];
+
+                // render primary
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.sx, defPrimary.sy, 32, 32, left, top, 32, 32);
+
+                // render edges and corners
+                ctx.globalCompositeOperation = 'destination-out';
+                if(layerEdgeCorners.substr(0, 1) == '1'){ ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeTop, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(1, 1) == '1'){ ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeRight, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(2, 1) == '1'){ ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeBottom, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(3, 1) == '1'){ ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeLeft, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(4, 1) == '1'){ ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.cornerTopLeft, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(5, 1) == '1'){ ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.cornerTopRight, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(6, 1) == '1'){ ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.cornerBottomRight, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(7, 1) == '1'){ ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.cornerBottomLeft, defPrimary.sy, 32, 32, left, top, 32, 32); }
+
+                // render base
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.drawImage(GameEngine.maptileset[tsBase], defBase.sx, defBase.sy, 32, 32, left, top, 32, 32);
             }
-            render += '</tr>'
         }
-
-        render += '</table>';
-
-        return render;
     };
 };
