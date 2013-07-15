@@ -188,7 +188,7 @@
                     <div id="player"></div>
                     <div id="mapshadow"></div>
                     <div id="playerMark"></div>
-                    <div id="mapname"><p id="mapname-p">Registration Area</p></div>
+                    <div id="mapname"><p id="mapname-p">-</p></div>
                 </div>
                 
                 <div id="playervitals-container">
@@ -252,19 +252,39 @@
             <div class="prop-cat">
               Builder Settings
             </div>
+            <div class="prop-set">
+              <center style="color:#666;padding-top:6px">Builder Settings will go here.</center>
+            </div>
             <!-- Area Properties -->
             <div class="prop-cat">
               Area Properties
             </div>
             <div class="prop-set">
-              <span class="prop-name">Area Name</span>
-              <span class="prop-value"><input type="text" id="propAreaName"></span>
+              <div class="prop-name">Area Name</div>
+              <div class="prop-value">Something..</div>
             </div>
 
             <!-- Selected Room Properties -->
             <div class="prop-cat">
               Current Room Properties
             </div>
+            <div class="prop-set">
+              <div class="prop-name">Name</div>
+              <div class="prop-value">Test</div>
+            </div>
+            <div class="prop-set">
+              <div class="prop-name">Description</div>
+              <div class="prop-value">Test</div>
+            </div>
+            <div class="prop-set">
+              <div class="prop-name">Terrain</div>
+              <div class="prop-value">Test</div>
+            </div>
+            <div class="prop-set">
+              <div class="prop-name">Environment</div>
+              <div class="prop-value">Test</div>
+            </div>
+
           </div>
         </div>
     </body>
