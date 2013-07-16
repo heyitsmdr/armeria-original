@@ -31,6 +31,7 @@ var GameEngine = new function() {
     this.mapoffsety = 0;        // Minimap offset - y
     this.mapdestoffsetx = 0;    // Minimap destination offset - x
     this.mapdestoffsety = 0;    // Minimap destination offset - y
+    this.mapmarker = false;     // Image of Map Marker
     this.server = false;        // Server class
     this.serverOffline = false; // Set to True if Socket.IO is not found (server offline)
     this.sendHistory = [];      // Array of strings that you sent to the server (for up/down history)
@@ -94,6 +95,8 @@ var GameEngine = new function() {
         GameEngine.mapctx.lineJoin = 'round';
         GameEngine.mapctx.strokeStyle = '#ffffff';
         GameEngine.setupTileset();
+        GameEngine.mapmarker = new Image();
+        GameEngine.mapmarker.src = "images/tiles/playerMark.png";
         // setup error reporting
         window.onerror = function(msg, url, linenumber){
             if(msg == 'ReferenceError: io is not defined') {
@@ -806,6 +809,12 @@ var GameEngine = new function() {
                 // render base
                 ctx.globalCompositeOperation = 'destination-over';
                 ctx.drawImage(GameEngine.maptileset[tsBase], defBase.sx, defBase.sy, 32, 32, left, top, 32, 32);
+
+                // render marker if current (or rendered) location
+                if(x == location.x && y == location.y) {
+                    ctx.globalCompositeOperation = 'source-over';
+                    ctx.drawImage(GameEngine.mapmarker, 0, 0, 30, 30, left + 1, top + 1, 30, 30);
+                }
             }
         }
     };
