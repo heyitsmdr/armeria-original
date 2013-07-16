@@ -253,7 +253,20 @@
               Builder Settings
             </div>
             <div class="prop-set">
-              <center style="color:#666;padding-top:6px">Builder Settings will go here.</center>
+              <div class="prop-name">Canvas Size</div>
+              <div class="prop-value"><a href="#" id="builder-size">16x16</a></div>
+            </div>
+            <div class="prop-set">
+              <div class="prop-name">Default Terrain</div>
+              <div class="prop-value"><a href="#" id="builder-terrain" onclick="GameEngine.editorToggleExtra('builder-terrain-extra')">null null</a></div>
+            </div>
+            <div class="prop-extra" id="builder-terrain-extra">
+              <strong>Base:</strong>&nbsp;<select id="builder-terrain-base" onchange="GameEngine.editorSetDefaultTerrain()"></select><br />
+              <strong>Primary:</strong>&nbsp;<select id="builder-terrain-primary" onchange="GameEngine.editorSetDefaultTerrain()"></select>
+            </div>
+            <div class="prop-set">
+              <div class="prop-name">Click Action</div>
+              <div class="prop-value"><a href="#" id="builder-clickaction" onclick="GameEngine.editorChangeClickAction()">teleport</a></div>
             </div>
             <!-- Area Properties -->
             <div class="prop-cat">

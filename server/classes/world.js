@@ -151,28 +151,35 @@ var Map = function(config, fn) {
         var x = player.character.location.x;
         var y = player.character.location.y;
         var z = player.character.location.z;
-        switch(dir.substr(0, 1).toLowerCase()) {
-            case 'n':
-                y--;
-                break;
-            case 's':
-                y++;
-                break;
-            case 'e':
-                x++;
-                break;
-            case 'w':
-                x--;
-                break;
-            case 'u':
-                z++;
-                break;
-            case 'd':
-                z--;
-                break;
-            default:
-                player.msg('Invalid direction.');
-                return;
+        if(dir.indexOf('@') > -1) {
+            dir = dir.substr(1);
+            x = dir.split(',')[0];
+            y = dir.split(',')[1];
+            z = dir.split(',')[2];
+        } else {
+            switch(dir.substr(0, 1).toLowerCase()) {
+                case 'n':
+                    y--;
+                    break;
+                case 's':
+                    y++;
+                    break;
+                case 'e':
+                    x++;
+                    break;
+                case 'w':
+                    x--;
+                    break;
+                case 'u':
+                    z++;
+                    break;
+                case 'd':
+                    z--;
+                    break;
+                default:
+                    player.msg('Invalid direction.');
+                    return;
+            }
         }
         if(player.character.room.map.getRoom(x, y, z)) {
             player.msg('Room already exists in that direction.');
@@ -182,7 +189,7 @@ var Map = function(config, fn) {
             x: x,
             y: y,
             z: z,
-            type: 'grass'
+            type: 'floors.dirt floors.grass 00000000'
         }, self);
         self.rooms.push(new_room);
         self.save();
