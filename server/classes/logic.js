@@ -740,7 +740,10 @@ var Logic = function() {
 
     self.edit = function(player) {
         if(!player.character.builder) { return self._invalidcmd(player); }
-        player.emit("editor", {roomData: player.character.room.getSaveData()});
+        player.emit("editor", {
+            roomData: player.character.room.getSaveData(),
+            mapData: player.character.room.map.getSaveData()
+        });
     };
     /* ## END: BASIC ## */
 

@@ -257,24 +257,24 @@
             </div>
             <!-- Area Properties -->
             <div class="prop-cat">
-              Area Properties
+              Map Properties
             </div>
             <div class="prop-set">
-              <div class="prop-name">Area Name</div>
-              <div class="prop-value">..</div>
+              <div class="prop-name">Map Name</div>
+              <div class="prop-value"><a href="#" id="map-name">..</a></div>
             </div>
 
             <!-- Selected Room Properties -->
-            <div class="prop-cat">
+            <div class="prop-cat" id="section-roomprops">
               Current Room Properties
             </div>
             <div class="prop-set">
               <div class="prop-name">Name</div>
-              <div class="prop-value" id="room-name">..</div>
+              <div class="prop-value"><a href="#" id="room-name" onclick="GameEngine.editorEditProperty(this)">..</a></div>
             </div>
             <div class="prop-set">
               <div class="prop-name">Description</div>
-              <div class="prop-value" id="room-desc">..</div>
+              <div class="prop-value"><a href="#" id="room-desc" onclick="GameEngine.editorEditProperty(this)">..</a></div>
             </div>
             <div class="prop-set">
               <div class="prop-name">Terrain</div>
@@ -290,7 +290,7 @@
             </div>
             <div class="prop-set">
               <div class="prop-name">Environment</div>
-              <div class="prop-value" id="room-environment">..</div>
+              <div class="prop-value"><a href="#" id="room-environment" onclick="GameEngine.editorEditProperty(this)">..</a></div>
             </div>
 
           </div>

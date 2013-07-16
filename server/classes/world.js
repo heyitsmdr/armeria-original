@@ -85,13 +85,17 @@ var Map = function(config, fn) {
         console.log('[init] map loaded: ' + self.name);
     }
     
-    self.stringify = function() {
-        return JSON.stringify({
+    self.getSaveData = function() {
+        return {
             name: self.name,
             author: self.author,
             rooms: self.roomStringify()
-        }, null, '\t');
-    }
+        };
+    };
+
+    self.stringify = function() {
+        return JSON.stringify(self.getSaveData(), null, '\t');
+    };
     
     self.save = function() {
         fs.writeFileSync(data_path + self.name + '.json', self.stringify(), 'utf8');
