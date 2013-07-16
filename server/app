@@ -278,7 +278,7 @@ function init() {
                     LOGIC.quit(player);
                     break;
                 case 'edit':
-                    LOGIC.edit(player);
+                    LOGIC.edit(player, cmd_args);
                     break;
                 default:
                     if(!LOGIC.emote(player, cmd.toLowerCase()))

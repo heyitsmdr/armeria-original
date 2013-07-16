@@ -738,11 +738,12 @@ var Logic = function() {
         player.socket.disconnect();
     };
 
-    self.edit = function(player) {
+    self.edit = function(player, refresh) {
         if(!player.character.builder) { return self._invalidcmd(player); }
         player.emit("editor", {
             roomData: player.character.room.getSaveData(),
-            mapData: player.character.room.map.getSaveData()
+            mapData: player.character.room.map.getSaveData(),
+            update: ((refresh=='refresh')?true:false)
         });
     };
     /* ## END: BASIC ## */

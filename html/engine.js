@@ -362,7 +362,10 @@ var GameEngine = new function() {
             $('#itemtooltip-container').html(data.content);
         });
         this.socket.on('editor', function(data){
-            GameEngine.toggleEditor(data);
+            if(data.update)
+                GameEngine.editorData(data);
+            else
+                GameEngine.toggleEditor(data);
         });
     }
 
@@ -682,41 +685,45 @@ var GameEngine = new function() {
                 // ready
                 GameEngine.editorInit(16,16);
                 GameEngine.editorRender(false);
-                // area data
-                $('#map-name').html( data.mapData.name );
-
-                // room data
-                $('#room-name').html( data.roomData.name );
-
-                $('#room-desc').html( data.roomData.desc );
-                GameEngine.registerToolTip('#room-desc', data.roomData.desc);
-
-                $('#room-terrain').html( data.roomData.type );
-                GameEngine.registerToolTip('#room-terrain', data.roomData.type);
-                $('#room-terrain-base').html('');
-                $('#room-terrain-primary').html('');
-                GameEngine.tilesets.forEach(function(ts){
-                    GameEngine.mapts[ts].forEach(function(tile){
-                        var def = ts + '.' + tile.def;
-                        $('#room-terrain-base').append('<option ' + ((def==data.roomData.type.split(' ')[0])?'selected':'') + '>' + def + '</option>')
-                        $('#room-terrain-primary').append('<option ' + ((def==data.roomData.type.split(' ')[1])?'selected':'') + '>' + def + '</option>')
-                    });
-                });
-                $('#room-terrain-corners-t').prop('checked', ((data.roomData.type.split(' ')[2].substr(0, 1)=='1')?true:false) );
-                $('#room-terrain-corners-r').prop('checked', ((data.roomData.type.split(' ')[2].substr(1, 1)=='1')?true:false) );
-                $('#room-terrain-corners-b').prop('checked', ((data.roomData.type.split(' ')[2].substr(2, 1)=='1')?true:false) );
-                $('#room-terrain-corners-l').prop('checked', ((data.roomData.type.split(' ')[2].substr(3, 1)=='1')?true:false) );
-                $('#room-terrain-corners-tl').prop('checked', ((data.roomData.type.split(' ')[2].substr(4, 1)=='1')?true:false) );
-                $('#room-terrain-corners-tr').prop('checked', ((data.roomData.type.split(' ')[2].substr(5, 1)=='1')?true:false) );
-                $('#room-terrain-corners-br').prop('checked', ((data.roomData.type.split(' ')[2].substr(6, 1)=='1')?true:false) );
-                $('#room-terrain-corners-bl').prop('checked', ((data.roomData.type.split(' ')[2].substr(7, 1)=='1')?true:false) );
-
-                $('#room-environment').html( data.roomData.environment );
-                // section title
-                $('#section-roomprops').html( 'Current Room Properties (' + data.roomData.x + ',' + data.roomData.y + ',' + data.roomData.z + ')' );
+                GameEngine.editorData(data);
             });
         else
             $('#editor-container').stop().fadeOut('fast');
+    };
+
+    this.editorData = function(data) {
+        // area data
+        $('#map-name').html( data.mapData.name );
+
+        // room data
+        $('#room-name').html( data.roomData.name );
+
+        $('#room-desc').html( data.roomData.desc );
+        GameEngine.registerToolTip('#room-desc', data.roomData.desc);
+
+        $('#room-terrain').html( data.roomData.type );
+        GameEngine.registerToolTip('#room-terrain', data.roomData.type);
+        $('#room-terrain-base').html('');
+        $('#room-terrain-primary').html('');
+        GameEngine.tilesets.forEach(function(ts){
+            GameEngine.mapts[ts].forEach(function(tile){
+                var def = ts + '.' + tile.def;
+                $('#room-terrain-base').append('<option ' + ((def==data.roomData.type.split(' ')[0])?'selected':'') + '>' + def + '</option>')
+                $('#room-terrain-primary').append('<option ' + ((def==data.roomData.type.split(' ')[1])?'selected':'') + '>' + def + '</option>')
+            });
+        });
+        $('#room-terrain-corners-t').prop('checked', ((data.roomData.type.split(' ')[2].substr(0, 1)=='1')?true:false) );
+        $('#room-terrain-corners-r').prop('checked', ((data.roomData.type.split(' ')[2].substr(1, 1)=='1')?true:false) );
+        $('#room-terrain-corners-b').prop('checked', ((data.roomData.type.split(' ')[2].substr(2, 1)=='1')?true:false) );
+        $('#room-terrain-corners-l').prop('checked', ((data.roomData.type.split(' ')[2].substr(3, 1)=='1')?true:false) );
+        $('#room-terrain-corners-tl').prop('checked', ((data.roomData.type.split(' ')[2].substr(4, 1)=='1')?true:false) );
+        $('#room-terrain-corners-tr').prop('checked', ((data.roomData.type.split(' ')[2].substr(5, 1)=='1')?true:false) );
+        $('#room-terrain-corners-br').prop('checked', ((data.roomData.type.split(' ')[2].substr(6, 1)=='1')?true:false) );
+        $('#room-terrain-corners-bl').prop('checked', ((data.roomData.type.split(' ')[2].substr(7, 1)=='1')?true:false) );
+
+        $('#room-environment').html( data.roomData.environment );
+        // section title
+        $('#section-roomprops').html( 'Current Room Properties (' + data.roomData.x + ',' + data.roomData.y + ',' + data.roomData.z + ')' );
     };
 
     this.editorSetTerrain = function(){
@@ -753,7 +760,16 @@ var GameEngine = new function() {
     this.editorInit = function(sizeh, sizew) {
         var width = (sizew + 1) * 32;
         var height = (sizeh + 1) * 32;
-        $('#editor-grids').html('<canvas id="editor-canvas" width="' + width + '" height="' + height + '"></canvas>');
+        $('#editor-grids').html('<canvas id="editor-canvas" width="' + width + '" height="' + height + '" onclick="GameEngine.editorClick(event)"></canvas>');
+    };
+
+    this.editorClick = function(evt) {
+        // calculate absolute x and y from relative x and y
+        var x = Math.floor(((evt.x - $('#editor-canvas').offset().left) - (($('#editor-canvas').width() / 2) - 16)) / 32);
+        var y = Math.floor(((evt.y - $('#editor-canvas').offset().top) - (($('#editor-canvas').height() / 2) - 16)) / 32);
+        // send to server
+        GameEngine.socket.emit('cmd', {cmd: 'tp ' + x + ' ' + y});
+        GameEngine.socket.emit('cmd', {cmd: 'edit refresh'});
     };
 
     this.editorRender = function(location) {
@@ -775,8 +791,8 @@ var GameEngine = new function() {
 
         for(var y = yrangemin; y <= yrangemax; y++) {
             for(var x = xrangemin; x <= xrangemax; x++) {
-                var left = x * 32;
-                var top = y * 32;
+                var left = (x * 32) + ((sizew / 2) * 32);
+                var top = (y * 32) + ((sizeh / 2) * 32);
                 var grid = GameEngine.mapGridAt(x, y, location.z);
                 if(!grid)
                     continue;
