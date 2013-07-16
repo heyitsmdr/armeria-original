@@ -694,6 +694,7 @@ var GameEngine = new function() {
     this.editorData = function(data) {
         // area data
         $('#map-name').html( data.mapData.name );
+        $('#map-author').html( data.mapData.author );
 
         // room data
         $('#room-name').html( data.roomData.name );

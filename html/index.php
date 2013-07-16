@@ -263,6 +263,10 @@
               <div class="prop-name">Map Name</div>
               <div class="prop-value"><a href="#" id="map-name">..</a></div>
             </div>
+            <div class="prop-set">
+              <div class="prop-name">Creator</div>
+              <div class="prop-value" id="map-author">..</div>
+            </div>
 
             <!-- Selected Room Properties -->
             <div class="prop-cat" id="section-roomprops">
