@@ -18,6 +18,7 @@ var GameEngine = new function() {
     this.fbaccesstoken = false; // Facebook Access Token
     this.connected = false;     // Connected or not (boolean)
     this.connecting = false;    // Connection in process (to block certain functions)
+    this.tilesets = [];         // Tilesets
     this.mapdata = false;       // Entire minimap data
     this.mapz = 0;              // Map Z-Coordinate
     this.maproom = false;       // Object within this.mapdata that contains the current room
@@ -146,7 +147,7 @@ var GameEngine = new function() {
 
     this.setupTileset = function() {
         /* TILE DEFINITIONS */
-        var TILESETS = ['floors'];
+        GameEngine.tilesets = ['floors'];
 
         /* NOTE: Edges are automatically calculated since they will always be
                  to the right of the tile (if edges = true). */
@@ -157,7 +158,7 @@ var GameEngine = new function() {
         ];
 
         // Calculate Real sx and sy && Calculate edges (if needed) && Load images
-        TILESETS.forEach(function(tset){
+        GameEngine.tilesets.forEach(function(tset){
             GameEngine.tsSetReal( GameEngine.mapts[tset] );
             GameEngine.mapts[tset].forEach(function(ts){ if(ts.edges){ GameEngine.tsSetEdges( ts ); }});
             GameEngine.maptileset[tset] = new Image();
@@ -558,6 +559,10 @@ var GameEngine = new function() {
                 GameEngine.mapctx.drawImage(GameEngine.maptileset[tsBase], defBase.sx, defBase.sy, 32, 32, left, top, 32, 32);
             }
         }
+        // redraw editor (if open)
+        if( $('#editor-container').css('display') != 'none' ) {
+            GameEngine.editorRender( false );
+        }
     }
 
     this.mapGridAt = function(x, y, z) {
@@ -682,11 +687,44 @@ var GameEngine = new function() {
 
                 $('#room-terrain').html( data.roomData.type );
                 GameEngine.registerToolTip('#room-terrain', data.roomData.type);
+                $('#room-terrain-base').html('');
+                $('#room-terrain-primary').html('');
+                GameEngine.tilesets.forEach(function(ts){
+                    GameEngine.mapts[ts].forEach(function(tile){
+                        var def = ts + '.' + tile.def;
+                        $('#room-terrain-base').append('<option ' + ((def==data.roomData.type.split(' ')[0])?'selected':'') + '>' + def + '</option>')
+                        $('#room-terrain-primary').append('<option ' + ((def==data.roomData.type.split(' ')[1])?'selected':'') + '>' + def + '</option>')
+                    });
+                });
+                $('#room-terrain-corners-t').prop('checked', ((data.roomData.type.split(' ')[2].substr(0, 1)=='1')?true:false) );
+                $('#room-terrain-corners-r').prop('checked', ((data.roomData.type.split(' ')[2].substr(1, 1)=='1')?true:false) );
+                $('#room-terrain-corners-b').prop('checked', ((data.roomData.type.split(' ')[2].substr(2, 1)=='1')?true:false) );
+                $('#room-terrain-corners-l').prop('checked', ((data.roomData.type.split(' ')[2].substr(3, 1)=='1')?true:false) );
+                $('#room-terrain-corners-tl').prop('checked', ((data.roomData.type.split(' ')[2].substr(4, 1)=='1')?true:false) );
+                $('#room-terrain-corners-tr').prop('checked', ((data.roomData.type.split(' ')[2].substr(5, 1)=='1')?true:false) );
+                $('#room-terrain-corners-br').prop('checked', ((data.roomData.type.split(' ')[2].substr(6, 1)=='1')?true:false) );
+                $('#room-terrain-corners-bl').prop('checked', ((data.roomData.type.split(' ')[2].substr(7, 1)=='1')?true:false) );
 
                 $('#room-environment').html( data.roomData.environment );
             });
         else
             $('#editor-container').stop().fadeOut('fast');
+    };
+
+    this.editorSetTerrain = function(){
+        var typeString = $('#room-terrain-base').val() + ' ' + $('#room-terrain-primary').val() + ' ';
+        if( $('#room-terrain-corners-t').prop('checked') ) { typeString += '1'; } else { typeString += '0'; }
+        if( $('#room-terrain-corners-r').prop('checked') ) { typeString += '1'; } else { typeString += '0'; }
+        if( $('#room-terrain-corners-b').prop('checked') ) { typeString += '1'; } else { typeString += '0'; }
+        if( $('#room-terrain-corners-l').prop('checked') ) { typeString += '1'; } else { typeString += '0'; }
+        if( $('#room-terrain-corners-tl').prop('checked') ) { typeString += '1'; } else { typeString += '0'; }
+        if( $('#room-terrain-corners-tr').prop('checked') ) { typeString += '1'; } else { typeString += '0'; }
+        if( $('#room-terrain-corners-br').prop('checked') ) { typeString += '1'; } else { typeString += '0'; }
+        if( $('#room-terrain-corners-bl').prop('checked') ) { typeString += '1'; } else { typeString += '0'; }
+        // set within editor
+        $('#room-terrain').html( typeString );
+        // send to server
+        GameEngine.socket.emit('cmd', {cmd: 'modify room terrain ' + typeString});
     };
 
     /**
