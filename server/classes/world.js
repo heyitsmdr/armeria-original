@@ -189,7 +189,7 @@ var Map = function(config, fn) {
             x: x,
             y: y,
             z: z,
-            type: 'floors.dirt floors.grass 00000000'
+            type: getargbyname(dirargs, 'terrain', 'floors.dirt floors.grass 00000000')
         }, self);
         self.rooms.push(new_room);
         self.save();

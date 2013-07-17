@@ -786,8 +786,12 @@ var GameEngine = new function () {
         // send to server
         if($('#builder-clickaction').html() == 'teleport' )
             GameEngine.socket.emit('cmd', {cmd: 'tp ' + x + ' ' + y});
-        else if($('#builder-clickaction').html() == 'build' )
-            GameEngine.socket.emit('cmd', {cmd: 'create room @' + x + ',' + y + ',' + GameEngine.maproom.z + ' -terrain "' + $('#builder-terrain').html() + '"'});
+        else if($('#builder-clickaction').html() == 'build' ){
+            if($('#builder-terrain').html() == 'null null')
+                $.gritter.add({title: 'Build Error', text: 'Please set a Default Terrain before building.'});
+            else
+                GameEngine.socket.emit('cmd', {cmd: 'create room @' + x + ',' + y + ',' + GameEngine.maproom.z + ' -terrain "' + $('#builder-terrain').html() + ' 00000000"'});
+        }
         GameEngine.socket.emit('cmd', {cmd: 'edit refresh'});
     };
 
