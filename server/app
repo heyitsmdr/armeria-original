@@ -142,6 +142,17 @@ function init() {
         }
     }
 
+    getargbyname = function(haystack, arg, defaultValue) {
+        // create room @1,0,0 -terrain "floors.dirt floors.grass"
+        var sections = haystack.split(' ');
+        for(var i = 0; i < sections.length; i++) {
+            if(sections[i] == '-' + arg) {
+                return getarg(haystack, i + 1);
+            }
+        }
+        return defaultValue;
+    }
+
     io.sockets.on('connection', function(socket){
         var player = new Player(socket);
         PLAYERS.addPlayer(player);

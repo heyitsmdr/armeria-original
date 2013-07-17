@@ -5,7 +5,7 @@
  Questions? info@playarmeria.com
  */
 
-var GameEngine = new function() {
+var GameEngine = new function () {
     this.debug = {datainput: false};
     this.funcvars = {};         // Various static variables for functions
     this.version = false;       // Version
@@ -787,7 +787,7 @@ var GameEngine = new function() {
         if($('#builder-clickaction').html() == 'teleport' )
             GameEngine.socket.emit('cmd', {cmd: 'tp ' + x + ' ' + y});
         else if($('#builder-clickaction').html() == 'build' )
-            GameEngine.socket.emit('cmd', {cmd: 'create room @' + x + ',' + y + ',' + GameEngine.maproom.z});
+            GameEngine.socket.emit('cmd', {cmd: 'create room @' + x + ',' + y + ',' + GameEngine.maproom.z + ' -terrain "' + $('#builder-terrain').html() + '"'});
         GameEngine.socket.emit('cmd', {cmd: 'edit refresh'});
     };
 
