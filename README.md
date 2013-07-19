@@ -42,6 +42,10 @@ this, you can run the following command (from any directory) which will grab all
 the live server and put it in `/vagrant/server/data`:
 
     curl http://tools.playarmeria.com/fetchLiveData.sh | sh
+    
+OR
+
+    /vagrant/bin/getdata
 
 **Note:** Be sure to keep the `data` directory out of the repository. Never, ever add it!
 
@@ -68,3 +72,8 @@ http://local.playarmeria.com:8080/
 
 You don't have to add anything to your HOSTS (or equivalent) file since the DNS entry for
 `local.playarmeria.com` points to `127.0.0.1`.
+
+## Adding Changes
+
+Once you've added a few changes, open up a pull request and let [Mike Du Russel](https://github.com/ethryx) know. If
+everything looks good, we'll go ahead and pull it into `live`.
