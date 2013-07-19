@@ -77,3 +77,9 @@ You don't have to add anything to your HOSTS (or equivalent) file since the DNS 
 
 Once you've added a few changes, open up a pull request and let [Mike Du Russel](https://github.com/ethryx) know. If
 everything looks good, we'll go ahead and pull it into `live`.
+
+When pull requests are merged, Jenkins will automatically shut down the live server, add your changes and start
+the server back up. We'll be sure to warn everyone on the game before this takes place.
+
+Furthermore, if the client files are updated (namely index.html and engine.js), the client will warn the user to
+refresh the page.
