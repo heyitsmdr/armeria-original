@@ -780,9 +780,14 @@ var GameEngine = new function () {
     };
 
     this.editorClick = function(evt) {
-        // calculate absolute x and y from relative x and y
-        var x = Math.floor(((evt.x - $('#editor-canvas').offset().left) - (($('#editor-canvas').width() / 2) - 16)) / 32);
-        var y = Math.floor(((evt.y - $('#editor-canvas').offset().top) - (($('#editor-canvas').height() / 2) - 16)) / 32);
+        // calculate relative x and y
+        var sizew = (document.getElementById('editor-canvas').width / 32) - 1;
+        var sizeh = (document.getElementById('editor-canvas').height / 32) - 1;
+        var x = Math.floor((evt.x - $('#editor-canvas').offset().left) / 32) - (sizew / 2);
+        var y = Math.floor((evt.y - $('#editor-canvas').offset().top) / 32) - (sizeh / 2);
+        // convert to absolute (based on current location)
+        x = parseInt(GameEngine.maproom.x) + parseInt(x);
+        y = parseInt(GameEngine.maproom.y) + parseInt(y);
         // send to server
         if($('#builder-clickaction').html() == 'teleport' )
             GameEngine.socket.emit('cmd', {cmd: 'tp ' + x + ' ' + y});
@@ -807,15 +812,22 @@ var GameEngine = new function () {
 
         var sizew = (document.getElementById('editor-canvas').width / 32) - 1;
         var sizeh = (document.getElementById('editor-canvas').height / 32) - 1;
-        var xrangemin = location.x - (sizew / 2);
-        var xrangemax = location.x + (sizew / 2);
-        var yrangemin = location.y - (sizeh / 2);
-        var yrangemax = location.y + (sizeh / 2);
+        var xrangemin = parseInt(location.x) - (sizew / 2);
+        var xrangemax = parseInt(location.x) + (sizew / 2);
+        var yrangemin = parseInt(location.y) - (sizeh / 2);
+        var yrangemax = parseInt(location.y) + (sizeh / 2);
+        var offsetx = 0;
+        var offsety = 0;
 
+        ctx.clearRect(0, 0, $('#editor-canvas').width(), $('#editor-canvas').height());
+        
         for(var y = yrangemin; y <= yrangemax; y++) {
             for(var x = xrangemin; x <= xrangemax; x++) {
-                var left = (x * 32) + ((sizew / 2) * 32);
-                var top = (y * 32) + ((sizeh / 2) * 32);
+                var left = offsetx;
+                var top = offsety;
+                
+                offsetx += 32;
+                
                 var grid = GameEngine.mapGridAt(x, y, location.z);
                 if(!grid)
                     continue;
@@ -855,6 +867,8 @@ var GameEngine = new function () {
                     ctx.drawImage(GameEngine.mapmarker, 0, 0, 30, 30, left + 1, top + 1, 30, 30);
                 }
             }
+            offsetx = 0;
+            offsety += 32;
         }
     };
 };

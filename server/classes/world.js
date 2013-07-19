@@ -153,9 +153,9 @@ var Map = function(config, fn) {
         var z = player.character.location.z;
         if(dir.indexOf('@') > -1) {
             dir = dir.substr(1);
-            x = dir.split(',')[0];
-            y = dir.split(',')[1];
-            z = dir.split(',')[2];
+            x = parseInt(dir.split(',')[0]);
+            y = parseInt(dir.split(',')[1]);
+            z = parseInt(dir.split(',')[2]);
         } else {
             switch(dir.substr(0, 1).toLowerCase()) {
                 case 'n':
