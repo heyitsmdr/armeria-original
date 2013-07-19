@@ -299,20 +299,21 @@ td.score-value{
 	top: 0;
 	left: 0;
 	display: none;
-	background-color: rgba(0,0,0,0.8);
+	background: url('../images/layout/editor-bg.png');
 
 	#editor-map {
-		float: left;
-		width: 80%;
+		width: 100%;
 		height: 100%;
-		background-color: rgba(0,50,0,0.5);
 	}
 
 	#editor-properties {
 		float: right;
-		width: 20%;
-		height: 100%;
-		background-color: rgba(50,0,0,0.5);
+		position: absolute;
+		z-index: 99999;
+		top: 0;
+		right: 0;
+		width: 300px;
+		box-shadow: 0px 1px 10px #000;
 	}
 
 	.prop-cat {
@@ -327,23 +328,60 @@ td.score-value{
 		color: #fff;
 	}
 
+	.prop-extra {
+		border-left: 1px solid #222;
+		border-right: 1px solid #222;
+		border-bottom: 1px solid #111;
+		background-color: rgba(60,60,60,0.6);
+		width: 100%;
+		padding: 7px;
+		display: none;
+		color: #fff;
+
+		select {
+			background-color: #222;
+			border: 1px solid #444;
+			color: #fff;
+			font-family: Verdana;
+			font-size: 11px;
+			padding: 1px;
+		}
+
+		select:focus {
+			outline: none;
+		}
+	}
+
 	.prop-set {
 		border-left: 1px solid #222;
 		border-right: 1px solid #222;
 		border-bottom: 1px solid #111;
 		background-color: rgba(20,20,20,0.6);
+		width: 100%;
+		height: 32px;
+		display: block;
 
 		.prop-name {
 			font-family: @base-font;
 			color: #fff;
 			font-size: 12px;
 			padding: 7px;
-			width: 50%;
+			width: 90px;
+			float: left;
 		}
 
 		.prop-value {
 			padding: 7px;
-			width: 50%;
+			width: 180px;
+			color: #7b825f;
+			float: left;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			
+			a {
+				color: #9fb73d;
+			}
 		}
 	}
 }

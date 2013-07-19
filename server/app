@@ -142,6 +142,17 @@ function init() {
         }
     }
 
+    getargbyname = function(haystack, arg, defaultValue) {
+        // create room @1,0,0 -terrain "floors.dirt floors.grass"
+        var sections = haystack.split(' ');
+        for(var i = 0; i < sections.length; i++) {
+            if(sections[i] == '-' + arg) {
+                return getarg(haystack, i + 1);
+            }
+        }
+        return defaultValue;
+    }
+
     io.sockets.on('connection', function(socket){
         var player = new Player(socket);
         PLAYERS.addPlayer(player);
@@ -203,7 +214,7 @@ function init() {
             var cmd = matchcmd(sections[0], new Array('say', 'score', 'move', ['look', 'examine'], 'me',
                 'whisper', 'reply', 'attack', 'create', 'destroy', 'modify',
                 'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp'],
-                'inventory', 'who', 'spawn', 'areas', 'title', 'quit'));
+                'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit'));
             sections.shift();
             var cmd_args = sections.join(' ');
 
@@ -276,6 +287,9 @@ function init() {
                     break;
                 case 'quit':
                     LOGIC.quit(player);
+                    break;
+                case 'edit':
+                    LOGIC.edit(player, cmd_args);
                     break;
                 default:
                     if(!LOGIC.emote(player, cmd.toLowerCase()))

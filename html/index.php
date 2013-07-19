@@ -188,7 +188,7 @@
                     <div id="player"></div>
                     <div id="mapshadow"></div>
                     <div id="playerMark"></div>
-                    <div id="mapname"><p id="mapname-p">Registration Area</p></div>
+                    <div id="mapname"><p id="mapname-p">-</p></div>
                 </div>
                 
                 <div id="playervitals-container">
@@ -252,19 +252,64 @@
             <div class="prop-cat">
               Builder Settings
             </div>
-            <!-- Area Properties -->
-            <div class="prop-cat">
-              Area Properties
+            <div class="prop-set">
+              <div class="prop-name">Canvas Size</div>
+              <div class="prop-value"><a href="#" id="builder-size">16x16</a></div>
             </div>
             <div class="prop-set">
-              <span class="prop-name">Area Name</span>
-              <span class="prop-value"><input type="text" id="propAreaName"></span>
+              <div class="prop-name">Default Terrain</div>
+              <div class="prop-value"><a href="#" id="builder-terrain" onclick="GameEngine.editorToggleExtra('builder-terrain-extra')">null null</a></div>
+            </div>
+            <div class="prop-extra" id="builder-terrain-extra">
+              <strong>Base:</strong>&nbsp;<select id="builder-terrain-base" onchange="GameEngine.editorSetDefaultTerrain()"></select><br />
+              <strong>Primary:</strong>&nbsp;<select id="builder-terrain-primary" onchange="GameEngine.editorSetDefaultTerrain()"></select>
+            </div>
+            <div class="prop-set">
+              <div class="prop-name">Click Action</div>
+              <div class="prop-value"><a href="#" id="builder-clickaction" onclick="GameEngine.editorChangeClickAction()">teleport</a></div>
+            </div>
+            <!-- Area Properties -->
+            <div class="prop-cat">
+              Map Properties
+            </div>
+            <div class="prop-set">
+              <div class="prop-name">Map Name</div>
+              <div class="prop-value"><a href="#" id="map-name">..</a></div>
+            </div>
+            <div class="prop-set">
+              <div class="prop-name">Creator</div>
+              <div class="prop-value" id="map-author">..</div>
             </div>
 
             <!-- Selected Room Properties -->
-            <div class="prop-cat">
-              Selected Room Properties
+            <div class="prop-cat" id="section-roomprops">
+              Current Room Properties
             </div>
+            <div class="prop-set">
+              <div class="prop-name">Name</div>
+              <div class="prop-value"><a href="#" id="room-name" onclick="GameEngine.editorEditProperty(this)">..</a></div>
+            </div>
+            <div class="prop-set">
+              <div class="prop-name">Description</div>
+              <div class="prop-value"><a href="#" id="room-desc" onclick="GameEngine.editorEditProperty(this)">..</a></div>
+            </div>
+            <div class="prop-set">
+              <div class="prop-name">Terrain</div>
+              <div class="prop-value"><a href="#" onclick="GameEngine.editorToggleExtra('terrain-extra')" id="room-terrain">..</a></div>
+            </div>
+            <div class="prop-extra" id="terrain-extra">
+              <strong>Base:</strong>&nbsp;<select id="room-terrain-base" onchange="GameEngine.editorSetTerrain()"></select><br />
+              <strong>Primary:</strong>&nbsp;<select id="room-terrain-primary" onchange="GameEngine.editorSetTerrain()"></select><br />
+              <strong>Sides:</strong><br />
+              &nbsp;&nbsp;Top: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-t" />&nbsp;&nbsp;Right: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-r" />&nbsp;&nbsp;Bottom: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-b" />&nbsp;&nbsp;Left: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-l" /><br />
+              <strong>Corners:</strong><br />
+              &nbsp;&nbsp;TL: <input type="checkbox" onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-tl" />&nbsp;&nbsp;TR: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-tr" />&nbsp;&nbsp;BR: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-br" />&nbsp;&nbsp;BL: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-bl" /><br />
+            </div>
+            <div class="prop-set">
+              <div class="prop-name">Environment</div>
+              <div class="prop-value"><a href="#" id="room-environment" onclick="GameEngine.editorEditProperty(this)">..</a></div>
+            </div>
+
           </div>
         </div>
     </body>

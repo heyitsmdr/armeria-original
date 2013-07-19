@@ -1,5 +1,6 @@
 .c9revisions/
 .vagrant/
+.com.apple.timemachine.supported
 port
 server/data
 server/node_modules/

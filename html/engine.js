@@ -5,7 +5,7 @@
  Questions? info@playarmeria.com
  */
 
-var GameEngine = new function() {
+var GameEngine = new function () {
     this.debug = {datainput: false};
     this.funcvars = {};         // Various static variables for functions
     this.version = false;       // Version
@@ -18,18 +18,20 @@ var GameEngine = new function() {
     this.fbaccesstoken = false; // Facebook Access Token
     this.connected = false;     // Connected or not (boolean)
     this.connecting = false;    // Connection in process (to block certain functions)
+    this.tilesets = [];         // Tilesets
     this.mapdata = false;       // Entire minimap data
     this.mapz = 0;              // Map Z-Coordinate
     this.maproom = false;       // Object within this.mapdata that contains the current room
     this.mapctx = false;        // Minimap Canvas 2D Context
     this.mapcv = false;         // Minimap Canvas
-    this.maptileset = false;    // Image
-    this.mapts = false;         // Image Properties
+    this.maptileset = [];       // Images of Tilesets
+    this.mapts = [];            // Image Properties
     this.mapanim = false;       // Map Animation for setInterval
     this.mapoffsetx = 0;        // Minimap offset - x
     this.mapoffsety = 0;        // Minimap offset - y
     this.mapdestoffsetx = 0;    // Minimap destination offset - x
     this.mapdestoffsety = 0;    // Minimap destination offset - y
+    this.mapmarker = false;     // Image of Map Marker
     this.server = false;        // Server class
     this.serverOffline = false; // Set to True if Socket.IO is not found (server offline)
     this.sendHistory = [];      // Array of strings that you sent to the server (for up/down history)
@@ -92,9 +94,9 @@ var GameEngine = new function() {
         GameEngine.mapctx.lineWidth = 3;
         GameEngine.mapctx.lineJoin = 'round';
         GameEngine.mapctx.strokeStyle = '#ffffff';
-        GameEngine.maptileset = new Image();
-        GameEngine.maptileset.src = "images/tiles/tileset.png";
         GameEngine.setupTileset();
+        GameEngine.mapmarker = new Image();
+        GameEngine.mapmarker.src = "images/tiles/playerMark.png";
         // setup error reporting
         window.onerror = function(msg, url, linenumber){
             if(msg == 'ReferenceError: io is not defined') {
@@ -148,115 +150,42 @@ var GameEngine = new function() {
 
     this.setupTileset = function() {
         /* TILE DEFINITIONS */
+        GameEngine.tilesets = ['floors'];
 
-        GameEngine.mapts = [
-            {def: 'grassTL', sx: 0, sy: 0},
-            {def: 'grassT', sx: 1, sy: 0},
-            {def: 'grassTR', sx: 2, sy: 0},
-            {def: 'grassL', sx: 0, sy: 1},
-            {def: 'grass', sx: 1, sy: 1},
-            {def: 'grassR', sx: 2, sy: 1},
-            {def: 'grassBL', sx: 0, sy: 2},
-            {def: 'grassB', sx: 1, sy: 2},
-            {def: 'grassRB', sx: 2, sy: 2},
-            {def: 'grassTBL', sx: 3, sy: 0},
-            {def: 'grassTB', sx: 4, sy: 0},
-            {def: 'grassTRB', sx: 5, sy: 0},
-            {def: 'grassTRBL', sx: 3, sy: 1},
-            {def: 'grassTRL', sx: 6, sy: 0},
-            {def: 'grassRL', sx: 6, sy: 1},
-            {def: 'grassRBL', sx: 6, sy: 2},
-            {def: 'flowers', sx: 4, sy: 1},
-            {def: 'grassWorn', sx: 5, sy: 1},
-            {def: 'grassTall', sx: 3, sy: 2},
-            {def: 'dirt', sx: 7, sy: 0},
+        /* NOTE: Edges are automatically calculated since they will always be
+                 to the right of the tile (if edges = true). */
 
-            {def: 'waterTL', sx: 0, sy: 3},
-            {def: 'waterT', sx: 1, sy: 3},
-            {def: 'waterTR', sx: 2, sy: 3},
-            {def: 'waterL', sx: 0, sy: 4},
-            {def: 'water', sx: 1, sy: 4},
-            {def: 'waterR', sx: 2, sy: 4},
-            {def: 'waterBL', sx: 0, sy: 5},
-            {def: 'waterB', sx: 1, sy: 5},
-            {def: 'waterRB', sx: 2, sy: 5},
-            {def: 'waterTBL', sx: 3, sy: 3},
-            {def: 'waterTB', sx: 4, sy: 3},
-            {def: 'waterTRB', sx: 5, sy: 3},
-            {def: 'waterTRBL', sx: 3, sy: 4},
-            {def: 'waterTRL', sx: 6, sy: 3},
-            {def: 'waterRL', sx: 6, sy: 4},
-            {def: 'waterRBL', sx: 6, sy: 5},
-
-            {def: 'stoneTL', sx: 0, sy: 6},
-            {def: 'stoneT', sx: 1, sy: 6},
-            {def: 'stoneTR', sx: 2, sy: 6},
-            {def: 'stoneL', sx: 0, sy: 7},
-            {def: 'stone', sx: 1, sy: 7},
-            {def: 'stoneR', sx: 2, sy: 7},
-            {def: 'stoneBL', sx: 0, sy: 8},
-            {def: 'stoneB', sx: 1, sy: 8},
-            {def: 'stoneRB', sx: 2, sy: 8},
-            {def: 'stoneTBL', sx: 3, sy: 6},
-            {def: 'stoneTB', sx: 4, sy: 6},
-            {def: 'stoneTRB', sx: 5, sy: 6},
-            {def: 'stoneTRBL', sx: 3, sy: 7},
-            {def: 'stoneTRL', sx: 6, sy: 6},
-            {def: 'stoneRL', sx: 6, sy: 7},
-            {def: 'stoneRBL', sx: 6, sy: 8},
-
-            {def: 'lavaTL', sx: 0, sy: 9},
-            {def: 'lavaT', sx: 1, sy: 9},
-            {def: 'lavaTR', sx: 2, sy: 9},
-            {def: 'lavaL', sx: 0, sy: 10},
-            {def: 'lava', sx: 1, sy: 10},
-            {def: 'lavaR', sx: 2, sy: 10},
-            {def: 'lavaBL', sx: 0, sy: 11},
-            {def: 'lavaB', sx: 1, sy: 11},
-            {def: 'lavaRB', sx: 2, sy: 11},
-            {def: 'lavaTBL', sx: 3, sy: 9},
-            {def: 'lavaTB', sx: 4, sy: 9},
-            {def: 'lavaTRB', sx: 5, sy: 9},
-            {def: 'lavaTRBL', sx: 3, sy: 10},
-            {def: 'lavaTRL', sx: 6, sy: 9},
-            {def: 'lavaRL', sx: 6, sy: 10},
-            {def: 'lavaRBL', sx: 6, sy: 11},
-            {def: 'lavaEdge', sx: 4, sy: 10},
-
-            {def: 'woodFloor', sx: 8, sy: 0},
-
-            {def: 'woodWallN', sx: 5, sy: 18},
-            {def: 'woodWallS', sx: 5, sy: 16},
-            {def: 'woodWallE', sx: 4, sy: 17},
-            {def: 'woodWallW', sx: 5, sy: 17},
-            {def: 'woodWallU', sx: 4, sy: 19},
-            {def: 'woodWallD', sx: 4, sy: 19},
-
-            {def: 'grassWallN', sx: 1, sy: 18},
-            {def: 'grassWallS', sx: 1, sy: 16},
-            {def: 'grassWallE', sx: 0, sy: 17},
-            {def: 'grassWallW', sx: 1, sy: 17},
-            {def: 'grassWallU', sx: 0, sy: 19},
-            {def: 'grassWallD', sx: 0, sy: 19},
-
-            {def: 'stoneWallN', sx: 3, sy: 18},
-            {def: 'stoneWallS', sx: 3, sy: 16},
-            {def: 'stoneWallE', sx: 2, sy: 17},
-            {def: 'stoneWallW', sx: 3, sy: 17},
-            {def: 'stoneWallU', sx: 2, sy: 19},
-            {def: 'stoneWallD', sx: 2, sy: 19},
-
-            {def: 'wp', sx: 0, sy: 19},
-            {def: 'house', sx: 1, sy: 19}
+        GameEngine.mapts['floors'] = [
+            {def: 'grass', sx: 0, sy: 0, edges: true},
+            {def: 'dirt', sx: 0, sy: 1, edges: true}
         ];
 
-        // Calculate Real sx and sy
-        this.mapts.forEach(function(ts){
-            ts.sx *= 32;
-            ts.sy *= 32;
+        // Calculate Real sx and sy && Calculate edges (if needed) && Load images
+        GameEngine.tilesets.forEach(function(tset){
+            GameEngine.tsSetReal( GameEngine.mapts[tset] );
+            GameEngine.mapts[tset].forEach(function(ts){ if(ts.edges){ GameEngine.tsSetEdges( ts ); }});
+            GameEngine.maptileset[tset] = new Image();
+            GameEngine.maptileset[tset].src = "images/tiles/" + tset + ".png";
         });
-
     }
+
+    this.tsSetReal = function(ts) {
+        ts.forEach(function(tile){
+            tile.sx *= 32;
+            tile.sy *= 32;
+        });
+    };
+
+    this.tsSetEdges = function(tile) {
+        tile.edgeTop = tile.sx + 32;
+        tile.edgeRight = tile.sx + 64;
+        tile.edgeBottom = tile.sx + 96;
+        tile.edgeLeft = tile.sx + 128;
+        tile.cornerTopLeft = tile.sx + 160;
+        tile.cornerTopRight = tile.sx + 192;
+        tile.cornerBottomRight = tile.sx + 224;
+        tile.cornerBottomLeft = tile.sx + 256;
+    };
 
     this._doFBLogin = function() {
         this.parseInput("Facebook not authorized. Asking for permission..");
@@ -432,6 +361,12 @@ var GameEngine = new function() {
         this.socket.on('itemtip', function(data){
             $('#itemtooltip-container').html(data.content);
         });
+        this.socket.on('editor', function(data){
+            if(data.update)
+                GameEngine.editorData(data);
+            else
+                GameEngine.toggleEditor(data);
+        });
     }
 
     this.parseLinks = function(text) {
@@ -491,8 +426,6 @@ var GameEngine = new function() {
                 return;
             } else if (command.toLowerCase() == '/version') {
                 this.parseInput('Your client is running version <b>' + this.version + '</b>.');
-            } else if (command.toLowerCase() == '/edit') {
-                this.toggleEditor();
             } else {
                 if(this.connected)
                     this.socket.emit('cmd', {cmd: command.substr(1)});
@@ -567,14 +500,16 @@ var GameEngine = new function() {
     }
 
     this.mapGetTilesetDefinition = function(definition) {
-        for(var k = 0; k < GameEngine.mapts.length; k++) {
-            if(GameEngine.mapts[k].def.toLowerCase() == definition.toLowerCase()) {
-                return GameEngine.mapts[k];
+        var tileset = definition.split('.')[0];
+        var tile = definition.split('.')[1];
+        for(var k = 0; k < GameEngine.mapts[tileset].length; k++) {
+            if(GameEngine.mapts[tileset][k].def.toLowerCase() == tile.toLowerCase()) {
+                return GameEngine.mapts[tileset][k];
             }
         }
 
         // default to grass
-        return GameEngine.mapts[4];
+        return GameEngine.mapts[tileset][0];
     };
 
     this.mapRender = function(mapdata, offsetx, offsety) {
@@ -600,19 +535,39 @@ var GameEngine = new function() {
             var top = (y * 32) + offsety;
             // only render within viewport
             if(left > -32 && left < 255 && top > -32 && top < 255) {
-                var layers = mapdata[i].terrain.split(' ');
-                for(var j = 0; j < layers.length; j++) {
-                    var founddef = false;
-                    for(var k = 0; k < GameEngine.mapts.length; k++) {
-                        if(GameEngine.mapts[k].def.toLowerCase() == layers[j].toLowerCase()) {
-                            founddef = k;
-                            break;
-                        }
-                    }
-                    if(founddef === false) founddef = 4; // default to grass
-                    GameEngine.mapctx.drawImage(GameEngine.maptileset, GameEngine.mapts[founddef].sx, GameEngine.mapts[founddef].sy, 32, 32, left, top, 32, 32);
-                }
+                var layerBase = mapdata[i].terrain.split(' ')[0];
+                var layerPrimary = mapdata[i].terrain.split(' ')[1];
+                var layerEdgeCorners = mapdata[i].terrain.split(' ')[2];
+
+                var defBase = GameEngine.mapGetTilesetDefinition( layerBase );
+                var defPrimary = GameEngine.mapGetTilesetDefinition( layerPrimary );
+
+                var tsBase = layerBase.split('.')[0];
+                var tsPrimary = layerPrimary.split('.')[0];
+
+                // render primary
+                GameEngine.mapctx.globalCompositeOperation = 'source-over';
+                GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.sx, defPrimary.sy, 32, 32, left, top, 32, 32);
+
+                // render edges and corners
+                GameEngine.mapctx.globalCompositeOperation = 'destination-out';
+                if(layerEdgeCorners.substr(0, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeTop, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(1, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeRight, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(2, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeBottom, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(3, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeLeft, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(4, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.cornerTopLeft, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(5, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.cornerTopRight, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(6, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.cornerBottomRight, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(7, 1) == '1'){ GameEngine.mapctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.cornerBottomLeft, defPrimary.sy, 32, 32, left, top, 32, 32); }
+
+                // render base
+                GameEngine.mapctx.globalCompositeOperation = 'destination-over';
+                GameEngine.mapctx.drawImage(GameEngine.maptileset[tsBase], defBase.sx, defBase.sy, 32, 32, left, top, 32, 32);
             }
+        }
+        // redraw editor (if open)
+        if( $('#editor-container').css('display') != 'none' ) {
+            GameEngine.editorRender( false );
         }
     }
 
@@ -717,61 +672,203 @@ var GameEngine = new function() {
         }
     };
 
-    this.toggleEditor = function() {
+    this.editorToggleExtra = function(toggleId) {
+        if( $('#' + toggleId).css('display') == 'none' )
+            $('#' + toggleId).show('slide', {direction: 'up'});
+        else
+            $('#' + toggleId).hide('slide', {direction: 'up'});
+    };
+
+    this.toggleEditor = function(data) {
         if( $('#editor-container').css('display') == 'none' )
             $('#editor-container').stop().fadeIn('fast', function(){
-                $('#editor-grids').html(GameEngine.editorRender(16,16));
+                // ready
+                GameEngine.editorInit(16,16);
+                GameEngine.editorRender(false);
+                GameEngine.editorData(data);
             });
         else
             $('#editor-container').stop().fadeOut('fast');
+    };
+
+    this.editorData = function(data) {
+        // area data
+        $('#map-name').html( data.mapData.name );
+        $('#map-author').html( data.mapData.author );
+
+        // room data
+        $('#room-name').html( data.roomData.name );
+
+        $('#room-desc').html( data.roomData.desc );
+        GameEngine.registerToolTip('#room-desc', data.roomData.desc);
+
+        $('#room-terrain').html( data.roomData.type );
+        GameEngine.registerToolTip('#room-terrain', data.roomData.type);
+        $('#room-terrain-base').html('');
+        $('#room-terrain-primary').html('');
+        $('#builder-terrain-base').html('');
+        $('#builder-terrain-primary').html('');
+        GameEngine.tilesets.forEach(function(ts){
+            GameEngine.mapts[ts].forEach(function(tile){
+                var def = ts + '.' + tile.def;
+                $('#room-terrain-base').append('<option ' + ((def==data.roomData.type.split(' ')[0])?'selected':'') + '>' + def + '</option>');
+                $('#room-terrain-primary').append('<option ' + ((def==data.roomData.type.split(' ')[1])?'selected':'') + '>' + def + '</option>');
+                $('#builder-terrain-base').append('<option>' + def + '</option>');
+                $('#builder-terrain-primary').append('<option>' + def + '</option>');
+            });
+        });
+        $('#room-terrain-corners-t').prop('checked', ((data.roomData.type.split(' ')[2].substr(0, 1)=='1')?true:false) );
+        $('#room-terrain-corners-r').prop('checked', ((data.roomData.type.split(' ')[2].substr(1, 1)=='1')?true:false) );
+        $('#room-terrain-corners-b').prop('checked', ((data.roomData.type.split(' ')[2].substr(2, 1)=='1')?true:false) );
+        $('#room-terrain-corners-l').prop('checked', ((data.roomData.type.split(' ')[2].substr(3, 1)=='1')?true:false) );
+        $('#room-terrain-corners-tl').prop('checked', ((data.roomData.type.split(' ')[2].substr(4, 1)=='1')?true:false) );
+        $('#room-terrain-corners-tr').prop('checked', ((data.roomData.type.split(' ')[2].substr(5, 1)=='1')?true:false) );
+        $('#room-terrain-corners-br').prop('checked', ((data.roomData.type.split(' ')[2].substr(6, 1)=='1')?true:false) );
+        $('#room-terrain-corners-bl').prop('checked', ((data.roomData.type.split(' ')[2].substr(7, 1)=='1')?true:false) );
+
+        $('#room-environment').html( data.roomData.environment );
+        // section title
+        $('#section-roomprops').html( 'Current Room Properties (' + data.roomData.x + ',' + data.roomData.y + ',' + data.roomData.z + ')' );
+    };
+
+    this.editorSetTerrain = function(){
+        var typeString = $('#room-terrain-base').val() + ' ' + $('#room-terrain-primary').val() + ' ';
+        if( $('#room-terrain-corners-t').prop('checked') ) { typeString += '1'; } else { typeString += '0'; }
+        if( $('#room-terrain-corners-r').prop('checked') ) { typeString += '1'; } else { typeString += '0'; }
+        if( $('#room-terrain-corners-b').prop('checked') ) { typeString += '1'; } else { typeString += '0'; }
+        if( $('#room-terrain-corners-l').prop('checked') ) { typeString += '1'; } else { typeString += '0'; }
+        if( $('#room-terrain-corners-tl').prop('checked') ) { typeString += '1'; } else { typeString += '0'; }
+        if( $('#room-terrain-corners-tr').prop('checked') ) { typeString += '1'; } else { typeString += '0'; }
+        if( $('#room-terrain-corners-br').prop('checked') ) { typeString += '1'; } else { typeString += '0'; }
+        if( $('#room-terrain-corners-bl').prop('checked') ) { typeString += '1'; } else { typeString += '0'; }
+        // set within editor
+        $('#room-terrain').html( typeString );
+        // send to server
+        GameEngine.socket.emit('cmd', {cmd: 'modify room terrain ' + typeString});
+    };
+
+    this.editorSetDefaultTerrain = function() {
+        $('#builder-terrain').html( $('#builder-terrain-base').val() + ' ' + $('#builder-terrain-primary').val() );
+    };
+
+    this.editorChangeClickAction = function() {
+        if( $('#builder-clickaction').html() == 'teleport' )
+            $('#builder-clickaction').html('build');
+        else
+            $('#builder-clickaction').html('teleport');
+    };
+
+    this.editorEditProperty = function(prop) {
+        var newContent = prompt('Set property to:', $(prop).html());
+        if(newContent) {
+            // set within editor
+            $(prop).html( newContent );
+            // send to server
+            if($(prop).attr('id').split('-')[0] == 'room')
+                GameEngine.socket.emit('cmd', {cmd: 'modify room ' + $(prop).attr('id').split('-')[1] + ' ' + newContent});
+        }
     };
 
     /**
         Note: sizeh and sizew must be divisible by 2.
         Todo: Move styles to stylesheet
     **/
-    this.editorRender = function(sizeh, sizew, location) {
+    this.editorInit = function(sizeh, sizew) {
+        var width = (sizew + 1) * 32;
+        var height = (sizeh + 1) * 32;
+        $('#editor-grids').html('<canvas id="editor-canvas" width="' + width + '" height="' + height + '" onclick="GameEngine.editorClick(event)"></canvas>');
+    };
+
+    this.editorClick = function(evt) {
+        // calculate relative x and y
+        var sizew = (document.getElementById('editor-canvas').width / 32) - 1;
+        var sizeh = (document.getElementById('editor-canvas').height / 32) - 1;
+        var x = Math.floor((evt.x - $('#editor-canvas').offset().left) / 32) - (sizew / 2);
+        var y = Math.floor((evt.y - $('#editor-canvas').offset().top) / 32) - (sizeh / 2);
+        // convert to absolute (based on current location)
+        x = parseInt(GameEngine.maproom.x) + parseInt(x);
+        y = parseInt(GameEngine.maproom.y) + parseInt(y);
+        // send to server
+        if($('#builder-clickaction').html() == 'teleport' )
+            GameEngine.socket.emit('cmd', {cmd: 'tp ' + x + ' ' + y});
+        else if($('#builder-clickaction').html() == 'build' ){
+            if($('#builder-terrain').html() == 'null null')
+                $.gritter.add({title: 'Build Error', text: 'Please set a Default Terrain before building.'});
+            else
+                GameEngine.socket.emit('cmd', {cmd: 'create room @' + x + ',' + y + ',' + GameEngine.maproom.z + ' -terrain "' + $('#builder-terrain').html() + ' 00000000"'});
+        }
+        GameEngine.socket.emit('cmd', {cmd: 'edit refresh'});
+    };
+
+    this.editorRender = function(location) {
         if(!location)
             location = GameEngine.maproom;
         if(!location) {
-            console.log('GameEngine.editorRender(' + sizeh + ',' + sizew + ',' + location + ') failed - location was false');
+            console.log('GameEngine.editorRender(' + location + ') failed - location was false');
             return false;
         }
 
-        var xrangemin = location.x - (sizew / 2);
-        var xrangemax = location.x + (sizew / 2);
-        var yrangemin = location.y - (sizeh / 2);
-        var yrangemax = location.y + (sizeh / 2);
+        var ctx = document.getElementById('editor-canvas').getContext('2d');
 
-        var render = '<table cellspacing="0" cellpadding="0">';
+        var sizew = (document.getElementById('editor-canvas').width / 32) - 1;
+        var sizeh = (document.getElementById('editor-canvas').height / 32) - 1;
+        var xrangemin = parseInt(location.x) - (sizew / 2);
+        var xrangemax = parseInt(location.x) + (sizew / 2);
+        var yrangemin = parseInt(location.y) - (sizeh / 2);
+        var yrangemax = parseInt(location.y) + (sizeh / 2);
+        var offsetx = 0;
+        var offsety = 0;
 
+        ctx.clearRect(0, 0, $('#editor-canvas').width(), $('#editor-canvas').height());
+        
         for(var y = yrangemin; y <= yrangemax; y++) {
-            render += '<tr>';
             for(var x = xrangemin; x <= xrangemax; x++) {
-                if(x == location.x && y == location.y)
-                    render += '<td gamex="'+x+'" gamey="'+y+'" style="width:32px;height:32px;border:2px solid #f00">';
-                else
-                    render += '<td gamex="'+x+'" gamey="'+y+'" style="width:32px;height:32px;border:1px solid #fff">';
+                var left = offsetx;
+                var top = offsety;
+                
+                offsetx += 32;
+                
+                var grid = GameEngine.mapGridAt(x, y, location.z);
+                if(!grid)
+                    continue;
 
-                var cell = GameEngine.mapGridAt(x, y, GameEngine.mapz);
-                if(cell) {
-                    var terrain = cell.terrain.split(' ');
-                    var zindex = 100;
-                    terrain.forEach(function(t){
-                        zindex++;
-                        var def = GameEngine.mapGetTilesetDefinition(t);
-                        var bg = 'background-image:url(images/tiles/tileset.png);background-position: -' + def.sx + 'px -' + def.sy + 'px;';
-                        render += '<div style="position:absolute;width:32px;height:32px;z-index:' + zindex + ';' + bg + '"></div>';
-                    });
+                var layerBase = grid.terrain.split(' ')[0];
+                var layerPrimary = grid.terrain.split(' ')[1];
+                var layerEdgeCorners = grid.terrain.split(' ')[2];
+
+                var defBase = GameEngine.mapGetTilesetDefinition( layerBase );
+                var defPrimary = GameEngine.mapGetTilesetDefinition( layerPrimary );
+
+                var tsBase = layerBase.split('.')[0];
+                var tsPrimary = layerPrimary.split('.')[0];
+
+                // render primary
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.sx, defPrimary.sy, 32, 32, left, top, 32, 32);
+
+                // render edges and corners
+                ctx.globalCompositeOperation = 'destination-out';
+                if(layerEdgeCorners.substr(0, 1) == '1'){ ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeTop, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(1, 1) == '1'){ ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeRight, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(2, 1) == '1'){ ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeBottom, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(3, 1) == '1'){ ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.edgeLeft, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(4, 1) == '1'){ ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.cornerTopLeft, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(5, 1) == '1'){ ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.cornerTopRight, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(6, 1) == '1'){ ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.cornerBottomRight, defPrimary.sy, 32, 32, left, top, 32, 32); }
+                if(layerEdgeCorners.substr(7, 1) == '1'){ ctx.drawImage(GameEngine.maptileset[tsPrimary], defPrimary.cornerBottomLeft, defPrimary.sy, 32, 32, left, top, 32, 32); }
+
+                // render base
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.drawImage(GameEngine.maptileset[tsBase], defBase.sx, defBase.sy, 32, 32, left, top, 32, 32);
+
+                // render marker if current (or rendered) location
+                if(x == location.x && y == location.y) {
+                    ctx.globalCompositeOperation = 'source-over';
+                    ctx.drawImage(GameEngine.mapmarker, 0, 0, 30, 30, left + 1, top + 1, 30, 30);
                 }
-
-                render += '</td>';
             }
-            render += '</tr>'
+            offsetx = 0;
+            offsety += 32;
         }
-
-        render += '</table>';
-
-        return render;
     };
 };

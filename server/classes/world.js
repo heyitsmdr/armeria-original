@@ -85,13 +85,17 @@ var Map = function(config, fn) {
         console.log('[init] map loaded: ' + self.name);
     }
     
-    self.stringify = function() {
-        return JSON.stringify({
+    self.getSaveData = function() {
+        return {
             name: self.name,
             author: self.author,
             rooms: self.roomStringify()
-        }, null, '\t');
-    }
+        };
+    };
+
+    self.stringify = function() {
+        return JSON.stringify(self.getSaveData(), null, '\t');
+    };
     
     self.save = function() {
         fs.writeFileSync(data_path + self.name + '.json', self.stringify(), 'utf8');
@@ -147,28 +151,35 @@ var Map = function(config, fn) {
         var x = player.character.location.x;
         var y = player.character.location.y;
         var z = player.character.location.z;
-        switch(dir.substr(0, 1).toLowerCase()) {
-            case 'n':
-                y--;
-                break;
-            case 's':
-                y++;
-                break;
-            case 'e':
-                x++;
-                break;
-            case 'w':
-                x--;
-                break;
-            case 'u':
-                z++;
-                break;
-            case 'd':
-                z--;
-                break;
-            default:
-                player.msg('Invalid direction.');
-                return;
+        if(dir.indexOf('@') > -1) {
+            dir = dir.substr(1);
+            x = parseInt(dir.split(',')[0]);
+            y = parseInt(dir.split(',')[1]);
+            z = parseInt(dir.split(',')[2]);
+        } else {
+            switch(dir.substr(0, 1).toLowerCase()) {
+                case 'n':
+                    y--;
+                    break;
+                case 's':
+                    y++;
+                    break;
+                case 'e':
+                    x++;
+                    break;
+                case 'w':
+                    x--;
+                    break;
+                case 'u':
+                    z++;
+                    break;
+                case 'd':
+                    z--;
+                    break;
+                default:
+                    player.msg('Invalid direction.');
+                    return;
+            }
         }
         if(player.character.room.map.getRoom(x, y, z)) {
             player.msg('Room already exists in that direction.');
@@ -178,7 +189,7 @@ var Map = function(config, fn) {
             x: x,
             y: y,
             z: z,
-            type: 'grass'
+            type: getargbyname(dirargs, 'terrain', 'floors.dirt floors.grass 00000000')
         }, self);
         self.rooms.push(new_room);
         self.save();
