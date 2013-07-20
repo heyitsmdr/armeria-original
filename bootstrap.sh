@@ -65,6 +65,9 @@ mv /tmp/armeria/package.json /vagrant/server
 # install curl
 apt-get install -y curl
 
+# start server debugger
+/vagrant/bin/debug
+
 # restart services
 service php5-fpm restart
 service nginx restart
