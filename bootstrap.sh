@@ -60,6 +60,7 @@ npm update
 npm install --no-bin-links # uses package.json
 rm -rf /vagrant/server/node_modules
 mv /tmp/armeria/node_modules /vagrant/server
+mv /tmp/armeria/package.json /vagrant/server
 
 # install curl
 apt-get install -y curl
