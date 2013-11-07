@@ -17,6 +17,26 @@ Local Development
 For local development, we use [Vagrant](http://www.vagrantup.com). This allows us to replicate
 the same testing environment on every computer. 
 
+### Setting Up Repo
+
+The first thing you want to do is fork the `armeria-live` repo, and then clone it locally on
+your computer.
+
+You then want to set up the `upstream` to pull changes down from `armeria-live`. To do this,
+run the following command:
+
+    git remote add upstream git@bitbucket.org:ethryx/armeria-live.git
+    
+This will give you two remotes: `origin` and `upstream`. Origin is your own repository and
+upstream is the live version of the game.
+
+### Pulling Down Updates From Live (Upstream) 
+
+Before you start adding features (and each time you sit down to work on the game), you will
+want to pull down anything new added to the live version of the game. To do so, run the command:
+
+    git pull upstream master
+
 ### Working
 
 Once Vagrant is installed and the repo is cloned, run the following commands:
@@ -75,7 +95,12 @@ You don't have to add anything to your HOSTS (or equivalent) file since the DNS 
 
 ## Adding Changes
 
-Once you've added a few changes, open up a pull request and let [Mike Du Russel](https://github.com/ethryx) know. If
+Once you've added and committed a few changes, the first thing you want to do is push them to BitBucket.
+You can do this by running the command:
+
+    git push origin master
+    
+You can then open up a pull request on the `armeria-live` repo and let [Mike Du Russel](https://github.com/ethryx) know. If
 everything looks good, we'll go ahead and pull it into `live`.
 
 When pull requests are merged, Jenkins will automatically shut down the live server, add your changes and start
