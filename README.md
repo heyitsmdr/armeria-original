@@ -17,6 +17,26 @@ Local Development
 For local development, we use [Vagrant](http://www.vagrantup.com). This allows us to replicate
 the same testing environment on every computer. 
 
+### Setting Up Repo
+
+The first thing you want to do is fork the `armeria-live` repo, and then clone it locally on
+your computer.
+
+You then want to set up the `upstream` to pull changes down from `armeria-live`. To do this,
+run the following command:
+
+    git remote add upstream git@bitbucket.org:ethryx/armeria-live.git
+    
+This will give you two remotes: `origin` and `upstream`. Origin is your own repository and
+upstream is the live version of the game.
+
+### Pulling Down Updates From Live (Upstream) 
+
+Before you start adding features (and each time you sit down to work on the game), you will
+want to pull down anything new added to the live version of the game. To do so, run the command:
+
+    git pull upstream master
+
 ### Working
 
 Once Vagrant is installed and the repo is cloned, run the following commands:
