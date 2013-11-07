@@ -59,6 +59,10 @@ switch(arg) {
     case 'nodaemon':
         init();
         break;
+    case 'debug':
+        process.kill(process.pid, 'SIGUSR1');
+        init();
+        break;
     default:
         console.log('Valid options:');
         console.log('Syntax: ./app [option]')
@@ -66,6 +70,7 @@ switch(arg) {
         console.log('   stop     - stop the server');
         console.log('   restart  - restart (or start) the server');
         console.log('   nodaemon - start the server without using a daemon');
+        console.log('   debug    - start the server in debug mode without using a daemon');
 }
 
 function init() {

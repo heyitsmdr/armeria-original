@@ -1,6 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
-# Used to setup vagrant on Windows (due to symlink issues)
+if [ "$(whoami)" != "root" ]; then
+        echo "Run this with sudo."
+        exit 1
+fi
 
 # cleanup
 rm -rf /vagrant/server/node_modules
@@ -11,7 +14,7 @@ mv /vagrant/server /tmp
 
 # install
 cd /tmp/server
-npm install
+npm install --no-bin-links
 
 # move back
 mv /tmp/server /vagrant

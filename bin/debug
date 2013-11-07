@@ -1,0 +1,6 @@
+#!/bin/sh
+
+node /vagrant/server/node_modules/node-inspector/bin/inspector.js --web-port=8088 > /dev/null &
+
+echo "You can now run: node --debug ./app nodaemon"
+echo "Listen on:  http://local.playarmeria.com:8088/debug?port=5858"

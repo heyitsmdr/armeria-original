@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 apt-get update
+apt-get install -y python-software-properties python g++ make # for nodejs
+add-apt-repository -y ppa:chris-lea/node.js                   # for nodejs
+apt-get update
 
 # install git
 apt-get install -y git
@@ -49,13 +52,21 @@ apt-get install -y npm
 # install build-essentials (for building npm packages)
 apt-get install -y build-essential
 
-# install npm packages
-cd /vagrant/server
+# install npm packages (windows-safe)
+mkdir /tmp/armeria
+mv /vagrant/server/package.json /tmp/armeria
+cd /tmp/armeria
 npm update
 npm install --no-bin-links # uses package.json
+rm -rf /vagrant/server/node_modules
+mv /tmp/armeria/node_modules /vagrant/server
+mv /tmp/armeria/package.json /vagrant/server
 
 # install curl
 apt-get install -y curl
+
+# start server debugger
+/vagrant/bin/debug
 
 # restart services
 service php5-fpm restart
