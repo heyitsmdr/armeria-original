@@ -95,7 +95,12 @@ You don't have to add anything to your HOSTS (or equivalent) file since the DNS 
 
 ## Adding Changes
 
-Once you've added a few changes, open up a pull request and let [Mike Du Russel](https://github.com/ethryx) know. If
+Once you've added and committed a few changes, the first thing you want to do is push them to BitBucket.
+You can do this by running the command:
+
+    git push origin master
+    
+You can then open up a pull request on the `armeria-live` repo and let [Mike Du Russel](https://github.com/ethryx) know. If
 everything looks good, we'll go ahead and pull it into `live`.
 
 When pull requests are merged, Jenkins will automatically shut down the live server, add your changes and start
