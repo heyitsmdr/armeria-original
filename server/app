@@ -1,7 +1,6 @@
 #!/usr/bin/node
 // require built-ins
 var fs            = require('fs');
-var path          = require('path');
 var https         = require('https');
 var daemon        = require('daemon');
 // require custom
@@ -20,21 +19,27 @@ var pid;
 
 switch(arg) {
     case 'start':
-        if (path.existsSync("./server.pid")) {
+        if (fs.existsSync("./server.pid")) {
             console.log('Server already started. Quitting.');
             return process.exit(-1);
         } else {
-            pid = daemon.daemonize({ stdout: 'stdout.txt', stderr: 'stderr.txt' }, './server.pid');
-            console.log('Daemon started successfully with pid: ' + pid);
+            daemon();
+            console.log('Daemon started successfully with pid: ' + process.pid);
+            fs.writeFile('./server.pid', process.pid);
             init();
         }
         break;
     case 'stop':
-        if (path.existsSync("./server.pid")) {
-            daemon.kill('./server.pid', function(){
-                console.log('Server stopped.');
-                return process.exit(-1);
-            });
+        if (fs.existsSync("./server.pid")) {
+        	fs.readFile('./server.pid', function(err, data){
+        		if(err) {
+        			throw err;
+        		}
+        		process.kill(data);
+        		fs.unlink('./server.pid');
+        		console.log('Server stopped.');
+        		return process.exit(-1);
+        	});
             return;
         } else {
             console.log('Server is not running. Can\'t stop. Quitting.');
@@ -42,18 +47,10 @@ switch(arg) {
         }
         break;
     case 'restart':
-        if (path.existsSync("./server.pid")) {
-            daemon.kill('./server.pid', function(){
-                console.log('Server restarted.');
-                pid = daemon.daemonize({ stdout: 'stdout.txt', stderr: 'stderr.txt' }, './server.pid');
-                console.log('Daemon started successfully with pid: ' + pid);
-                init();
-            });
-            return;
+        if (fs.existsSync("./server.pid")) {
+        	return;
         } else {
-            pid = daemon.daemonize({ stdout: 'stdout.log', stderr: 'stderr.log' }, './server.pid');
-            console.log('Daemon started successfully with pid: ' + pid);
-            init();
+			return;
         }
         break;
     case 'nodaemon':
