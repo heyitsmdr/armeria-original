@@ -328,6 +328,12 @@ function init() {
                     tooltip += "<br>Level <b>" + C.level + "</b>";
                     player.emit('itemtip', { content: tooltip });
                     break;
+                case 'mob':
+                    var M = LIBRARY.getById(data.id);
+                    var tooltip = "<span class='tipIdentifier'>" + M.get('htmlname') + "</span>";
+                    tooltip += "<br>" + M.get('title');
+                    player.emit('itemtip', { content: tooltip });
+                    break;
             }
         });
     });

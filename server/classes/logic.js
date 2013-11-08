@@ -240,9 +240,9 @@ var Logic = function() {
     }
     
     self.move = function(player, dir) {
-        var x = player.character.location.x;
-        var y = player.character.location.y;
-        var z = player.character.location.z;
+        var x = Number(player.character.location.x);
+        var y = Number(player.character.location.y);
+        var z = Number(player.character.location.z);
         var map = player.character.location.map;
         var dir_exit;
         var dir_enter;
@@ -497,7 +497,7 @@ var Logic = function() {
     }
 
     self.create = function(player, args) {
-        if(!player.character.builder) { return self._invalidcmd(player); }
+        if(!player.character.hasPriv('libraryManagement')) { return self._invalidcmd(player); }
         var creation = args.split(' ')[0];
         var argsremaining = args.split(' ').splice(1).join(' ');
         creation = matchcmd(creation, new Array(['room', 'rm']));
@@ -514,7 +514,7 @@ var Logic = function() {
     }
 
     self.spawn = function(player, args) {
-        if(!player.character.builder) { return self._invalidcmd(player); }
+        if(!player.character.hasPriv('libraryManagement')) { return self._invalidcmd(player); }
         var creation = getarg(args, 0, true);
         var obj = LIBRARY.getById(creation);
         if (obj === false) {
@@ -523,6 +523,8 @@ var Logic = function() {
         }
         switch(obj.type) {
             case 'item':
+            	var success = player.character.addInventoryItem(obj.id);
+                player.msg('Your inventory now contains a ' + obj.get('htmlname') + '.');
                 break;
             case 'mob':
                 player.character.room.addMob(obj);
@@ -662,7 +664,7 @@ var Logic = function() {
     };
 
     self.library = function(player, args) {
-        if(!player.character.builder) { return self._invalidcmd(player); }
+        if(!player.character.hasPriv('libraryManagement')) { return self._invalidcmd(player); }
         var creation = args.split(' ')[0];
         var argsremaining = args.split(' ').splice(1).join(' ');
         creation = matchcmd(creation, new Array('add', ['listitems', 'lsitems', 'li'], ['listmobs', 'lsmobs', 'lm']));

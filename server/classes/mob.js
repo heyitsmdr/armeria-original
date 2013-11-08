@@ -43,6 +43,7 @@ var Mob = function(config) {
     self.htmlname;
     self.level;
     self.script;
+    self.title;
 
     self.init = function(config) {
         self.id = config.id;
@@ -50,6 +51,7 @@ var Mob = function(config) {
         self.htmlname = config.htmlname;
         self.level = config.level;
         self.script = config.script;
+        self.title = config.title;
         console.log('[init] mob template loaded: ' + self.id);
     };
 
@@ -59,7 +61,8 @@ var Mob = function(config) {
             name: self.name,
             htmlname: self.htmlname,
             level: self.level,
-            script: self.script
+            script: self.script,
+            title: self.title
         }, null, '\t');
     }
 

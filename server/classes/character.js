@@ -32,7 +32,8 @@ var Characters = function() {
                 x: 1,
                 y: 0,
                 z: 0
-            }
+            },
+            privs: []
         });
         self.objects.push(char);
         char.save();
@@ -86,6 +87,7 @@ var Character = function(config) {
     self.age;       // int
     self.inventory; // array of strings
     self.title;     // string
+    self.privs;     // array of strings
 
     // not saved
     self.online = false;    // boolean
@@ -112,6 +114,8 @@ var Character = function(config) {
         self.age = config.age || 18;
         self.inventory = config.inventory || [];
         self.title = config.title || '';
+        self.privs = config.privs || [];
+
         console.log('[init] character loaded: ' + self.name);
     };
     
@@ -133,7 +137,8 @@ var Character = function(config) {
             level: self.level,
             age: self.age,
             inventory: self.inventory,
-            title: self.title
+            title: self.title,
+            privs: self.privs
         }, null, '\t');    
     };
     
@@ -151,6 +156,13 @@ var Character = function(config) {
     
     self.locationString = function() {
         return self.location.map + ', ' + self.location.x + ', ' + self.location.y + ', ' + self.location.z;
+    };
+
+    self.hasPriv = function(priv) {
+        if(self.privs.indexOf(priv) >= 0)
+            return true;
+        else
+            return false;
     };
 
     self.login = function() {
@@ -182,6 +194,10 @@ var Character = function(config) {
         self.player.update({minimap: 1, maplocnoanim: 1});
         // announce to room
         self.room.announceExcept(self.player, self.htmlname + " has just logged in to Armeria!");
+        // priviledged character?
+        if(self.privs.length >= 1) {
+            self.player.msg("<div style='padding:10px;width:500px;margin-top:10px;border:2px solid #540303;background-color:#2b0505;color:#BA3C3C'>You are using a priviledged character. You have abilities that other characters do not possess. Do NOT use any of these abilities to help other characters in the game in ANY WAY.<br><br>Your character has been granted the following permissions: " + self.privs.join(', ') + "</div>");
+        }
         // look around
         LOGIC.look(self.player);
     };
@@ -239,6 +255,17 @@ var Character = function(config) {
         return true;
     };
 
+	self.addInventoryItem = function(itemId) {
+		var obj = LIBRARY.getById(itemId);
+		if(!obj)
+			return false;
+		if(obj.type !== 'item')
+			return false;
+			
+		self.inventory.push(itemId);
+        return obj;
+	};
+	
     self.eachInventoryItem = function(callback) {
         self.inventory.forEach(function(item){
             var libobj = LIBRARY.getById(item);
