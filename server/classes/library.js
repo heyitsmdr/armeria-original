@@ -167,13 +167,15 @@ var LibraryEntry = function(config) {
     /* END: ITEM ONLY FUNCTIONS */
 
     /* SCRIPT FUNCTIONS */
-    self.emit = function(func, arg1, arg2, arg3, arg4) {
+    self.emit = function(func) {
         if(!self.gameScript) return;
-        switch(func) {
-            case 'onSay':
-                self.gameScript.onSay(arg1, arg2);
-                break;
+        var args = new Array();
+        if(arguments.length > 1) {
+        	for(var i = 1; i < arguments.length; i++) {
+        		args.push(arguments[i]);
+        	}
         }
+        eval("self.gameScript." + func)(args);
     };
     self.say = function(location, text) {
         var map = WORLD.getMap(location.map);
