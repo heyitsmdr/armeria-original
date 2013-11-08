@@ -17,23 +17,7 @@ less.php
 
 .DS_Store
 
-.idea/.name
-
-.idea/armeria.iml
-
-.idea/encodings.xml
-
-.idea/misc.xml
-
-.idea/modules.xml
-
-.idea/scopes/scope_settings.xml
-
-.idea/vcs.xml
-
-.idea/watcherTasks.xml
-
-.idea/workspace.xml
+.idea/*
 
 html/images/tiles/tileset.psd
 
