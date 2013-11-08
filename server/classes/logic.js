@@ -523,6 +523,8 @@ var Logic = function() {
         }
         switch(obj.type) {
             case 'item':
+            	var success = player.character.addInventoryItem(obj.id);
+                player.msg('Your inventory now contains a ' + obj.get('htmlname') + '.');
                 break;
             case 'mob':
                 player.character.room.addMob(obj);

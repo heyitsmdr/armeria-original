@@ -239,6 +239,17 @@ var Character = function(config) {
         return true;
     };
 
+	self.addInventoryItem = function(itemId) {
+		var obj = LIBRARY.getById(itemId);
+		if(!obj)
+			return false;
+		if(obj.type !== 'item')
+			return false;
+			
+		self.inventory.push(itemId);
+        return obj;
+	};
+	
     self.eachInventoryItem = function(callback) {
         self.inventory.forEach(function(item){
             var libobj = LIBRARY.getById(item);
