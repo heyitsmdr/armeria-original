@@ -240,9 +240,9 @@ var Logic = function() {
     }
     
     self.move = function(player, dir) {
-        var x = player.character.location.x;
-        var y = player.character.location.y;
-        var z = player.character.location.z;
+        var x = Number(player.character.location.x);
+        var y = Number(player.character.location.y);
+        var z = Number(player.character.location.z);
         var map = player.character.location.map;
         var dir_exit;
         var dir_enter;
