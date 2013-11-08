@@ -36,6 +36,20 @@ Before you start adding features (and each time you sit down to work on the game
 want to pull down anything new added to the live version of the game. To do so, run the command:
 
     git pull upstream master
+    
+Furthermore, if many changes were made on live, you can first create a new branch:
+
+    git branch testing
+    
+And then pull in the changes from upstream:
+
+    git pull upstream master
+    
+And if all goes well, you can switch back to the `master` branch and merge in everything from
+`testing`:
+
+    git checkout master
+    git merge testing
 
 ### Working
 
