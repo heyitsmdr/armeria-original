@@ -196,7 +196,7 @@ var Character = function(config) {
         self.room.announceExcept(self.player, self.htmlname + " has just logged in to Armeria!");
         // priviledged character?
         if(self.privs.length >= 1) {
-            self.player.msg("<div style='padding:10px;width:500px;margin-top:10px;border:2px solid #540303;background-color:#2b0505;color:#BA3C3C'>You are using a priviledged character. You have abilities that other characters do not possess. Do NOT use any of these abilities to help other characters in the game in ANY WAY.<br><br>Your character has been granted the following permissions: " + self.privs.join(', ') + "</div>");
+            self.player.msg("<div style='padding:10px;width:500px;margin-top:10px;border:2px solid #540303;background-color:#2b0505;color:#BA3C3C'>You are using a priviledged character. You have abilities that other characters do not possess. Do NOT use any of these abilities to help other characters in the game in ANY WAY.<br><br>Your character has been granted the following permissions: " + self.privs.join(', ') + ".</div>");
         }
         // look around
         LOGIC.look(self.player);

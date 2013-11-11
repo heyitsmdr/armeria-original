@@ -111,8 +111,13 @@ var Logic = function() {
         if(what.toLowerCase() == "lol") { self.lol(player); return; }
         if(what == '^') { self.agree(player); return; }
         
-        // remove html
-        what = self._removeHTML(what);
+        // remove html (unless specifically not wanting to -- staff only)
+        if(player.character.hasPriv('useHTML') && what.substring(0, 1) == ':') {
+            what = what.substring(1);
+            what = what.replace('{', '<span style="font-weight:700;color:#f5f567">');
+            what = what.replace('}', '</span>');
+        } else
+            what = self._removeHTML(what);
 
         // Check arguments
         var args = what.split(' ');
