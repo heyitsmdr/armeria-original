@@ -1,0 +1,5 @@
+#!/bin/sh
+/vagrant/server/app stop
+rm -rf /vagrant/server/data
+curl http://tools.playarmeria.com/fetchLiveData.sh | sh
+/vagrant/server/app start
