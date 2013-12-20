@@ -45,7 +45,14 @@
         <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
         <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
 
-        <script src="http://playarmeria.com:2772/socket.io/socket.io.js"></script>
+        <script type="text/javascript">
+          var socketJs = document.createElement('script');
+          socketJs.setAttribute('type','text/javascript');
+          socketJs.setAttribute('src', 'http://' + location.hostname + ':2772/socket.io/socket.io.js');
+          if(socketJs) {
+            document.getElementsByTagName('head')[0].appendChild(socketJs);
+          }
+        </script>
         <script type="text/javascript">
             $(document).ready(function(){
                 GameEngine.init();
