@@ -73,14 +73,18 @@ virtual box!**
 ## Remote Testing (For Others To Test Your Repo)
 
 We use ngrok to create a tunnel (that bypasses firewalls and port forwarding -- so you don't need to worry
-about that). The tunnel will forward the remote port `8080 -> 8080` (for the client) and `2772 -> 2772` (for
-the server).
+about that). The tunnel will forward the remote port `8080 -> 8080` (for the client), `2772 -> 2772` (for
+the server) and `8088 -> 8088` (for server-side debugging).
 
 To start the tunnel, you can run:
 
-    ngrok start client server
+    /vagrant/bin/remotetesting
     
-This will automatically load the ngrok client and server tunnels based on the config in `~/.ngrok`.
+This will automatically load the ngrok config located in `/vagrant/bin/ngrok.config`.
+
+Lastly, anyone will be able to access the tunnel from:
+
+    http://armeria.ngrok.com
 
 ### Server Management
 
