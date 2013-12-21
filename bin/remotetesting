@@ -1,0 +1,3 @@
+#!/bin/sh
+cd /vagrant/bin
+./ngrok -config ./ngrok.config start client server debug

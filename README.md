@@ -15,7 +15,8 @@ Local Development
 ### Intro
 
 For local development, we use [Vagrant](http://www.vagrantup.com). This allows us to replicate
-the same testing environment on every computer. 
+the same testing environment on every computer. For exposing the test environment with the internet,
+so that others can test your local repo, we use [ngrok](https://ngrok.com).
 
 ### Setting Up Repo
 
@@ -68,6 +69,22 @@ the command:
 You should note that all of your repository files are stored at `/vagrant` and they automatically
 sync to your repository on your local computer. **Only make git changes locally, and not from the
 virtual box!**
+
+## Remote Testing (For Others To Test Your Repo)
+
+We use ngrok to create a tunnel (that bypasses firewalls and port forwarding -- so you don't need to worry
+about that). The tunnel will forward the remote port `8080 -> 8080` (for the client), `2772 -> 2772` (for
+the server) and `8088 -> 8088` (for server-side debugging).
+
+To start the tunnel, you can run:
+
+    /vagrant/bin/remotetesting
+    
+This will automatically load the ngrok config located in `/vagrant/bin/ngrok.config`.
+
+Lastly, anyone will be able to access the tunnel from:
+
+    http://armeria.ngrok.com
 
 ### Server Management
 
