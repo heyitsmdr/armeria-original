@@ -88,7 +88,7 @@ function init(arg2) {
     // live?
     LIVE       = ((arg2 == 'live') ? true : false);
     console.log('live server: ' + JSON.stringify(LIVE));
-    
+
     // hip chat association
     HIPCHAT    = new hipchatter('G9AuMaMlZQxzPaE1mo3sMsNoOpPt9GiutxRfP4ZW');
 
@@ -119,10 +119,10 @@ function init(arg2) {
         return cmd_real;
     }
 
-    hipchatmsg = function(msg) {
+    hipchatmsg = function(msg, color) {
         HIPCHAT.notify('188827', {
             message: msg,
-            color: 'purple',
+            color: color || 'purple',
             token: 'XyrMGRf6xVaDnZ5xbaogFnwyabrDJrlEK2ei2a0Q'
         }, function(err){ });
     }
