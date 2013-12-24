@@ -9,7 +9,8 @@
     "daemon": "1.1.0",
     "socket.io": "0.9.16",
     "node-inspector": "0.3.1",
-    "hipchatter": "0.0.8"
+    "hipchatter": "0.0.8",
+    "async": "~0.2.9"
   },
   "engines": {
     "node": ">=0.4.0"
