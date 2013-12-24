@@ -1,4 +1,4 @@
-Armeria Test
+Armeria
 =======
 
 This is the main repository for Armeria. Please keep everything secret unless told otherwise.
