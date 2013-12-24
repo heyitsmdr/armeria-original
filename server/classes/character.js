@@ -194,6 +194,8 @@ var Character = function(config) {
         self.player.update({minimap: 1, maplocnoanim: 1});
         // announce to room
         self.room.announceExcept(self.player, self.htmlname + " has just logged in to Armeria!");
+        // announce to hipchat (on live server)
+        if(LIVE) { hipchatmsg(self.name + ' has just logged in!'); }
         // priviledged character?
         if(self.privs.length >= 1) {
             self.player.msg("<div style='padding:10px;width:500px;margin-top:10px;border:2px solid #540303;background-color:#2b0505;color:#BA3C3C'>You are using a priviledged character. You have abilities that other characters do not possess. Do NOT use any of these abilities to help other characters in the game in ANY WAY.<br><br>Your character has been granted the following permissions: " + self.privs.join(', ') + ".</div>");
@@ -205,6 +207,8 @@ var Character = function(config) {
     self.logout = function() {
         // announce to room
         self.room.announce(self.htmlname + " has just logged out of Armeria!");
+        // announce to hipchat (on live server)
+        if(LIVE) { hipchatmsg(self.name + ' has just logged out.'); }
         // remove player from room
         self.room.removePlayer(self.player);
         // update players
