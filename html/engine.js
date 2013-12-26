@@ -271,7 +271,8 @@ var GameEngine = new function () {
         if(!this.fbinfo && !this.skipFbAuth) return;
         this.parseInput("<br>Connecting to game server..");
         try {
-            this.socket = io.connect('http://' + window.location.hostname + ':' + GameEngine.port, {
+            var hn = location.hostname;
+            this.socket = io.connect('http://' + ((hn=='armeria.ngrok.com')?'armeria-serv.ngrok.com':hn) + ((hn=='armeria.ngrok.com')?'':':'+GameEngine.port), {
                 'reconnect': true,
                 'reconnection delay': 1000,
                 'max reconnection attempts': 10
