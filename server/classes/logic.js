@@ -693,32 +693,16 @@ var Logic = function() {
     };
 
     self.who = function(player) {
-        var tabledata = [];
+        var whodata = [];
         var count = 0;
         PLAYERS.eachOnline(function(p){
             var title = 'PLAYER';
             if(p.character.builder)
                 title = '<span style="color:#3ff">BUILDER</span>';
-            tabledata.push([
-            {
-                data: '[',
-                style: 'text-align:center'
-            },
-            {
-                data: title,
-                style: 'text-align:center'
-            },
-            {
-                data: ']',
-                style: 'text-align:center'
-            },
-            {
-                data: p.character.htmlname + ((p.character.title)?', ' + p.character.title:'') + ' @ ' + p.character.room.map.name,
-                style: 'text-align:left;padding-left:10px'
-            }]);
+            whodata.push('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> ' + p.character.htmlname + ((p.character.title)?', ' + p.character.title:'') + ' @ ' + p.character.room.map.name);
             count++;
         });
-        player.msg('<br>' + self._createInvisTable(tabledata, '600px'));
+        player.msg('<br>' + whodata.join('<br>') + '<br>');
         player.msg('There ' + ((count>1)?'are ':'is ') + count + ' visible player' + ((count>1)?'s':'') + ' online.');
     };
 
