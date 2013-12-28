@@ -19,6 +19,9 @@ var arg = process.argv[2] || false;
 var arg2 = process.argv[3] || false;
 var pid;
 
+// new relic monitoring for live server
+if(arg2=='live') { require('newrelic'); }
+
 switch(arg) {
     case 'start':
         if (fs.existsSync("./server.pid")) {

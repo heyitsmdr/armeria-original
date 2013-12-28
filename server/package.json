@@ -10,7 +10,8 @@
     "socket.io": "0.9.16",
     "node-inspector": "0.3.1",
     "hipchatter": "0.0.8",
-    "async": "~0.2.9"
+    "async": "~0.2.9",
+    "newrelic": "~1.2.0"
   },
   "engines": {
     "node": ">=0.4.0"

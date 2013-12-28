@@ -23,7 +23,7 @@ var Logic = function() {
     };
     self._createInvisTable = function(data, width) {
         var output = "<table width='" + width + "'>";
-        data.forEach(function(row){
+        data.forEach(function(row) {
             output += "<tr>";
             row.forEach(function(cell){
                 output += "<td style='" + cell.style + "'>" + cell.data + "</td>";
