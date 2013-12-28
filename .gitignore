@@ -22,3 +22,5 @@ less.php
 html/images/tiles/tileset.psd
 
 *.esproj/
+
+server/newrelic_agent.log
