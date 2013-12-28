@@ -1,4 +1,4 @@
-Armeria Test
+Armeria
 =======
 
 This is the main repository for Armeria. Please keep everything secret unless told otherwise.
@@ -139,3 +139,21 @@ the server back up. We'll be sure to warn everyone on the game before this takes
 
 Furthermore, if the client files are updated (namely index.html and engine.js), the client will warn the user to
 refresh the page.
+
+## Server-Side JavaScript Debugging
+
+To debug the node.js server, you first to make sure the node.js debugger is running:
+
+    /vagrant/bin/debug
+
+and then you can run the server so it connects to the debugger:
+
+    node --debug ./app nodaemon
+
+and lastly, you can access this debug session using this url:
+
+    http://local.playarmeria.com:8088/debug?port=5858
+
+OR (if you're using ngrok):
+
+    http://armeria-debug.ngrok.com/debug?port=5858

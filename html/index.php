@@ -46,11 +46,11 @@
         <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
 
         <script type="text/javascript">
-          var serverHost = location.hostname;
+          var serverHost = location.hostname + ":2772";
           if(location.hostname == 'armeria.ngrok.com') { serverHost = "armeria-serv.ngrok.com"; }
           var socketJs = document.createElement('script');
           socketJs.setAttribute('type','text/javascript');
-          socketJs.setAttribute('src', 'http://' + serverHost + ':2772/socket.io/socket.io.js');
+          socketJs.setAttribute('src', 'http://' + serverHost + '/socket.io/socket.io.js');
           if(socketJs) {
             document.getElementsByTagName('head')[0].appendChild(socketJs);
           }

@@ -3,6 +3,7 @@
 var fs            = require('fs');
 var https         = require('https');
 var daemon        = require('daemon');
+var hipchatter    = require('hipchatter');
 // require custom
 var Players       = require('./classes/player').Players;
 var Player        = require('./classes/player').Player;
@@ -15,7 +16,11 @@ var Mobs          = require('./classes/mob').Mobs;
 var Library       = require('./classes/library').Library;
 
 var arg = process.argv[2] || false;
+var arg2 = process.argv[3] || false;
 var pid;
+
+// new relic monitoring for live server
+if(arg2=='live') { require('newrelic'); }
 
 switch(arg) {
     case 'start':
@@ -26,7 +31,7 @@ switch(arg) {
             daemon();
             console.log('Daemon started successfully with pid: ' + process.pid);
             fs.writeFile('./server.pid', process.pid);
-            init();
+            init(arg2);
         }
         break;
     case 'stop':
@@ -54,11 +59,11 @@ switch(arg) {
         }
         break;
     case 'nodaemon':
-        init();
+        init(arg2);
         break;
     case 'debug':
         process.kill(process.pid, 'SIGUSR1');
-        init();
+        init(arg2);
         break;
     default:
         console.log('Valid options:');
@@ -70,7 +75,7 @@ switch(arg) {
         console.log('   debug    - start the server in debug mode without using a daemon');
 }
 
-function init() {
+function init(arg2) {
     // globals
     PLAYERS    = new Players();
     CHARACTERS = new Characters();
@@ -82,6 +87,13 @@ function init() {
             LIBRARY    = new Library();
         });
     });
+
+    // live?
+    LIVE       = ((arg2 == 'live') ? true : false);
+    console.log('live server: ' + JSON.stringify(LIVE));
+
+    // hip chat association
+    HIPCHAT    = new hipchatter('G9AuMaMlZQxzPaE1mo3sMsNoOpPt9GiutxRfP4ZW');
 
     // listen
     // var port = parseInt(fs.readFileSync('./port').toString('utf8'));
@@ -108,6 +120,14 @@ function init() {
         }
 
         return cmd_real;
+    }
+
+    hipchatmsg = function(msg, color) {
+        HIPCHAT.notify('188827', {
+            message: msg,
+            color: color || 'purple',
+            token: 'XyrMGRf6xVaDnZ5xbaogFnwyabrDJrlEK2ei2a0Q'
+        }, function(err){ });
     }
 
     // haystack = input string
