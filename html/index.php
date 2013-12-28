@@ -31,7 +31,7 @@
         <link rel="stylesheet/less" type="text/css" href="css/style.less" />
         <script>
           less = {
-            env: "development"
+            env: "production"
           };
         </script>
         <script src="./css/less-1.3.3.min.js" type="text/javascript"></script>
