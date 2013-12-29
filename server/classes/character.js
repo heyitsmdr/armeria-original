@@ -15,7 +15,7 @@ var Characters = function () {
         fs.readdir(data_path, function (err, files) {
             var i, character_file;
             
-            console.log(files);
+            //console.log(files);
             // load all characters
             for (i = 0; i < files.length; i++) {
                 character_file = data_path + files[i];
@@ -83,7 +83,7 @@ var Character = function (config) {
     self.id = 0;        // int
     self.name = '';      // string
     self.htmlname = '';  // string
-    self.location = {map: 'none', x: 0, y: 0, z: 0};  // array (map, x, y, z)
+    self.location = [];  // array (map, x, y, z)
     self.picture = '';   // string
     self.builder = true;   // boolean
     self.channels = [];  // array of strings
