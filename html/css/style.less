@@ -75,23 +75,25 @@ body{
 	left: 5px;
 	width: 200px;
 	z-index: 99;
+    min-height:555px;
 }
 #roomlist-container{
 	position: absolute;
 	top: 5px;
 	right: 5px;
 	left: 5px;
-	bottom: 185px;
+	bottom: 345px;
 	overflow: auto;
+    min-height:200px;
 }
-.player{
+.player, .inv-item{
 	margin-top: 2px;
 	width: 100%;
 	height: 50px;
 	z-index: 98;
 	overflow: hidden;
 }
-.player img{
+.player img, .inv-item img{
 	float: left;
 	margin: 5px;
 	margin-right: 10px;
@@ -105,10 +107,11 @@ body{
 #score{
 	position: absolute;
 	right: 5px;
-	bottom: 5px;
+	bottom: 210px;
 	left: 5px;
-	height: 165px;
+	height: 125px;
 	padding: 5px;
+    font-size: 0.75em;
 }
 #raceclass{
 	text-align: center;
@@ -122,8 +125,42 @@ td.score-value{
 	width: 50%;
 	padding-left: 3px;
 	text-align: left;
+    min-width: 15px;
 }
-
+#items-container{
+    overflow:auto;
+    position:absolute;
+    height:235px;
+    right:5px;
+    bottom:25px;
+    left:5px;
+}
+.inv-item{
+	height: 42px;
+}
+.inv-item p{
+    line-height: 42px;
+}
+.item-tab{
+    position:absolute;
+    right:5px;
+    bottom:5px;
+    left:5px;
+    height:20px;
+    text-align: center;
+}
+.item-tab:hover{
+    cursor:pointer;
+}
+.item-tab p{
+    line-height:20px;
+}
+#inventory-tab{
+    right:105px;
+}
+#equipment-tab{
+    left:105px;
+}
 
 //RIGHT
 #right-content{

@@ -1,3 +1,4 @@
+// main: style.less
 //MIXINS
 .Bg (dark, @opacity: 1) {
 	background-color: rgba(0,0,0,@opacity);
@@ -23,7 +24,7 @@
 }
 
 body{
-	background: #333 url('../images/layout/new_bg.png');
+    background: #333 url('../images/layout/dark_geometric.png');
 }
 a{
 	color: orange;
@@ -95,12 +96,39 @@ a{
 	border-top: solid thin #2a2a2a;
 	border-bottom: solid thin #3a3a3a;
 }
-.player img{
+.player img, .inv-item img{
 	.Border-radius(2px);
 	.Box-shadow(false, 0, 0, 5px, 0, rgba(0,0,0,0.75));
 }
-.player p{
+.player p, .inv-item p{
 	color: #eee;
+}
+#items-container{
+    .Bg(light, 0.1);
+    .Box-shadow(true, 0, 0, 10px, 0, rgba(0,0,0,0.5));
+    border: solid thin #2a2a2a;
+	border-bottom: solid thin #3a3a3a;
+}
+.inv-item{
+	.Bg(dark, 0.3);
+	.Box-shadow(false, 0, 0, 5px, 0, rgba(0,0,0,0.5));
+	border-top: solid thin #2a2a2a;
+	border-bottom: solid thin #3a3a3a;
+}
+.item-tab{
+    .Bg(light, 0.1);
+    .Box-shadow(true, 0, 3px, 3px, 0, rgba(0,0,0,0.5));
+    color:white;
+    font-size:0.75em;
+    border-top:solid thin #3a3a3a;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+.tab-selected{
+    .Bg(light, 0.15);
+    .Box-shadow(false, 0, 3px, 3px, 0, rgba(0,0,0,0.5));
+    border-top:none;
+    border-bottom:solid thin #4a4a4a;
 }
 #minimap{
 	.Bg(light, 0.1);
