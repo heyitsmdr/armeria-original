@@ -4,6 +4,7 @@ var fs            = require('fs');
 var https         = require('https');
 var daemon        = require('daemon');
 var hipchatter    = require('hipchatter');
+var mongojs       = require('mongojs');
 // require custom
 var Players       = require('./classes/player').Players;
 var Player        = require('./classes/player').Player;
@@ -76,6 +77,21 @@ switch(arg) {
 }
 
 function init(arg2) {
+    DB = false;
+    // connect to db
+    if(arg2 == 'live') {
+        DB = mongojs('gameserver', ['characters']);
+    } else {
+        DB = mongojs('armeriaserv:p0pc0rn@playarmeria.com/gameserver', ['characters']);
+    }
+    
+    if(!DB) {
+        console.log('ERROR: could not connect to database.');
+        return process.exit(-1);
+    } else {
+        console.log('connected to db!');
+    }
+    
     // globals
     PLAYERS    = new Players();
     CHARACTERS = new Characters();
@@ -87,11 +103,11 @@ function init(arg2) {
             LIBRARY    = new Library();
         });
     });
-
+    
     // live?
     LIVE       = ((arg2 == 'live') ? true : false);
     console.log('live server: ' + JSON.stringify(LIVE));
-
+    
     // hip chat association
     HIPCHAT    = new hipchatter('G9AuMaMlZQxzPaE1mo3sMsNoOpPt9GiutxRfP4ZW');
 
