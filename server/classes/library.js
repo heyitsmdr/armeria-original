@@ -1,3 +1,4 @@
+var fs = require('fs');
 var script_path = __dirname + '/../data/scripts/';
 
 var Library = function(){
@@ -144,11 +145,14 @@ var LibraryEntry = function(config) {
         // load a script?
         if(self.get('script')) {
             try {
-                self.gameScript = require(script_path + self.get('script')).GameScript;
-                self.gameScript = new self.gameScript(self);
+                // write to temp data folder
+                fs.writeFile(script_path + self._id + '.js', self.get('script'), function(err) {
+                    self.gameScript = require(script_path + self._id + '.js').GameScript;
+                    self.gameScript = new self.gameScript(self); 
+                });
             } catch (err) {
                 self.gameScript = false;
-                console.log('[script] error loading: ' + script_path + self.get('script'));
+                console.log('[script] error loading: /data/scripts/' + self._id + '.js');
             }
         }
         console.log('[init] library ' + self.type + ' loaded: ' + self.id + ' (parent: ' + self.parent.id + ') level ' + self.get('level'));
