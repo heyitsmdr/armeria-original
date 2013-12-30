@@ -1,6 +1,3 @@
-var fs        = require('fs');
-var data_path = __dirname + '/../data/mobs/';
-
 var Mobs = function(callback) {
     var self = this;
     self.objects = [];
@@ -9,16 +6,12 @@ var Mobs = function(callback) {
         console.log('[init] loading mob templates..');
         // clear objects
         self.objects = [];
-        fs.readdir(data_path, function(err, files){
-            // load all items
-            for(i in files) {
-                var mob_file = data_path + files[i];
-                if(!fs.statSync(mob_file).isFile()) {
-                    console.log('[init] error: invalid mob template file (' + mob_file + '), moving on..');
-                    continue;
-                }
-                self.objects.push(new Mob(JSON.parse(fs.readFileSync(mob_file).toString('utf8'))));
-            }
+        // load from db
+        DB.mobs.find(function(err, mobiles){
+            if(err) { console.log('ERROR: could not read mobile database.'); return; }
+            mobiles.forEach(function(mobile){
+                self.objects.push(new Mob(mobile));
+            });
             callback();
         });
     };
@@ -55,19 +48,17 @@ var Mob = function(config) {
         console.log('[init] mob template loaded: ' + self.id);
     };
 
-    self.stringify = function() {
-        return JSON.stringify({
+    self.save = function() {
+        var data = {
             id: self.id,
             name: self.name,
             htmlname: self.htmlname,
             level: self.level,
             script: self.script,
             title: self.title
-        }, null, '\t');
-    }
-
-    self.save = function() {
-        fs.writeFileSync(data_path + self.id + '.json', self.stringify(), 'utf8');
+        };
+        
+        DB.mobs.update({id: self.id}, data, {upsert: true});
     };
 
     self.init(config);
