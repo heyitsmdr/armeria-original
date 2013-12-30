@@ -389,6 +389,10 @@ var Map = function(config, fn) {
                 "Room Properties: " + player.character.location.map + ", " + player.character.location.x + ", " + player.character.location.y + ", " + player.character.location.z,
                 [
                     {
+                        property: "ObjectID",
+                        value: player.character.room.map._id
+                    },
+                    {
                         property: "Name",
                         value: player.character.room.name
                     },

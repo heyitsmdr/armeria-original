@@ -119,7 +119,7 @@ var LibraryEntry = function(config) {
     var self = this;
 
     // basics
-    self.dbid;
+    self._id;
     self.id;
     self.parent;
     self.type;
@@ -127,7 +127,7 @@ var LibraryEntry = function(config) {
     self.gameScript = false;
 
     self.init = function(config) {
-        self.dbid = config._id;
+        self._id = config._id;
         self.id = config.id;
         self.type = config.type;
         self.overrides = config.overrides;
