@@ -151,42 +151,48 @@
             <div id="score">
               <table id="score-table" border="1" width="100%" cellpadding="3" cellspacing="3">
                 <tr>
-                  <td id="raceclass" colspan="2">Human Novice</td>
+                  <td id="raceclass" colspan="4">Level 1 Human Novice</td>
                 </tr>
                 <tr>
-                  <td class="score-property">Level:</td>
-                  <td id="level" class="score-value">0</td>
+                    <td class="score-property">Armor:</td>
+                    <td id="armor" class="score-value">0</td>
+                    <td class="score-property">Power:</td>
+                    <td id="strength" class="score-value">0</td>
                 </tr>
                 <tr>
-                  <td class="score-property">Armor:</td>
-                  <td id="armor" class="score-value">0</td>
+                    <td class="score-property">Swiftness:</td>
+                    <td id="strength" class="score-value">0</td>
+                    <td class="score-property">Perception:</td>
+                    <td id="intelligence" class="score-value">0</td>
                 </tr>
                 <tr>
-                  <td class="score-property">Strength:</td>
-                  <td id="strength" class="score-value">0</td>
+                    <td class="score-property">P Damage:</td>
+                    <td id="physicaldamage" class="score-value">0</td>
+                    <td class="score-property">M Damage:</td>
+                    <td id="magicaldamage" class="score-value">0</td>
                 </tr>
                 <tr>
-                  <td class="score-property">Intelligence:</td>
-                  <td id="intelligence" class="score-value">0</td>
-                </tr>
-                <tr>
-                  <td class="score-property">Charisma:</td>
-                  <td id="charisma" class="score-value">0</td>
-                </tr>
-                <tr>
-                  <td class="score-property">P. Damage:</td>
-                  <td id="physicaldamage" class="score-value">0</td>
-                </tr>
-                <tr>
-                  <td class="score-property">M. Damage:</td>
-                  <td id="magicaldamage" class="score-value">0</td>
-                </tr>
-                <tr>
-                  <td class="score-property">Resistance:</td>
-                  <td id="resistance" class="score-value">0</td>
+                    <td class="score-property">P Res:</td>
+                    <td id="resistance" class="score-value">0</td>
+                    <td class="score-property">M Res:</td>
+                    <td id="resistance" class="score-value">0</td>
                 </tr>
               </table>
             </div>
+            <div id="items-container">
+                <ul id="inventory">
+                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
+                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
+                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
+                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
+                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
+                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
+                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
+                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
+                </ul>
+            </div>
+            <div id="inventory-tab" class="item-tab tab-selected"><p>Items</p></div>
+            <div id="equipment-tab" class="item-tab"><p>Equipment</p></div>
         </div>
         <div id="minimap-hide"></div>
         <div id="minimap-show"><p>Show Minimap</p></div>

@@ -1,19 +1,25 @@
+/*jslint plusplus: true, continue: true, nomen: true*/
+/*global console: false, require: false, __dirname: false, Character: false, WORLD: false, PLAYERS: false, LIVE: false, hipchatmsg: false, LOGIC: false, LIBRARY: false, exports: false*/
 var fs        = require('fs');
 var data_path = __dirname + '/../data/characters/';
 
-var Characters = function() {
+var Characters = function () {
+    "use strict";
     var self = this;
     self.objects = [];
     
-    self.init = function() {
+    self.init = function () {
         console.log('[init] loading characters..');
         // clear objects
         self.objects = [];
-        fs.readdir(data_path, function(err, files){
+        fs.readdir(data_path, function (err, files) {
+            var i, character_file;
+            
+            //console.log(files);
             // load all characters
-            for(i in files) {
-                var character_file = data_path + files[i];
-                if(!fs.statSync(character_file).isFile()) {
+            for (i = 0; i < files.length; i++) {
+                character_file = data_path + files[i];
+                if (!fs.statSync(character_file).isFile()) {
                     console.log('[init] error: invalid character file (' + character_file + '), moving on..');
                     continue;
                 }
@@ -22,8 +28,8 @@ var Characters = function() {
         });
     };
     
-    self.create = function(charid, charname) {
-        if(self.getCharacterById(charid)) return false;
+    self.create = function (charid, charname) {
+        if (self.getCharacterById(charid)) { return false; }
         var char = new Character({
             id: charid,
             name: charname,
@@ -40,21 +46,24 @@ var Characters = function() {
         return char;
     };
     
-    self.getCharacterById = function(id) {
-        for(var i = 0; i < self.objects.length; i++) {
-            if(self.objects[i].id==id) return self.objects[i];
+    self.getCharacterById = function (id) {
+        var i;
+        for (i = 0; i < self.objects.length; i++) {
+            if (self.objects[i].id === id) { return self.objects[i]; }
         }
         return false;
     };
     
-    self.getCharacterByName = function(name, isonline, checknicks) {
-        for(var i = 0; i < self.objects.length; i++) {
-            if((self.objects[i].name.toLowerCase() == name.toLowerCase()) || (checknicks === true && self.objects[i].nickname.toLowerCase() == name.toLowerCase())) {
-                if(isonline) {
-                    if(self.objects[i].online)
+    self.getCharacterByName = function (name, isonline, checknicks) {
+        var i;
+        for (i = 0; i < self.objects.length; i++) {
+            if ((self.objects[i].name.toLowerCase() === name.toLowerCase()) || (checknicks === true && self.objects[i].nickname.toLowerCase() === name.toLowerCase())) {
+                if (isonline) {
+                    if (self.objects[i].online) {
                         return self.objects[i];
-                    else
+                    } else {
                         return false;
+                    }
                 } else {
                     return self.objects[i];
                 }
@@ -66,37 +75,38 @@ var Characters = function() {
     self.init();
 };
 
-var Character = function(config) {
+var Character = function (config) {
+    "use strict";
     var self = this;
     
     // saved
-    self.id;        // int
-    self.name;      // string
-    self.htmlname;  // string
-    self.location;  // array (map, x, y, z)
-    self.picture;   // string
-    self.builder;   // boolean
-    self.channels;  // array of strings
-    self.roomdesc;  // string
-    self.gender;    // string
-    self.race;      // string
-    self.class;     // string
-    self.stats;     // array (health maxhealth magic maxmagic energy maxenergy str int cha armor resistance)
-    self.statmods;  // array (strmod intmod chamod pdmgmod mdmgmod resistancemod)
-    self.level;     // int
-    self.age;       // int
-    self.inventory; // array of strings
-    self.title;     // string
-    self.privs;     // array of strings
+    self.id = 0;        // int
+    self.name = '';      // string
+    self.htmlname = '';  // string
+    self.location = [];  // array (map, x, y, z)
+    self.picture = '';   // string
+    self.builder = true;   // boolean
+    self.channels = [];  // array of strings
+    self.roomdesc = '';  // string
+    self.gender = '';    // string
+    self.race = '';      // string
+    self.characterClass = '';     // string
+    self.stats = [];     // array (health maxhealth magic maxmagic energy maxenergy str int cha armor resistance)
+    self.statmods = [];  // array (strmod intmod chamod pdmgmod mdmgmod resistancemod)
+    self.level = 1;     // int
+    self.age = 0;       // int
+    self.inventory = []; // array of strings
+    self.title = '';     // string
+    self.privs = [];     // array of strings
 
     // not saved
     self.online = false;    // boolean
-    self.player;            // object (Player)
-    self.room;              // object (Room)
-    self.replyto;           // string
+    self.player = '';            // object (Player)
+    self.room = '';              // object (Room)
+    self.replyto = '';           // string
     self.nickname = '';     // string
 
-    self.init = function(config) {
+    self.init = function (config) {
         self.id = config.id || 0;
         self.name = config.name || 'Someone';
         self.htmlname = config.htmlname || "<span class='yellow'>" + self.name + "</span>";
@@ -107,7 +117,7 @@ var Character = function(config) {
         self.roomdesc = config.roomdesc || 'is here.';
         self.gender = config.gender || 'Male';
         self.race = config.race || 'Human';
-        self.class = config.class || 'Novice'
+        self.characterClass = config.characterClass || 'Novice';
         self.stats = config.stats || {health: 100, maxhealth: 100, magic: 100, maxmagic: 100, energy: 100, maxenergy: 100, exp: 0, exptl: 200, str: 10, int: 10, cha: 10, pdmg: 10, mdmg: 10, armor: 10, resistance: 10};
         self.statmods = config.statmods || {strmod: 0, intmod: 0, chamod: 0, pdmgmod: 0, mdmgmod: 0, resistancemod: 0};
         self.level = config.level || 1;
@@ -119,7 +129,7 @@ var Character = function(config) {
         console.log('[init] character loaded: ' + self.name);
     };
     
-    self.stringify = function() {
+    self.stringify = function () {
         return JSON.stringify({
             id: self.id,
             name: self.name,
@@ -131,7 +141,7 @@ var Character = function(config) {
             roomdesc: self.roomdesc,
             gender: self.gender,
             race: self.race,
-            class: self.class,
+            characterClass: self.characterClass,
             stats: self.stats,
             statmods: self.statmods,
             level: self.level,
@@ -139,38 +149,39 @@ var Character = function(config) {
             inventory: self.inventory,
             title: self.title,
             privs: self.privs
-        }, null, '\t');    
+        }, null, '\t');
     };
     
-    self.save = function() {
+    self.save = function () {
         fs.writeFileSync(data_path + self.id + '.json', self.stringify(), 'utf8');
     };
     
-    self.getMapObj = function() {
+    self.getMapObj = function () {
         return WORLD.getMap(self.location.map);
     };
     
-    self.getRoomObj = function() {
+    self.getRoomObj = function () {
         return self.getMapObj().getRoom(self.location.x, self.location.y, self.location.z);
     };
     
-    self.locationString = function() {
+    self.locationString = function () {
         return self.location.map + ', ' + self.location.x + ', ' + self.location.y + ', ' + self.location.z;
     };
 
-    self.hasPriv = function(priv) {
-        if(self.privs.indexOf(priv) >= 0)
+    self.hasPriv = function (priv) {
+        if (self.privs.indexOf(priv) >= 0) {
             return true;
-        else
+        } else {
             return false;
+        }
     };
 
-    self.login = function() {
+    self.login = function () {
         // set online
         self.online = true;
         // store room
         self.room = self.getRoomObj();
-        if(self.room === false) {
+        if (self.room === false) {
             self.player.msg('Your character is saved to a room that no longer exists. Please contact us. Disconnecting..');
             self.online = false;
             self.player.socket.disconnect();
@@ -179,11 +190,11 @@ var Character = function(config) {
         // add player to room
         self.room.addPlayer(self.player);
         // update players (including yourself)
-        self.room.eachPlayer(function(p){
+        self.room.eachPlayer(function (p) {
             p.update({plist: 1});
         });
         // send notifications to everyone
-        PLAYERS.eachOnlineExcept(self.player, function(p){
+        PLAYERS.eachOnlineExcept(self.player, function (p) {
             p.emit('notify', {
                 title: self.name + ' logged in!',
                 text: 'This character has logged in to the world of Armeria. They are located at ' + self.room.name + '.',
@@ -195,24 +206,24 @@ var Character = function(config) {
         // announce to room
         self.room.announceExcept(self.player, self.htmlname + " has just logged in to Armeria!");
         // announce to hipchat (on live server)
-        if(LIVE) { hipchatmsg(self.name + ' has just logged in!', 'green'); }
+        if (LIVE) { hipchatmsg(self.name + ' has just logged in!', 'green'); }
         // priviledged character?
-        if(self.privs.length >= 1) {
-            self.player.msg("<div style='padding:10px;width:500px;margin-top:10px;border:2px solid #540303;background-color:#2b0505;color:#BA3C3C'>You are using a priviledged character. You have abilities that other characters do not possess. Do NOT use any of these abilities to help other characters in the game in ANY WAY.<br><br>Your character has been granted the following permissions: " + self.privs.join(', ') + ".</div>");
+        if (self.privs.length >= 1) {
+            self.player.msg("<div style='padding:10px;width:100%;margin-top:10px;border:2px solid #540303;background-color:#2b0505;color:#BA3C3C;box-sizing:border-box'>You are using a priviledged character. You have abilities that other characters do not possess. Do NOT use any of these abilities to help other characters in the game in ANY WAY.<br><br>Your character has been granted the following permissions: " + self.privs.join(', ') + ".</div>");
         }
         // look around
         LOGIC.look(self.player);
     };
     
-    self.logout = function() {
+    self.logout = function () {
         // announce to room
         self.room.announce(self.htmlname + " has just logged out of Armeria!");
         // announce to hipchat (on live server)
-        if(LIVE) { hipchatmsg(self.name + ' has just logged out.', 'green'); }
+        if (LIVE) { hipchatmsg(self.name + ' has just logged out.', 'green'); }
         // remove player from room
         self.room.removePlayer(self.player);
         // update players
-        self.room.eachPlayer(function(p){
+        self.room.eachPlayer(function (p) {
             p.update({plist: 1});
         });
         // set offline
@@ -221,13 +232,14 @@ var Character = function(config) {
         self.save();
     };
     
-    self.switchRooms = function(m, x, y, z) {
-        var map = WORLD.getMap(m);
-        if(!map) return false;
-        var room = map.getRoom(x, y, z);
-        if(!room) return false;
+    self.switchRooms = function (m, x, y, z) {
+        var map, room, old_room;
+        map = WORLD.getMap(m);
+        if (!map) { return false; }
+        room = map.getRoom(x, y, z);
+        if (!room) { return false; }
         
-        var old_room = self.room;
+        old_room = self.room;
         
         old_room.removePlayer(self.player);
         room.addPlayer(self.player);
@@ -239,42 +251,40 @@ var Character = function(config) {
         self.location.z = z;
         
         // update players in old room
-        old_room.eachPlayer(function(p){
+        old_room.eachPlayer(function (p) {
             p.update({plist: 1});
         });
         
         // update players in new room
-        room.eachPlayer(function(p){
+        room.eachPlayer(function (p) {
             p.update({plist: 1});
         });
         
         // update local player
-        if(map == old_room.map && old_room.z != z)
+        if (map === old_room.map && old_room.z !== z) {
             self.player.update({maplocnoanim: 1});
-        else if(map == old_room.map)
+        } else if (map === old_room.map) {
             self.player.update({maploc: 1});
-        else
+        } else {
             self.player.update({minimap: 1, maplocnoanim: 1});
+        }
 
         return true;
     };
 
-	self.addInventoryItem = function(itemId) {
+	self.addInventoryItem = function (itemId) {
 		var obj = LIBRARY.getById(itemId);
-		if(!obj)
-			return false;
-		if(obj.type !== 'item')
-			return false;
+		if (!obj) { return false; }
+		if (obj.type !== 'item') { return false; }
 			
 		self.inventory.push(itemId);
         return obj;
 	};
 	
-    self.eachInventoryItem = function(callback) {
-        self.inventory.forEach(function(item){
+    self.eachInventoryItem = function (callback) {
+        self.inventory.forEach(function (item) {
             var libobj = LIBRARY.getById(item);
-            if(libobj !== false)
-                callback(libobj);
+            if (libobj !== false) { callback(libobj); }
         });
     };
 
