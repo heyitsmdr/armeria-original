@@ -1,5 +1,3 @@
-var fs          = require('fs');
-var data_path   = __dirname + '/../data/library.json';
 var script_path = __dirname + '/../data/scripts/';
 
 var Library = function(){
@@ -11,14 +9,12 @@ var Library = function(){
         console.log('[init] loading library..');
         // clear objects
         self.objects = [];
-        // load entire library
-        var lib = JSON.parse(fs.readFileSync(data_path).toString('utf8'));
-        lib.forEach(function(entry){
-            // is there already an entry for this?
-            if(self.getById(entry.id) !== false)
-                console.log('[init] library ' + entry.type + ' failed to load: ' + entry.id + ' (duplicate id)');
-            else
-                self.objects.push(new LibraryEntry(entry));
+        // load entire library from db
+        DB.library.find(function(err, lib){
+            if(err) { console.log('ERROR: could not read library database.'); return; }
+            lib.forEach(function(libentry){
+                self.objects.push(new LibraryEntry(libentry));
+            });
         });
     }
 
@@ -123,6 +119,7 @@ var LibraryEntry = function(config) {
     var self = this;
 
     // basics
+    self.dbid;
     self.id;
     self.parent;
     self.type;
@@ -130,6 +127,7 @@ var LibraryEntry = function(config) {
     self.gameScript = false;
 
     self.init = function(config) {
+        self.dbid = config._id;
         self.id = config.id;
         self.type = config.type;
         self.overrides = config.overrides;

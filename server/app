@@ -80,9 +80,9 @@ function init(arg2) {
     DB = false;
     // connect to db
     if(arg2 == 'live') {
-        DB = mongojs('gameserver', ['characters', 'items']);
+        DB = mongojs('gameserver', ['characters', 'items', 'library']);
     } else {
-        DB = mongojs('armeriaserv:p0pc0rn@playarmeria.com/gameserver', ['characters', 'items']);
+        DB = mongojs('armeriaserv:p0pc0rn@playarmeria.com/gameserver', ['characters', 'items', 'library']);
     }
     
     if(!DB) {
