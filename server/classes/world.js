@@ -1,6 +1,3 @@
-var fs        = require('fs');
-var data_path = __dirname + '/../data/maps/';
-
 var World = function() {
     var self = this;
     
@@ -8,17 +5,14 @@ var World = function() {
     
     self.init = function() {
         console.log('[init] loading world..');
+        // clear maps
         self.maps = [];
-        fs.readdir(data_path, function (err, files) {
-            // load all maps
-            for(i in files) {
-                var map_file = data_path + files[i];
-                if(!fs.statSync(map_file).isFile()) {
-                    console.log('[init] error: invalid map file (' + map_file + ')');
-                    continue;
-                }
-                self.maps.push(new Map(JSON.parse(fs.readFileSync(map_file).toString('utf8')), files[i]));
-            }
+        // load from db
+        DB.maps.find(function(err, allmaps){
+            if(err) { console.log('ERROR: could not read maps database.'); return; }
+            allmaps.forEach(function(_map){
+                self.maps.push(new Map(_map));
+            });
         });
     };
     
@@ -71,11 +65,13 @@ var Map = function(config, fn) {
     self.filename;      // string
     
     // save
+    self._id;           // object (ObjectId)
     self.name;          // string
     self.author;        // string
     self.rooms = [];    // array of objects (Room)
     
     self.init = function(config, fn) {
+        self._id = config._id;
         self.filename = fn;
         self.name = config.name || 'Unknown Area';
         self.author = config.author || '';
@@ -85,20 +81,14 @@ var Map = function(config, fn) {
         console.log('[init] map loaded: ' + self.name);
     }
     
-    self.getSaveData = function() {
-        return {
+    self.save = function() {
+        var data = {
             name: self.name,
             author: self.author,
             rooms: self.roomStringify()
         };
-    };
-
-    self.stringify = function() {
-        return JSON.stringify(self.getSaveData(), null, '\t');
-    };
-    
-    self.save = function() {
-        fs.writeFileSync(data_path + self.name + '.json', self.stringify(), 'utf8');
+        
+        DB.maps.update({_id: self._id}, data, {upsert: true});
     };
 
     self.roomStringify = function() {

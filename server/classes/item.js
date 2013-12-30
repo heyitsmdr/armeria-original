@@ -44,15 +44,6 @@ var Item = function(config) {
         console.log('[init] item template loaded: ' + self.id);
     };
 
-    self.stringify = function() {
-        return JSON.stringify({
-            id: self.id,
-            name: self.name,
-            htmlname: self.htmlname,
-            level: self.level
-        }, null, '\t');
-    }
-
     self.save = function() {
         var data = {
             id: self.id,
