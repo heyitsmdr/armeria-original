@@ -1,8 +1,5 @@
 /*jslint plusplus: true, continue: true, nomen: true*/
 /*global console: false, require: false, __dirname: false, Character: false, WORLD: false, PLAYERS: false, LIVE: false, hipchatmsg: false, LOGIC: false, LIBRARY: false, exports: false*/
-var fs        = require('fs');
-var data_path = __dirname + '/../data/characters/';
-
 var Characters = function () {
     "use strict";
     var self = this;
@@ -12,19 +9,12 @@ var Characters = function () {
         console.log('[init] loading characters..');
         // clear objects
         self.objects = [];
-        fs.readdir(data_path, function (err, files) {
-            var i, character_file;
-            
-            //console.log(files);
-            // load all characters
-            for (i = 0; i < files.length; i++) {
-                character_file = data_path + files[i];
-                if (!fs.statSync(character_file).isFile()) {
-                    console.log('[init] error: invalid character file (' + character_file + '), moving on..');
-                    continue;
-                }
-                self.objects.push(new Character(JSON.parse(fs.readFileSync(character_file).toString('utf8'))));
-            }
+        // load from db
+        DB.characters.find(function(err, chars){
+            if(err) { console.log('ERROR: could not read characters database.'); return; }
+            chars.forEach(function(char){
+                self.objects.push(new Character(char));
+            });
         });
     };
     
@@ -129,8 +119,8 @@ var Character = function (config) {
         console.log('[init] character loaded: ' + self.name);
     };
     
-    self.stringify = function () {
-        return JSON.stringify({
+    self.save = function () {
+        var data = {
             id: self.id,
             name: self.name,
             htmlname: self.htmlname,
@@ -149,11 +139,9 @@ var Character = function (config) {
             inventory: self.inventory,
             title: self.title,
             privs: self.privs
-        }, null, '\t');
-    };
-    
-    self.save = function () {
-        fs.writeFileSync(data_path + self.id + '.json', self.stringify(), 'utf8');
+        };
+        
+        DB.characters.update({id: self.id}, data, {upsert: true});
     };
     
     self.getMapObj = function () {

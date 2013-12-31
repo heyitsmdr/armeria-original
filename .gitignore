@@ -24,3 +24,6 @@ html/images/tiles/tileset.psd
 *.esproj/
 
 server/newrelic_agent.log
+
+html/*-gcc.js
+html/*/*-gcc.js

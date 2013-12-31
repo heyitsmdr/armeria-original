@@ -1,6 +1,3 @@
-var fs        = require('fs');
-var data_path = __dirname + '/../data/items/';
-
 var Items = function(callback) {
     var self = this;
     self.objects = [];
@@ -9,16 +6,12 @@ var Items = function(callback) {
         console.log('[init] loading item templates..');
         // clear objects
         self.objects = [];
-        fs.readdir(data_path, function(err, files){
-            // load all items
-            for(i in files) {
-                var item_file = data_path + files[i];
-                if(!fs.statSync(item_file).isFile()) {
-                    console.log('[init] error: invalid item template file (' + item_file + '), moving on..');
-                    continue;
-                }
-                self.objects.push(new Item(JSON.parse(fs.readFileSync(item_file).toString('utf8'))));
-            }
+        // load from db
+        DB.items.find(function(err, itms){
+            if(err) { console.log('ERROR: could not read items database.'); return; }
+            itms.forEach(function(itm){
+                self.objects.push(new Item(itm));
+            });
             callback();
         });
     };
@@ -51,17 +44,15 @@ var Item = function(config) {
         console.log('[init] item template loaded: ' + self.id);
     };
 
-    self.stringify = function() {
-        return JSON.stringify({
+    self.save = function() {
+        var data = {
             id: self.id,
             name: self.name,
             htmlname: self.htmlname,
             level: self.level
-        }, null, '\t');
-    }
-
-    self.save = function() {
-        fs.writeFileSync(data_path + self.id + '.json', self.stringify(), 'utf8');
+        };
+        
+        DB.items.update({id: self.id}, data, {upsert: true});
     };
 
     self.init(config);

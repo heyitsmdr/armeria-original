@@ -1,5 +1,4 @@
-var fs          = require('fs');
-var data_path   = __dirname + '/../data/library.json';
+var fs = require('fs');
 var script_path = __dirname + '/../data/scripts/';
 
 var Library = function(){
@@ -11,14 +10,12 @@ var Library = function(){
         console.log('[init] loading library..');
         // clear objects
         self.objects = [];
-        // load entire library
-        var lib = JSON.parse(fs.readFileSync(data_path).toString('utf8'));
-        lib.forEach(function(entry){
-            // is there already an entry for this?
-            if(self.getById(entry.id) !== false)
-                console.log('[init] library ' + entry.type + ' failed to load: ' + entry.id + ' (duplicate id)');
-            else
-                self.objects.push(new LibraryEntry(entry));
+        // load entire library from db
+        DB.library.find(function(err, lib){
+            if(err) { console.log('ERROR: could not read library database.'); return; }
+            lib.forEach(function(libentry){
+                self.objects.push(new LibraryEntry(libentry));
+            });
         });
     }
 
@@ -123,6 +120,7 @@ var LibraryEntry = function(config) {
     var self = this;
 
     // basics
+    self._id;
     self.id;
     self.parent;
     self.type;
@@ -130,6 +128,7 @@ var LibraryEntry = function(config) {
     self.gameScript = false;
 
     self.init = function(config) {
+        self._id = config._id;
         self.id = config.id;
         self.type = config.type;
         self.overrides = config.overrides;
@@ -146,11 +145,14 @@ var LibraryEntry = function(config) {
         // load a script?
         if(self.get('script')) {
             try {
-                self.gameScript = require(script_path + self.get('script')).GameScript;
-                self.gameScript = new self.gameScript(self);
+                // write to temp data folder
+                fs.writeFile(script_path + self._id + '.js', self.get('script'), function(err) {
+                    self.gameScript = require(script_path + self._id + '.js').GameScript;
+                    self.gameScript = new self.gameScript(self); 
+                });
             } catch (err) {
                 self.gameScript = false;
-                console.log('[script] error loading: ' + script_path + self.get('script'));
+                console.log('[script] error loading: /data/scripts/' + self._id + '.js');
             }
         }
         console.log('[init] library ' + self.type + ' loaded: ' + self.id + ' (parent: ' + self.parent.id + ') level ' + self.get('level'));
