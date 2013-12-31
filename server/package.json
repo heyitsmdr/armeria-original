@@ -6,7 +6,6 @@
   "author": "Mike Du Russel",
   "description": "game server for armeria",
   "dependencies": {
-    "daemon": "1.1.0",
     "socket.io": "0.9.16",
     "node-inspector": "0.3.1",
     "hipchatter": "0.0.8",
