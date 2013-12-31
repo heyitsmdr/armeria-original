@@ -726,6 +726,8 @@ var Logic = function() {
 
     self.quit = function(player) {
         player.msg('Ok. Thanks for playing! See you next time in the world of Armeria.');
+        player.character.logout();
+        PLAYERS.removePlayer(player);
         player.socket.disconnect();
     };
 
