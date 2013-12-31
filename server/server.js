@@ -162,7 +162,7 @@ io.sockets.on('connection', function(socket){
     socket.on('login', function(data){
         // check version?
         if(data.version !== false) {
-            fs.stat('../html/index.php', function(err, stat){
+            fs.stat(__dirname + '/../html/index.php', function(err, stat){
                 var ver = String(stat.mtime.getTime());
                 ver = ver.substr(0, ver.length - 3);
                 if(data.version != ver) {
