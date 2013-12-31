@@ -88,18 +88,6 @@ Lastly, anyone will be able to access the tunnel from:
 
 ### Server Management
 
-Now that you have everything up and running, you must grab some data for your local server. To do
-this, you can run the following command (from any directory) which will grab all of the data from
-the live server and put it in `/vagrant/server/data`:
-
-    curl http://tools.playarmeria.com/fetchLiveData.sh | sh
-    
-OR
-
-    /vagrant/bin/getdata
-
-**Note:** Be sure to keep the `data` directory out of the repository. Never, ever add it!
-
 You can now start up the server. To do so, you have two choices. You can run it in non-daemon mode:
 
     cd /vagrant/server
@@ -131,7 +119,7 @@ You can do this by running the command:
 
     git push origin master
     
-You can then open up a pull request on the `armeria-live` repo and let [Mike Du Russel](https://github.com/ethryx) know. If
+You can then open up a pull request on the `armeria-live` repo and let [Mike Du Russel](https://bitbucket.org/ethryx) know. If
 everything looks good, we'll go ahead and pull it into `live`.
 
 When pull requests are merged, Jenkins will automatically shut down the live server, add your changes and start
