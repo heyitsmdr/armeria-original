@@ -5,14 +5,9 @@ port
 server/data
 server/node_modules/
 git.php
-servercontroller.php
+armeria.pid
 out.log
-errors.txt
-stderr.log
-stdout.log
-stderr.txt
-stdout.txt
-server.pid
+error.log
 less.php
 
 .DS_Store
