@@ -52,6 +52,9 @@ apt-get install -y npm
 # install build-essentials (for building npm packages)
 apt-get install -y build-essential
 
+# install java (needed for node-minify)
+apt-get install -y openjdk-7-jre-headless
+
 # install npm packages (windows-safe)
 mkdir /tmp/armeria
 mv /vagrant/server/package.json /tmp/armeria
