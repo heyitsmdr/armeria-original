@@ -81,14 +81,16 @@ var Map = function(config, fn) {
         console.log('[init] map loaded: ' + self.name);
     }
     
-    self.save = function() {
-        var data = {
+    self.getSaveData = function() {
+        return {
             name: self.name,
             author: self.author,
             rooms: self.roomStringify()
         };
-        
-        DB.maps.update({_id: self._id}, data, {upsert: true});
+    };
+    
+    self.save = function() {        
+        DB.maps.update({_id: self._id}, self.getSaveData(), {upsert: true});
     };
 
     self.roomStringify = function() {
