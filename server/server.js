@@ -149,10 +149,14 @@ getargbyname = function(haystack, arg, defaultValue) {
 // error reporting on live
 if(LIVE) {
     process.on('uncaughtException', function ( err ) {
-        console.error('An uncaughtException was found, armeria will end.');
+        console.error('ERROR: an uncaughtException was found, armeria will end.');
         console.error(err);
-        hipchatmsg('<b>Armeria Crashed!</b>', 'red');
-        hipchatmsg(JSON.stringify(err), 'red');
+        try {
+            hipchatmsg('<b>Armeria Crashed!</b>', 'red');
+            hipchatmsg(JSON.stringify(err), 'red');
+        } catch(hcerror) {
+            console.error('ERROR: could not report error to HipChat');   
+        }
         process.exit(1);
     });
 }
