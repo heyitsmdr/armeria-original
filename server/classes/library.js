@@ -177,7 +177,18 @@ var LibraryEntry = function(config) {
         		args.push(arguments[i]);
         	}
         }
-        eval("self.gameScript." + func)(args);
+        try {
+            eval("self.gameScript." + func)(args);
+        } catch(err) {
+            // error in game script
+            if(LIVE) {
+                hipchatmsg('<b>Exception in Script for:</b> ' + self.id, 'red');
+                hipchatmsg(JSON.stringify(err), 'red');
+            } else {
+                console.log('SCRIPT ERROR: ' + self.id);
+                console.log(err);
+            }
+        }
     };
     self.say = function(location, text) {
         var map = WORLD.getMap(location.map);
