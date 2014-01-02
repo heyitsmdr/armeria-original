@@ -42,10 +42,14 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
             <!-- Engine -->
-            <script src="engine/global-gcc.js?buildTime=<?=filemtime('./engine/global-gcc.js')?>"></script>
-            <script src="engine-gcc.js?buildTime=<?=filemtime('./engine-gcc.js')?>"></script>
-            <script src="engine/editor-gcc.js?buildTime=<?=filemtime('./engine/editor-gcc.js')?>"></script>
-            <script src="engine/minimap-gcc.js?buildTime=<?=filemtime('./engine/minimap-gcc.js')?>"></script>
+            <? if(file_exists('./engine.min.js')): ?>
+            <script src="engine.min.js?buildTime=<?=filemtime('./engine.min.js')?>"></script>
+            <? else: ?>
+            <script src="engine/global.js?buildTime=<?=filemtime('./engine/global.js')?>"></script>
+            <script src="engine.js?buildTime=<?=filemtime('./engine.js')?>"></script>
+            <script src="engine/editor.js?buildTime=<?=filemtime('./engine/editor.js')?>"></script>
+            <script src="engine/minimap.js?buildTime=<?=filemtime('./engine/minimap.js')?>"></script>
+            <? endif; ?>
         <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
         <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
 
