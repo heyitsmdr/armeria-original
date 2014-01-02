@@ -68,6 +68,9 @@ mv /tmp/armeria/package.json /vagrant/server
 # install curl
 apt-get install -y curl
 
+# install grunt-cli
+npm install -g grunt-cli
+
 # start server debugger
 /vagrant/bin/debug
 
