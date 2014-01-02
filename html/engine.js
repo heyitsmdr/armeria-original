@@ -421,6 +421,9 @@ var GameEngine = new function () {
                 return;
             } else if (command.toLowerCase() === '/version') {
                 this.parseInput('Your client is running version <b>' + this.version + '</b>.');
+            } else if (command.toLowerCase() === '/clearcache') {
+                GameEngine.toolTipCache = [];
+                this.parseInput('Your cache has been cleared.');
             } else {
                 if (this.connected) {
                     this.socket.emit('cmd', {cmd: command.substr(1)});
