@@ -3,7 +3,6 @@ var fs            = require('fs');
 var https         = require('https');
 var hipchatter    = require('hipchatter');
 var mongojs       = require('mongojs');
-var compressor    = require('node-minify');
 // require custom
 var Players       = require('./classes/player').Players;
 var Player        = require('./classes/player').Player;
@@ -54,17 +53,6 @@ if(LIVE) {
 
 // hip chat association
 HIPCHAT    = new hipchatter('G9AuMaMlZQxzPaE1mo3sMsNoOpPt9GiutxRfP4ZW');
-
-// minify
-var minifyFiles = ['engine.js', 'engine/global.js', 'engine/minimap.js', 'engine/editor.js'];
-minifyFiles.forEach(function(entry){
-    new compressor.minify({
-        type: 'gcc',
-        fileIn: __dirname + '/../html/' + entry,
-        fileOut: __dirname + '/../html/' + entry.replace('.js', '-gcc.js'),
-        callback: function(err, min){ if(!err){ console.log('[init][minify] successfully minified: ' + entry + ' (' + entry.replace('.js', '-gcc.js') + ')'); }else{ console.log('[init][minify] ERROR: ' + err); } }
-    });
-});
 
 // listen
 // var port = parseInt(fs.readFileSync('./port').toString('utf8'));
