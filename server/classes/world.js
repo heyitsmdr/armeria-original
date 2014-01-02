@@ -466,7 +466,8 @@ var Room = function(config, mapobj) {
     // no-save
     self.map;             // object (Map)
     self.players = [];    // array of objects (Player)
-    self.mobs = [];       // array of objects (Mob)
+    self.mobs = [];       // array of objects (LibraryItem)
+    self.items = [];      // array of objects (LibraryItem)
     self.sayhistory = []; // array of objects (string)
 
     // save
@@ -530,17 +531,49 @@ var Room = function(config, mapobj) {
 
     self.addMob = function(mob) {
         self.mobs.push(mob);
+        self.announceUpdate();
     };
     
     self.removeMob = function(mob) {
         var i = self.mobs.indexOf(mob);
         self.mobs.splice(i, 1);
+        self.announceUpdate();
     };
 
     self.eachMob = function(callback) {
         self.mobs.forEach(function(p){
             callback(p);
         });
+    };
+
+    self.addItem = function(item) {
+        self.items.push(item);
+        self.announceUpdate();
+    };
+    
+    self.removeItem = function(item) {
+        var i = self.items.indexOf(item);
+        self.items.splice(i, 1);
+        self.announceUpdate();
+    };
+
+    self.eachItem = function(callback) {
+        self.items.forEach(function(i){
+            callback(i);
+        });
+    };
+
+    self.getItem = function(item) {
+        if(!self.items)
+            return false;
+        
+        for(var i = 0; i < self.items.length; i++) {
+            if(self.items[i].get('name').toLowerCase().indexOf(item.toLowerCase()) > -1) {
+                return self.items[i];
+            }
+        }
+
+        return false;
     };
 
     self.addPlayer = function(player) {
@@ -567,6 +600,14 @@ var Room = function(config, mapobj) {
     self.getPlayerListData = function() {
         var plist = [];
         // Note: Order is Last to First
+        self.eachItem(function(item){
+            plist.push({
+                id: item.id,
+                name: item.get('htmlname'),
+                picture: '',
+                type: 'item'
+            });
+        });
         self.eachPlayer(function(player){
             plist.push({
                 id: player.character.name,
@@ -598,6 +639,12 @@ var Room = function(config, mapobj) {
         });
     };
     
+    self.announceUpdate = function() {
+        self.eachPlayer(function(p) {
+            p.update({plist: 1});
+        });
+    };
+
     self.init(config, mapobj);
 };
 

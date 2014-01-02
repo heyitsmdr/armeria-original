@@ -373,12 +373,11 @@ var GameEngine = new function () {
         this.socket.on('inv', function(data) {
             var listData = "";
             data.forEach(function(item) {
-                listData += "<li class='inv-item'><span class='itemtooltip' data-id='" + item.id + "'><img src='http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif' width='32px' height='32px'/></span><p>";
-                listData += "<span class='itemtooltip' data-id='" + item.id + "'>" + item.htmlname + "</span>";
-                listData += "</p></li>";
+                listData += "<span class='itemtooltip' data-id='" + item.id + "'><li class='inv-item'><img src='http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif' width='32px' height='32px'/><p>";
+                listData += item.htmlname;
+                listData += "</p></li></span>";
             });
             $('#carrying').html(listData);
-            console.log(data);
         });
     };
 
@@ -544,7 +543,14 @@ var GameEngine = new function () {
         $('#itemtooltip-container').html('Loading...');
         $('#itemtooltip-container').show();
         if (GameEngine.connected) {
-            GameEngine.socket.emit('ptip', { id: $(this).data('id'), type: $(this).data('type') });
+            var foundCacheData = getIndex(GameEngine.toolTipCache, 'id', $(this).data('id'));
+            if(foundCacheData.length == 0) {
+                if($(this).data('type') == 'item')
+                    GameEngine.socket.emit('itemtip', { id: $(this).data('id') });
+                else
+                    GameEngine.socket.emit('ptip', { id: $(this).data('id'), type: $(this).data('type') });
+            } else
+                $('#itemtooltip-container').html(foundCacheData[0].data);
         }
     };
 

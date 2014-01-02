@@ -208,7 +208,7 @@ io.sockets.on('connection', function(socket){
         // get base command
         var sections = data.cmd.split(' ');
         var cmd = matchcmd(sections[0], new Array('say', 'score', 'move', ['look', 'examine'], 'me',
-            'whisper', 'reply', 'attack', 'create', 'destroy', 'modify',
+            'whisper', 'reply', 'attack', 'create', 'destroy', 'modify', 'drop', 'get',
             'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp'],
             'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit'));
         sections.shift();
@@ -247,6 +247,12 @@ io.sockets.on('connection', function(socket){
                 break;
             case 'modify':
                 LOGIC.modify(player, cmd_args);
+                break;
+            case 'drop':
+                LOGIC.drop(player, cmd_args);
+                break;
+            case 'get':
+                LOGIC.get(player, cmd_args);
                 break;
             case 'channels':
                 LOGIC.channels(player);
