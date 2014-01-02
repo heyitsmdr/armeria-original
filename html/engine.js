@@ -398,8 +398,8 @@ var GameEngine = new function () {
         }
     };
 
-    this.parseCommand = function () {
-        var command = $('#input').val(), directions = ['n', 's', 'e', 'w', 'u', 'd'], sections, cmd, cmd_args;
+    this.parseCommand = function (cmd) {
+        var command = cmd || $('#input').val(), directions = ['n', 's', 'e', 'w', 'u', 'd'], sections, cmd, cmd_args;
 
         // looking?
         if (command === '') { command = '/look'; }

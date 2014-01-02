@@ -38,8 +38,18 @@ var Library = function(){
     self.listType = function(player, args, type) {
         var objs = [];
         self.objects.forEach(function(lib){
-            if(lib.type == type.toLowerCase())
-                objs.push({ property: lib.id, value: lib.get('name') });
+            if(lib.type == type.toLowerCase()) {
+                switch(lib.type) {
+                    case 'item':
+                        objs.push({
+                            property: "<span class='itemtooltip' data-id='" + lib.id + "' onclick='GameEngine.parseCommand(\"/spawn " + lib.id + "\")'>" + lib.id + "</span>",
+                            value: lib.get('name')
+                        });
+                        break;
+                    default:
+                        objs.push({ property: lib.id, value: lib.get('name') });
+                }
+            }
         });
         player.msg(LOGIC._createTable("Armeria Library: " + type + "s Directory", objs));
     };
