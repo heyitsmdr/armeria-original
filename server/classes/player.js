@@ -78,6 +78,10 @@ var Player = function(socket) {
         if(what.maplocnoanim) {
             self.emit('maplocnoanim', {x: self.character.location.x, y: self.character.location.y, z: self.character.location.z});
         }
+        // Update Inventory
+        if(what.inventory) {
+            self.emit('inv', self.character.getInventoryData());
+        }
     }
     
     self.socket = socket;

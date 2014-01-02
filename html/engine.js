@@ -21,6 +21,7 @@ var GameEngine = new function () {
     this.fbaccesstoken = false; // Facebook Access Token
     this.connected = false;     // Connected or not (boolean)
     this.connecting = false;    // Connection in process (to block certain functions)
+    this.toolTipCache = [];     // Array of tool tip data used for cache
     this.tilesets = [];         // Tilesets
     this.server = false;        // Server class
     this.serverOffline = false; // Set to True if Socket.IO is not found (server offline)
@@ -357,6 +358,9 @@ var GameEngine = new function () {
             });
         });
         this.socket.on('itemtip', function (data) {
+            if(getIndex(GameEngine.toolTipCache, 'id', data.id).length == 0)
+                GameEngine.toolTipCache.push({id: data.id, data:data.content});
+            
             $('#itemtooltip-container').html(data.content);
         });
         this.socket.on('editor', function (data) {
@@ -365,6 +369,16 @@ var GameEngine = new function () {
             } else {
                 GameEngine.toggleEditor(data);
             }
+        });
+        this.socket.on('inv', function(data) {
+            var listData = "";
+            data.forEach(function(item) {
+                listData += "<li class='inv-item'><span class='itemtooltip' data-id='" + item.id + "'><img src='http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif' width='32px' height='32px'/></span><p>";
+                listData += "<span class='itemtooltip' data-id='" + item.id + "'>" + item.htmlname + "</span>";
+                listData += "</p></li>";
+            });
+            $('#carrying').html(listData);
+            console.log(data);
         });
     };
 
@@ -484,11 +498,27 @@ var GameEngine = new function () {
         this.sendHistPtr = ptr;
     };
 
+    this.toggleCarryEquip = function(elem) {
+        if(elem.id == 'equipment-tab' && $('#equipped').is(':visible') == false) {
+            $('#equipment-tab').removeClass('tab-selected');
+            $('#inventory-tab').addClass('tab-selected');
+            $('#carrying').toggle('slide', 150, function(){ $('#equipped').toggle('slide', 400) });
+        } else if(elem.id == 'inventory-tab' && $('#carrying').is(':visible') == false) {
+            $('#equipment-tab').addClass('tab-selected');
+            $('#inventory-tab').removeClass('tab-selected');
+            $('#equipped').toggle('slide', 150, function(){ $('#carrying').toggle('slide', 400) });
+        }
+    };
+    
     this.itemToolTipEnter = function () {
         $('#itemtooltip-container').html('Loading...');
         $('#itemtooltip-container').show();
         if (GameEngine.connected) {
-            GameEngine.socket.emit('itemtip', { id: $(this).data('id') });
+            var foundCacheData = getIndex(GameEngine.toolTipCache, 'id', $(this).data('id'));
+            if(foundCacheData.length == 0)
+                GameEngine.socket.emit('itemtip', { id: $(this).data('id') });
+            else
+                $('#itemtooltip-container').html(foundCacheData[0].data);
         }
     };
 

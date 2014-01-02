@@ -65,6 +65,10 @@ rm -rf /vagrant/server/node_modules
 mv /tmp/armeria/node_modules /vagrant/server
 mv /tmp/armeria/package.json /vagrant/server
 
+# create data directory if it doesn't already exist
+mkdir /vagrant/server/data
+mkdir /vagrant/server/data/scripts
+
 # install curl
 apt-get install -y curl
 

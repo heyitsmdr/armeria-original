@@ -190,7 +190,7 @@ var Character = function (config) {
             });
         });
         // update local player
-        self.player.update({minimap: 1, maplocnoanim: 1});
+        self.player.update({minimap: 1, maplocnoanim: 1, inventory: 1});
         // announce to room
         self.room.announceExcept(self.player, self.htmlname + " has just logged in to Armeria!");
         // announce to hipchat (on live server)
@@ -276,6 +276,18 @@ var Character = function (config) {
         });
     };
 
+    self.getInventoryData = function() {
+        var items = [];
+        self.eachInventoryItem(function(i) {
+            items.push({
+                id: i.id,
+                name: i.get('name'),
+                htmlname: i.get('htmlname'),
+            });
+        });
+        return items;
+    };
+    
     self.init(config);
 };
 

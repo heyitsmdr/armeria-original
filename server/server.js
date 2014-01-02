@@ -307,7 +307,7 @@ io.sockets.on('connection', function(socket){
         tooltip += "<br>Level " + obj.get('level');
         // rare, unique, etc
         tooltip += "<br><br>This item is rare.";
-        player.emit('itemtip', { content: tooltip });
+        player.emit('itemtip', { id: data.id, content: tooltip });
     });
     socket.on('ptip', function(data){
         switch(data.type) {
@@ -320,13 +320,13 @@ io.sockets.on('connection', function(socket){
                     tooltip += "<br>Player";
                 tooltip += "<br>&lt;Guild Name&gt;";
                 tooltip += "<br>Level <b>" + C.level + "</b>";
-                player.emit('itemtip', { content: tooltip });
+                player.emit('itemtip', { id: data.id, content: tooltip });
                 break;
             case 'mob':
                 var M = LIBRARY.getById(data.id);
                 var tooltip = "<span class='tipIdentifier'>" + M.get('htmlname') + "</span>";
                 tooltip += "<br>" + M.get('title');
-                player.emit('itemtip', { content: tooltip });
+                player.emit('itemtip', { id: data.id, content: tooltip });
                 break;
         }
     });
