@@ -1,6 +1,8 @@
 // require built-ins
 var fs            = require('fs');
 var https         = require('https');
+var http          = require('http');
+var url           = require('url');
 var hipchatter    = require('hipchatter');
 var mongojs       = require('mongojs');
 // require custom
@@ -59,6 +61,28 @@ HIPCHAT    = new hipchatter('G9AuMaMlZQxzPaE1mo3sMsNoOpPt9GiutxRfP4ZW');
 var port = 2772;
 console.log('server listening on ' + port);
 var io = require('socket.io').listen(port);
+
+// listen for remote commands
+var server = http.createServer(function(req, res) {
+    var url_parts = url.parse(req.url, true);
+    var query = url_parts.query;
+
+    if(url_parts.pathname == '/api') {
+        if(query.key && query.key == 'l3tm3in') {
+            switch(query.action) {
+                case 'broadcast':
+                    PLAYERS.eachOnline(function(p) {
+                        p.msg(query.msg);
+                    });
+                    break;
+            }
+            console.log('[api] ' + url_parts.path);
+        }
+    }
+
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end('Success.');
+}).listen(8888, '127.0.0.1');
 
 // socket.io logging (options: 0 = error, 1 = warn, 2 = info, 3 = debug [default])
 io.set('log level', 1);
