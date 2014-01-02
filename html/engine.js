@@ -21,6 +21,7 @@ var GameEngine = new function () {
     this.fbaccesstoken = false; // Facebook Access Token
     this.connected = false;     // Connected or not (boolean)
     this.connecting = false;    // Connection in process (to block certain functions)
+    this.toolTipCache = [];     // Array of tool tip data used for cache
     this.tilesets = [];         // Tilesets
     this.server = false;        // Server class
     this.serverOffline = false; // Set to True if Socket.IO is not found (server offline)
@@ -357,6 +358,9 @@ var GameEngine = new function () {
             });
         });
         this.socket.on('itemtip', function (data) {
+            if(getIndex(GameEngine.toolTipCache, 'id', data.id).length == 0)
+                GameEngine.toolTipCache.push({id: data.id, data:data.content});
+            
             $('#itemtooltip-container').html(data.content);
         });
         this.socket.on('editor', function (data) {
@@ -365,6 +369,15 @@ var GameEngine = new function () {
             } else {
                 GameEngine.toggleEditor(data);
             }
+        });
+        this.socket.on('inv', function(data) {
+            var listData = "";
+            data.forEach(function(item) {
+                listData += "<span class='itemtooltip' data-id='" + item.id + "'><li class='inv-item'><img src='http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif' width='32px' height='32px'/><p>";
+                listData += item.htmlname;
+                listData += "</p></li></span>";
+            });
+            $('#carrying').html(listData);
         });
     };
 
@@ -385,8 +398,8 @@ var GameEngine = new function () {
         }
     };
 
-    this.parseCommand = function () {
-        var command = $('#input').val(), directions = ['n', 's', 'e', 'w', 'u', 'd'], sections, cmd, cmd_args;
+    this.parseCommand = function (cmd) {
+        var command = cmd || $('#input').val(), directions = ['n', 's', 'e', 'w', 'u', 'd'], sections, cmd, cmd_args;
 
         // looking?
         if (command === '') { command = '/look'; }
@@ -407,6 +420,9 @@ var GameEngine = new function () {
                 return;
             } else if (command.toLowerCase() === '/version') {
                 this.parseInput('Your client is running version <b>' + this.version + '</b>.');
+            } else if (command.toLowerCase() === '/clearcache') {
+                GameEngine.toolTipCache = [];
+                this.parseInput('Your cache has been cleared.');
             } else {
                 if (this.connected) {
                     this.socket.emit('cmd', {cmd: command.substr(1)});
@@ -484,11 +500,27 @@ var GameEngine = new function () {
         this.sendHistPtr = ptr;
     };
 
+    this.toggleCarryEquip = function(elem) {
+        if(elem.id == 'equipment-tab' && $('#equipped').is(':visible') == false) {
+            $('#equipment-tab').removeClass('tab-selected');
+            $('#inventory-tab').addClass('tab-selected');
+            $('#carrying').toggle('slide', 150, function(){ $('#equipped').toggle('slide', 400) });
+        } else if(elem.id == 'inventory-tab' && $('#carrying').is(':visible') == false) {
+            $('#equipment-tab').addClass('tab-selected');
+            $('#inventory-tab').removeClass('tab-selected');
+            $('#equipped').toggle('slide', 150, function(){ $('#carrying').toggle('slide', 400) });
+        }
+    };
+    
     this.itemToolTipEnter = function () {
         $('#itemtooltip-container').html('Loading...');
         $('#itemtooltip-container').show();
         if (GameEngine.connected) {
-            GameEngine.socket.emit('itemtip', { id: $(this).data('id') });
+            var foundCacheData = getIndex(GameEngine.toolTipCache, 'id', $(this).data('id'));
+            if(foundCacheData.length == 0)
+                GameEngine.socket.emit('itemtip', { id: $(this).data('id') });
+            else
+                $('#itemtooltip-container').html(foundCacheData[0].data);
         }
     };
 
@@ -511,7 +543,14 @@ var GameEngine = new function () {
         $('#itemtooltip-container').html('Loading...');
         $('#itemtooltip-container').show();
         if (GameEngine.connected) {
-            GameEngine.socket.emit('ptip', { id: $(this).data('id'), type: $(this).data('type') });
+            var foundCacheData = getIndex(GameEngine.toolTipCache, 'id', $(this).data('id'));
+            if(foundCacheData.length == 0) {
+                if($(this).data('type') == 'item')
+                    GameEngine.socket.emit('itemtip', { id: $(this).data('id') });
+                else
+                    GameEngine.socket.emit('ptip', { id: $(this).data('id'), type: $(this).data('type') });
+            } else
+                $('#itemtooltip-container').html(foundCacheData[0].data);
         }
     };
 

@@ -190,7 +190,7 @@ var Character = function (config) {
             });
         });
         // update local player
-        self.player.update({minimap: 1, maplocnoanim: 1});
+        self.player.update({minimap: 1, maplocnoanim: 1, inventory: 1});
         // announce to room
         self.room.announceExcept(self.player, self.htmlname + " has just logged in to Armeria!");
         // announce to hipchat (on live server)
@@ -266,15 +266,60 @@ var Character = function (config) {
 		if (obj.type !== 'item') { return false; }
 			
 		self.inventory.push(itemId);
+
+        self.player.update({inventory: 1});
+        
         return obj;
 	};
 	
+    // item (String or Object[LibraryItem])
+    self.removeInventoryItem = function (item) {
+        var obj = false;
+        if(typeof(item) == 'string')
+            obj = LIBRARY.getById(itemId);
+        else if(typeof(item) == 'object')
+            obj = item;
+
+        if (!obj) { return false; }
+        if (obj.type !== 'item') { return false; }
+            
+        var inventoryIndex = self.inventory.indexOf(obj.id);
+        if(inventoryIndex == -1) { return false; }
+
+        self.inventory.splice(inventoryIndex, 1);
+
+        self.player.update({inventory: 1});
+
+        return obj;
+    };
+
     self.eachInventoryItem = function (callback) {
         self.inventory.forEach(function (item) {
             var libobj = LIBRARY.getById(item);
             if (libobj !== false) { callback(libobj); }
         });
     };
+
+    self.getInventoryData = function() {
+        var items = [];
+        self.eachInventoryItem(function(i) {
+            items.push({
+                id: i.id,
+                name: i.get('name'),
+                htmlname: i.get('htmlname'),
+            });
+        });
+        return items;
+    };
+    
+    self.getInventoryItem = function(data) {
+        var obj = false;
+        self.eachInventoryItem(function(i) {
+            if(i.get('name').toLowerCase().indexOf(data.toLowerCase()) > -1)
+                obj = i;
+        });
+        return obj;
+    }
 
     self.init(config);
 };

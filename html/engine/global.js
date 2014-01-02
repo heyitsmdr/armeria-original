@@ -13,3 +13,11 @@ function matchcmd(cmd, cmdlist) {
     }
     return cmd_real;
 }
+
+function getIndex(arr, locate, locateData) {
+    return $.grep(arr, function(data, indx) {
+        if(data.hasOwnProperty(locate) && data[locate] == locateData) {
+            return true;        
+        }
+    });
+}

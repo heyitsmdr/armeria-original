@@ -188,7 +188,17 @@
               </table>
             </div>
             <div id="items-container">
-                <ul id="inventory">
+                <ul id="carrying">
+                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
+                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
+                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
+                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
+                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
+                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
+                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
+                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
+                </ul>
+                <ul id="equipped" style="display:none;">
                     <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
                     <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
                     <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
@@ -199,8 +209,8 @@
                     <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
                 </ul>
             </div>
-            <div id="inventory-tab" class="item-tab tab-selected"><p>Items</p></div>
-            <div id="equipment-tab" class="item-tab"><p>Equipment</p></div>
+            <div id="inventory-tab" class="item-tab" onclick="GameEngine.toggleCarryEquip(this)"><p>Carrying</p></div>
+            <div id="equipment-tab" class="item-tab tab-selected" onclick="GameEngine.toggleCarryEquip(this)"><p>Equipped</p></div>
         </div>
         <div id="minimap-hide"></div>
         <div id="minimap-show"><p>Show Minimap</p></div>

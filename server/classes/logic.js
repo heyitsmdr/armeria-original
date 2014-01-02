@@ -559,6 +559,40 @@ var Logic = function() {
         }
     }
 
+    self.drop = function(player, args) {
+        var found = player.character.getInventoryItem(args);
+
+        if(!found) {
+            player.msg('You do not seem to be carrying this.');
+            return;
+        }
+
+        if(!player.character.removeInventoryItem(found)) {
+            player.msg('Could not remove item from inventory.');
+            return;
+        }
+
+        player.character.room.addItem(found);
+
+        player.character.room.announceExcept(player, player.character.htmlname + ' dropped a ' + found.get('htmlname') + '.');
+        player.msg('You dropped a ' + found.get('htmlname') + '.');
+    }
+
+    self.get = function(player, args) {
+        var found = player.character.room.getItem(args);
+
+        if(!found) {
+            player.msg('The room does not contain this item.');
+            return;
+        }
+
+        player.character.addInventoryItem(found.id);
+        player.character.room.removeItem(found);
+
+        player.character.room.announceExcept(player, player.character.htmlname + ' picked up a ' + found.get('htmlname') + '.');
+        player.msg('You picked up a ' + found.get('htmlname') + '.');
+    }
+
     self.modify = function(player, args) {
         if(!player.character.builder) { return self._invalidcmd(player); }
         var modification = args.split(' ')[0];
