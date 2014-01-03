@@ -502,12 +502,12 @@ var GameEngine = new function () {
 
     this.toggleCarryEquip = function(elem) {
         if(elem.id == 'equipment-tab' && $('#equipped').is(':visible') == false) {
-            $('#equipment-tab').removeClass('tab-selected');
-            $('#inventory-tab').addClass('tab-selected');
-            $('#carrying').toggle('slide', 150, function(){ $('#equipped').toggle('slide', 400) });
-        } else if(elem.id == 'inventory-tab' && $('#carrying').is(':visible') == false) {
             $('#equipment-tab').addClass('tab-selected');
             $('#inventory-tab').removeClass('tab-selected');
+            $('#carrying').toggle('slide', 150, function(){ $('#equipped').toggle('slide', 400) });
+        } else if(elem.id == 'inventory-tab' && $('#carrying').is(':visible') == false) {
+            $('#equipment-tab').removeClass('tab-selected');
+            $('#inventory-tab').addClass('tab-selected');
             $('#equipped').toggle('slide', 150, function(){ $('#carrying').toggle('slide', 400) });
         }
     };
