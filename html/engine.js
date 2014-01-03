@@ -319,7 +319,7 @@ var GameEngine = new function () {
         });
         /* Custom Events */
         this.socket.on('txt', function (data) {
-            GameEngine.parseInput(data.msg, true);
+            GameEngine.parseInput(data.msg, true, data.skipheight);
         });
         this.socket.on('plist', function (data) {
             // clear current list
@@ -391,9 +391,12 @@ var GameEngine = new function () {
         return text.replace(urlRegex, function (url) { return '<a class="inlineLink" href="' + url + '" target="_new">' + url + '</a>'; });
     };
 
-    this.parseInput = function (newString, parseLinks) {
+    this.parseInput = function (newString, parseLinks, skipHeightCheck) {
         this.lineCount++;
-        newString = "<div class='outputLine' data-line='" + this.lineCount + "'>" + newString + "</div>";
+        if(skipHeightCheck)
+            newString = "<div class='outputLine' data-bypass='true' data-line='" + this.lineCount + "'>" + newString + "</div>";
+        else
+            newString = "<div class='outputLine' data-line='" + this.lineCount + "'>" + newString + "</div>";
         $('#game').html($('#game').html() + ((parseLinks) ? this.parseLinks(newString) : newString));
         this.toggleLineDisplay();
         $('#game').scrollTop(999999);
@@ -405,10 +408,12 @@ var GameEngine = new function () {
         var hideCount = 0;
 
         $('.outputLine').get().reverse().forEach(function(line) {
-            totalLineHeight += $(line).outerHeight();
+            if(!$(line).data('bypass')) {
+                totalLineHeight += $(line).outerHeight();
 
-            if(totalLineHeight > (viewableHeight * 2.5))
-                $('#game')[0].removeChild(line);
+                if(totalLineHeight > (viewableHeight * 2.5))
+                    $('#game')[0].removeChild(line);
+            }
         });
     };
 

@@ -57,8 +57,9 @@ var Player = function(socket) {
         socket.emit(t, m)
     }
     
-    self.msg = function(m) {
-        self.emit('txt', {msg: m});
+    self.msg = function(m, heightskip) {
+        if(!heightskip) { heightskip = false; }
+        self.emit('txt', {msg: m, skipheight: heightskip});
     }
     
     self.update = function(what) {
