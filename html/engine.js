@@ -408,12 +408,11 @@ var GameEngine = new function () {
         var hideCount = 0;
 
         $('.outputLine').get().reverse().forEach(function(line) {
-            if(!$(line).data('bypass')) {
+            if(!$(line).data('bypass'))
                 totalLineHeight += $(line).outerHeight();
 
-                if(totalLineHeight > (viewableHeight * 2.5))
-                    $('#game')[0].removeChild(line);
-            }
+            if(totalLineHeight > (viewableHeight * 2.5))
+                $('#game')[0].removeChild(line);
         });
     };
 
