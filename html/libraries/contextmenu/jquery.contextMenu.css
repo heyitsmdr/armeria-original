@@ -22,9 +22,14 @@
     position: absolute;
     list-style-type: none;
     
-    border: 1px solid #DDD;
-    background: #EEE;
-    
+    border: thin solid rgb(51,51,51);
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+    background: rgba(25,25,25,0.5);
+    padding: 1px;
+
     -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
        -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         -ms-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
@@ -37,7 +42,10 @@
 
 .context-menu-item {
     padding: 2px 2px 2px 24px;
-    background-color: #EEE;
+    background-color: #222;
+    color: #ddd;
+    border-bottom: solid thin #444;
+    margin-bottom: 1px;
     position: relative;
     -webkit-user-select: none;
        -moz-user-select: -moz-none;
@@ -60,7 +68,7 @@
 
 .context-menu-item.hover {
     cursor: pointer;
-    background-color: #39F;
+    background-color: #333;
 }
 
 .context-menu-item.disabled {
@@ -88,7 +96,7 @@
     http://css-tricks.com/13224-pseudo-spriting/ to get an idea of how to implement 
     .context-menu-item.icon:before {}
  */
-.context-menu-item.icon { min-height: 18px; background-repeat: no-repeat; background-position: 4px 2px; }
+.context-menu-item.icon {min-height: 18px; background-repeat: no-repeat; background-position: 4px 2px; }
 .context-menu-item.icon-edit { background-image: url(images/page_white_edit.png); }
 .context-menu-item.icon-cut { background-image: url(images/cut.png); }
 .context-menu-item.icon-copy { background-image: url(images/page_white_copy.png); }
