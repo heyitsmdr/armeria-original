@@ -75,15 +75,15 @@ var Library = function(){
                 [
                     {
                         property: "Name",
-                        value: obj.get('name')
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"name\")'>" + obj.get('name') + "</a>"
                     },
                     {
                         property: "HTMLName",
-                        value: obj.get('htmlname').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"htmlname\")'>" + obj.get('htmlname').replace(/</g, '&lt;').replace(/>/g, '&gt;') + "</a>"
                     },
                     {
                         property: "Level",
-                        value: obj.get('level')
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"level\")'>" + obj.get('level') + "</a>"
                     }
                 ]));
                 break;
@@ -117,6 +117,9 @@ var Library = function(){
     self.editEntryPropVal = function(player, obj, prop, val){
         switch(obj.type) {
             case 'item':
+                obj.set(prop.toLowerCase(), val);
+                player.msg('Library entry has been updated.');
+                self.editEntry(player, obj.id);
                 break;
             case 'mob':
                 break;
@@ -172,6 +175,14 @@ var LibraryEntry = function(config) {
         return eval("self.overrides." + stat + " || self.parent." + stat);
     }
 
+    self.set = function(prop, val) {
+        if(val=='true') { val = true; }
+        if(val=='false') { val = false; }
+        
+        self.overrides[prop] = val;
+        self.save();
+    };
+
     /* ITEM ONLY FUNCTIONS */
     self.ttOutput = function() {
         return "<span class='itemtooltip' data-id='" + self.id + "'>" + self.get('htmlname') + "</span>";
@@ -219,6 +230,16 @@ var LibraryEntry = function(config) {
             overrides: self.overrides
         }, null, '\t');
     }
+
+    self.save = function() {
+        var data = {
+            id: self.id,
+            type: self.type,
+            overrides: self.overrides
+        };
+        
+        DB.library.update({id: self.id}, data, {upsert: true});
+    };
 
     self.init(config);
 };
