@@ -128,6 +128,31 @@ var GameEngine = new function () {
         // request animation frame
         var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
         window.requestAnimationFrame = requestAnimationFrame;
+        // set up custom context menus
+        $('.itemtooltip').contextmenu({
+            menu: {
+                'Use' : '#',
+                'Drop' : '#'
+            }
+        });
+        $.contextMenu({
+            selector: '.itemtooltip', 
+            callback: function(key, options) {
+                switch(key) {
+                    case 'use':
+                        GameEngine.parseCommand('/use ' + this[0].getAttribute('data-name'));
+                        break;
+                    case 'drop':
+                        GameEngine.parseCommand('/drop ' + this[0].getAttribute('data-name'));
+                        break;
+                }
+            },
+            items: {
+                "use": {name: "Use", icon: "use"},
+                "drop": {name: "Drop Here", icon: "drop"}
+            }
+        });
+
         // focus input box
         $('#input').focus();
     };
@@ -378,7 +403,7 @@ var GameEngine = new function () {
         this.socket.on('inv', function(data) {
             var listData = "";
             data.forEach(function(item) {
-                listData += "<span class='itemtooltip' data-id='" + item.id + "'><li class='inv-item'><img src='http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif' width='32px' height='32px'/><p>";
+                listData += "<span class='itemtooltip' data-name='" + item.name + "' data-id='" + item.id + "'><li class='inv-item'><img src='http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif' width='32px' height='32px'/><p>";
                 listData += item.htmlname;
                 listData += "</p></li></span>";
             });
