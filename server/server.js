@@ -54,7 +54,7 @@ if(LIVE) {
 }
 
 // hip chat association
-HIPCHAT    = new hipchatter('G9AuMaMlZQxzPaE1mo3sMsNoOpPt9GiutxRfP4ZW');
+HIPCHAT = new hipchatter('G9AuMaMlZQxzPaE1mo3sMsNoOpPt9GiutxRfP4ZW');
 
 // listen
 // var port = parseInt(fs.readFileSync('./port').toString('utf8'));
@@ -232,7 +232,7 @@ io.sockets.on('connection', function(socket){
         // get base command
         var sections = data.cmd.split(' ');
         var cmd = matchcmd(sections[0], new Array('say', 'score', 'move', ['look', 'examine'], 'me',
-            'whisper', 'reply', 'attack', 'create', 'destroy', 'modify', 'drop', 'get',
+            'whisper', 'reply', 'attack', 'create', 'destroy', ['room', 'rm'], 'drop', 'get',
             'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp'],
             'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit'));
         sections.shift();
@@ -269,8 +269,8 @@ io.sockets.on('connection', function(socket){
             case 'destroy':
                 LOGIC.destroy(player, cmd_args);
                 break;
-            case 'modify':
-                LOGIC.modify(player, cmd_args);
+            case 'room':
+                LOGIC.room(player, cmd_args);
                 break;
             case 'drop':
                 LOGIC.drop(player, cmd_args);

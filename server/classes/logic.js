@@ -593,18 +593,10 @@ var Logic = function() {
         player.msg('You picked up a ' + found.get('htmlname') + '.');
     }
 
-    self.modify = function(player, args) {
+    self.room = function(player, args) {
         if(!player.character.builder) { return self._invalidcmd(player); }
-        var modification = args.split(' ')[0];
-        var argsremaining = args.split(' ').splice(1).join(' ');
-        modification = matchcmd(modification, new Array(['room', 'rm']));
-        switch(modification.toLowerCase()) {
-            case 'room':
-                player.character.room.map.modifyRoom(player, argsremaining);
-                break;
-            default:
-                player.msg("Unknown modification item.");
-        }
+        
+        player.character.room.map.modifyRoom(player, args);
     }
 
     self.channels = function(player) {
