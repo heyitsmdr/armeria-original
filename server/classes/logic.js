@@ -696,11 +696,11 @@ var Logic = function() {
 
     self.library = function(player, args) {
         if(!player.character.hasPriv('libraryManagement')) { return self._invalidcmd(player); }
-        var creation = args.split(' ')[0];
-        var argsremaining = args.split(' ').splice(1).join(' ');
-        creation = matchcmd(creation, new Array('add', ['listitems', 'lsitems', 'li'], ['listmobs', 'lsmobs', 'lm']));
-        switch(creation.toLowerCase()) {
-            case 'add':
+        var action = getarg(args, 0, false);
+        var argsremaining = getarg(args, 1, true);
+        action = matchcmd(action, new Array('additem', ['listitems', 'lsitems', 'li'], ['listmobs', 'lsmobs', 'lm']));
+        switch(action.toLowerCase()) {
+            case 'additem':
                 LIBRARY.addItem(player, argsremaining);
                 break;
             case 'listitems':
@@ -709,11 +709,8 @@ var Logic = function() {
             case 'listmobs':
                 LIBRARY.listType(player, argsremaining, 'Mob');
                 break;
-            case 'edit':
-                LIBRARY.editEntry(player, argsremaining);
-                break;
             default:
-                player.msg("Unknown library function. Valid functions: add, listitems, listmobs.");
+                LIBRARY.editEntry(player, args);
         }
 
     };

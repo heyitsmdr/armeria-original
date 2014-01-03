@@ -512,6 +512,13 @@ var GameEngine = new function () {
         }
     };
     
+    this.editProperty = function(libraryId, propName) {
+        var propValue = prompt('What do you want to change ' + libraryId + '.' + propName + ' to?');
+        if(propValue) {
+            this.parseCommand('/library ' + libraryId + ' ' + propName + ' ' + propValue);
+        }
+    };
+
     this.itemToolTipEnter = function () {
         $('#itemtooltip-container').html('Loading...');
         $('#itemtooltip-container').show();
