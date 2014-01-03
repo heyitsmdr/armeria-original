@@ -41,17 +41,21 @@
         <!-- Scripts -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
-            <!-- Engine -->
-            <? if(file_exists('./engine.min.js')): ?>
-            <script src="engine.min.js?buildTime=<?=filemtime('./engine.min.js')?>"></script>
-            <? else: ?>
-            <script src="engine/global.js?buildTime=<?=filemtime('./engine/global.js')?>"></script>
-            <script src="engine.js?buildTime=<?=filemtime('./engine.js')?>"></script>
-            <script src="engine/editor.js?buildTime=<?=filemtime('./engine/editor.js')?>"></script>
-            <script src="engine/minimap.js?buildTime=<?=filemtime('./engine/minimap.js')?>"></script>
-            <? endif; ?>
+        <!-- Engine -->
+        <? if(file_exists('./engine.min.js')): ?>
+        <script src="engine.min.js?buildTime=<?=filemtime('./engine.min.js')?>"></script>
+        <? else: ?>
+        <script src="engine/global.js?buildTime=<?=filemtime('./engine/global.js')?>"></script>
+        <script src="engine.js?buildTime=<?=filemtime('./engine.js')?>"></script>
+        <script src="engine/editor.js?buildTime=<?=filemtime('./engine/editor.js')?>"></script>
+        <script src="engine/minimap.js?buildTime=<?=filemtime('./engine/minimap.js')?>"></script>
+        <? endif; ?>
+        <!-- Libraries -->
         <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
         <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
+        <script src="libraries/contextmenu/jquery.ui.position.js"></script>
+        <script src="libraries/contextmenu/jquery.contextMenu.js"></script>
+        <link rel="stylesheet" href="libraries/contextmenu/jquery.contextMenu.css" /> 
 
         <script type="text/javascript">
           var serverHost = location.hostname + ":2772";

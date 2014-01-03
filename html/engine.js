@@ -27,6 +27,7 @@ var GameEngine = new function () {
     this.serverOffline = false; // Set to True if Socket.IO is not found (server offline)
     this.sendHistory = [];      // Array of strings that you sent to the server (for up/down history)
     this.sendHistPtr = false;   // Pointer for navigating the history
+    this.lineCount = 0;         // Number of lines parsed
 
     this.init = function () {
         // set port
@@ -103,6 +104,10 @@ var GameEngine = new function () {
                 GameEngine.parseInput("<span style='color:#ff6d58'>This error has been reported.</span>");
             });
         };
+        // setup resizing
+        window.addEventListener('resize', function(event){
+            GameEngine.toggleLineDisplay();
+        });
         // bind item tooltips
         $(document).on('mouseenter', '.itemtooltip', this.itemToolTipEnter);
         $(document).on('mouseleave', '.itemtooltip', this.toolTipLeave);
@@ -123,6 +128,31 @@ var GameEngine = new function () {
         // request animation frame
         var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
         window.requestAnimationFrame = requestAnimationFrame;
+        // set up custom context menus
+        $('.itemtooltip').contextmenu({
+            menu: {
+                'Use' : '#',
+                'Drop' : '#'
+            }
+        });
+        $.contextMenu({
+            selector: '.itemtooltip', 
+            callback: function(key, options) {
+                switch(key) {
+                    case 'use':
+                        GameEngine.parseCommand('/use ' + this[0].getAttribute('data-name'));
+                        break;
+                    case 'drop':
+                        GameEngine.parseCommand('/drop ' + this[0].getAttribute('data-name'));
+                        break;
+                }
+            },
+            items: {
+                "use": {name: "Use", icon: "use"},
+                "drop": {name: "Drop Here", icon: "drop"}
+            }
+        });
+
         // focus input box
         $('#input').focus();
     };
@@ -314,7 +344,7 @@ var GameEngine = new function () {
         });
         /* Custom Events */
         this.socket.on('txt', function (data) {
-            GameEngine.parseInput(data.msg, true);
+            GameEngine.parseInput(data.msg, true, data.skipheight);
         });
         this.socket.on('plist', function (data) {
             // clear current list
@@ -373,7 +403,7 @@ var GameEngine = new function () {
         this.socket.on('inv', function(data) {
             var listData = "";
             data.forEach(function(item) {
-                listData += "<span class='itemtooltip' data-id='" + item.id + "'><li class='inv-item'><img src='http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif' width='32px' height='32px'/><p>";
+                listData += "<span class='itemtooltip' data-name='" + item.name + "' data-id='" + item.id + "'><li class='inv-item'><img src='http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif' width='32px' height='32px'/><p>";
                 listData += item.htmlname;
                 listData += "</p></li></span>";
             });
@@ -386,9 +416,29 @@ var GameEngine = new function () {
         return text.replace(urlRegex, function (url) { return '<a class="inlineLink" href="' + url + '" target="_new">' + url + '</a>'; });
     };
 
-    this.parseInput = function (newString, parseLinks) {
-        $('#game').html($('#game').html() + ((parseLinks) ? this.parseLinks(newString) : newString) + '<br>');
+    this.parseInput = function (newString, parseLinks, skipHeightCheck) {
+        this.lineCount++;
+        if(skipHeightCheck)
+            newString = "<div class='outputLine' data-bypass='true' data-line='" + this.lineCount + "'>" + newString + "</div>";
+        else
+            newString = "<div class='outputLine' data-line='" + this.lineCount + "'>" + newString + "</div>";
+        $('#game').html($('#game').html() + ((parseLinks) ? this.parseLinks(newString) : newString));
+        this.toggleLineDisplay();
         $('#game').scrollTop(999999);
+    };
+
+    this.toggleLineDisplay = function() {
+        var viewableHeight = $('#game').innerHeight();
+        var totalLineHeight = 0;
+        var hideCount = 0;
+
+        $('.outputLine').get().reverse().forEach(function(line) {
+            if(!$(line).data('bypass'))
+                totalLineHeight += $(line).outerHeight();
+
+            if(totalLineHeight > (viewableHeight * 2.5))
+                $('#game')[0].removeChild(line);
+        });
     };
 
     this.newLine = function (count) {

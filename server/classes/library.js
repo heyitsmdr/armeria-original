@@ -51,7 +51,7 @@ var Library = function(){
                 }
             }
         });
-        player.msg(LOGIC._createTable("Armeria Library: " + type + "s Directory", objs));
+        player.msg(LOGIC._createTable("Armeria Library: " + type + "s Directory", objs), true);
     };
 
     self.editEntry = function(player, args) {
