@@ -27,6 +27,7 @@ var GameEngine = new function () {
     this.serverOffline = false; // Set to True if Socket.IO is not found (server offline)
     this.sendHistory = [];      // Array of strings that you sent to the server (for up/down history)
     this.sendHistPtr = false;   // Pointer for navigating the history
+    this.lineCount = 0;         // Number of lines parsed
 
     this.init = function () {
         // set port
@@ -103,6 +104,10 @@ var GameEngine = new function () {
                 GameEngine.parseInput("<span style='color:#ff6d58'>This error has been reported.</span>");
             });
         };
+        // setup resizing
+        window.addEventListener('resize', function(event){
+            GameEngine.toggleLineDisplay();
+        });
         // bind item tooltips
         $(document).on('mouseenter', '.itemtooltip', this.itemToolTipEnter);
         $(document).on('mouseleave', '.itemtooltip', this.toolTipLeave);
@@ -387,8 +392,24 @@ var GameEngine = new function () {
     };
 
     this.parseInput = function (newString, parseLinks) {
-        $('#game').html($('#game').html() + ((parseLinks) ? this.parseLinks(newString) : newString) + '<br>');
+        this.lineCount++;
+        newString = "<div class='outputLine' data-line='" + this.lineCount + "'>" + newString + "</div>";
+        $('#game').html($('#game').html() + ((parseLinks) ? this.parseLinks(newString) : newString));
+        this.toggleLineDisplay();
         $('#game').scrollTop(999999);
+    };
+
+    this.toggleLineDisplay = function() {
+        var viewableHeight = $('#game').innerHeight();
+        var totalLineHeight = 0;
+        var hideCount = 0;
+
+        $('.outputLine').get().reverse().forEach(function(line) {
+            totalLineHeight += $(line).outerHeight();
+
+            if(totalLineHeight > (viewableHeight * 2.5))
+                $('#game')[0].removeChild(line);
+        });
     };
 
     this.newLine = function (count) {
