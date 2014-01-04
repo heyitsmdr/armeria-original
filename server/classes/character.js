@@ -73,7 +73,7 @@ var Character = function (config) {
     self.id = 0;        // int
     self.name = '';      // string
     self.htmlname = '';  // string
-    self.location = [];  // array (map, x, y, z)
+    self.location = {};  // array (map, x, y, z)
     self.picture = '';   // string
     self.builder = true;   // boolean
     self.channels = [];  // array of strings
@@ -81,8 +81,8 @@ var Character = function (config) {
     self.gender = '';    // string
     self.race = '';      // string
     self.characterClass = '';     // string
-    self.stats = [];     // array (health maxhealth magic maxmagic energy maxenergy str int cha armor resistance)
-    self.statmods = [];  // array (strmod intmod chamod pdmgmod mdmgmod resistancemod)
+    self.stats = {};     // array (health maxhealth magic maxmagic energy maxenergy str int cha armor resistance)
+    self.statmods = {};  // array (strmod intmod chamod pdmgmod mdmgmod resistancemod)
     self.level = 1;     // int
     self.age = 0;       // int
     self.inventory = []; // array of strings
@@ -91,10 +91,11 @@ var Character = function (config) {
 
     // not saved
     self.online = false;    // boolean
-    self.player = '';            // object (Player)
-    self.room = '';              // object (Room)
-    self.replyto = '';           // string
+    self.player = '';       // object (Player)
+    self.room = '';         // object (Room)
+    self.replyto = '';      // string
     self.nickname = '';     // string
+    self.regen = false;     // function (self.handleRegen())
 
     self.init = function (config) {
         self.id = config.id || 0;
@@ -190,20 +191,25 @@ var Character = function (config) {
             });
         });
         // update local player
-        self.player.update({minimap: 1, maplocnoanim: 1, inventory: 1});
+        self.player.update({minimap: 1, maplocnoanim: 1, inventory: 1, bars: 1});
         // announce to room
         self.room.announceExcept(self.player, self.htmlname + " has just logged in to Armeria!");
         // announce to hipchat (on live server)
         if (LIVE) { hipchatmsg(self.name + ' has just logged in!', 'green'); }
         // priviledged character?
         if (self.privs.length >= 1) {
-            self.player.msg("<div style='padding:10px;width:100%;margin-top:10px;border:2px solid #540303;background-color:#2b0505;color:#BA3C3C;box-sizing:border-box'>You are using a priviledged character. You have abilities that other characters do not possess. Do NOT use any of these abilities to help other characters in the game in ANY WAY.<br><br>Your character has been granted the following permissions: " + self.privs.join(', ') + ".</div>");
+            self.player.msg("<div style='padding:10px;width:50%;margin-top:10px;border:2px solid #540303;background-color:#2b0505;color:#BA3C3C;box-sizing:border-box'>You are using a priviledged character. You have abilities that other characters do not possess. Do NOT use any of these abilities to help other characters in the game in ANY WAY.<br><br>Your character has been granted the following permissions: " + self.privs.join(', ') + ".</div>");
         }
         // look around
         LOGIC.look(self.player);
+        // set up timers
+        self.regen = setInterval(self.handleRegen, 30000);
     };
     
     self.logout = function () {
+        // stop timers
+        clearInterval(self.regen);
+        self.regen = false;
         // announce to room
         self.room.announce(self.htmlname + " has just logged out of Armeria!");
         // announce to hipchat (on live server)
@@ -320,6 +326,35 @@ var Character = function (config) {
         });
         return obj;
     }
+
+    self.getBarData = function(data) {
+        return {
+            health: { current: self.stats.health, max: self.stats.maxhealth },
+            magic: { current: self.stats.magic, max: self.stats.maxmagic },
+            energy: { current: self.stats.energy, max: self.stats.maxenergy }
+        }
+    };
+
+    self.handleRegen = function() {
+        var healthint = ((self.stats.health == self.stats.maxhealth) ? false : Math.round(self.stats.maxhealth) * 0.2);
+        var magicint = ((self.stats.magic == self.stats.maxmagic) ? false : Math.round(self.stats.maxmagic) * 0.2);
+        var energyint = ((self.stats.energy == self.stats.maxenergy) ? false : Math.round(self.stats.maxenergy) * 0.2);
+
+        if(healthint)
+            self.stats.health = (self.stats.health + healthint > self.stats.maxhealth) ? self.stats.maxhealth : self.stats.health + healthint;
+        if(magicint)
+            self.stats.magic = (self.stats.magic + magicint > self.stats.maxmagic) ? self.stats.maxmagic : self.stats.magic + magicint;
+        if(energyint)
+            self.stats.energy = (self.stats.energy + energyint > self.stats.maxenergy) ? self.stats.maxenergy : self.stats.energy + energyint;
+
+        // update you
+        self.player.update({bars: 1});
+
+        // update room
+        self.player.character.room.eachPlayer(function(p) {
+            p.update({plisthealth: 1});
+        });
+    };
 
     self.init(config);
 };

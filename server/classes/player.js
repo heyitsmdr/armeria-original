@@ -67,6 +67,9 @@ var Player = function(socket) {
         if(what.plist) {
             self.emit('plist', self.character.room.getPlayerListData());
         }
+        if(what.plisthealth) {
+            self.emit('plisthealth', self.character.room.getPlayerListHealthData());
+        }
         // Update Map
         if(what.minimap) {
             self.emit('map', {data: self.character.room.map.getMinimapData(), name: self.character.room.map.name});
@@ -82,6 +85,10 @@ var Player = function(socket) {
         // Update Inventory
         if(what.inventory) {
             self.emit('inv', self.character.getInventoryData());
+        }
+        // Update Bars
+        if(what.bars) {
+            self.emit('bars', self.character.getBarData());
         }
     }
     

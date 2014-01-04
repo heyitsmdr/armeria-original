@@ -65,7 +65,13 @@ var GameEngine = new function () {
                 $('#input').val('d');
                 break;
             case 27:
-                $('#input').val('/edit');
+                if($('#options-container').is(':visible')) {
+                    $('#options-container').stop().fadeOut('fast');
+                    GameEngine.saveOptions();
+                    GameEngine.parseInput("Options saved.");
+                }
+                else
+                    $('#input').val('/edit');
                 break;
             default:
                 return;
@@ -129,14 +135,8 @@ var GameEngine = new function () {
         var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
         window.requestAnimationFrame = requestAnimationFrame;
         // set up custom context menus
-        $('.itemtooltip').contextmenu({
-            menu: {
-                'Use' : '#',
-                'Drop' : '#'
-            }
-        });
         $.contextMenu({
-            selector: '.itemtooltip', 
+            selector: '.menuinv', 
             callback: function(key, options) {
                 switch(key) {
                     case 'use':
@@ -149,12 +149,33 @@ var GameEngine = new function () {
             },
             items: {
                 "use": {name: "Use", icon: "use"},
-                "drop": {name: "Drop Here", icon: "drop"}
+                "drop": {name: "Drop", icon: "drop"}
+            }
+        });
+        $.contextMenu({
+            selector: '.menuitem', 
+            callback: function(key, options) {
+                switch(key) {
+                    case 'pickup':
+                        GameEngine.parseCommand('/get ' + this[0].getAttribute('data-name'));
+                        break;
+                }
+            },
+            items: {
+                "pickup": {name: "Pickup", icon: "pickup"}
             }
         });
 
         // focus input box
         $('#input').focus();
+    };
+
+    this.loadOptions = function() {
+        $('#optMinimapAnimation').prop('checked', ((localStorage['optMinimapAnimation'])?JSON.parse(localStorage['optMinimapAnimation']):true));
+    };
+
+    this.saveOptions = function() {
+        localStorage['optMinimapAnimation'] = JSON.stringify($('#optMinimapAnimation').prop('checked'));
     };
 
     this.noForums = function () {
@@ -351,10 +372,15 @@ var GameEngine = new function () {
             $('#roomlist').html('');
             data.forEach(function (listdata) {
                 if (listdata.picture === false) {
-                    $('#roomlist').html("<li class='player' data-id='" + listdata.id + "' data-type='" + listdata.type + "'><p style='padding-left: 15px'>" + listdata.name + "</p></li>" + $('#roomlist').html());
+                    $('#roomlist').html("<li class='player menu" + listdata.type + "' data-id='" + listdata.id + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "'><div id='healthbar-" + listdata.id + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div><p style='padding-left: 15px'>" + listdata.name + "</p></li>" + $('#roomlist').html());
                 } else {
-                    $('#roomlist').html("<li class='player' data-id='" + listdata.id + "' data-type='" + listdata.type + "'><img src='" + listdata.picture + "' width='40px' height='40px'><p>" + listdata.name + "</p></li>" + $('#roomlist').html());
+                    $('#roomlist').html("<li class='player menu" + listdata.type + "' data-id='" + listdata.id + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "'><div id='healthbar-" + listdata.id + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div><img src='" + listdata.picture + "' width='40px' height='40px'><p>" + listdata.name + "</p></li>" + $('#roomlist').html());
                 }
+            });
+        });
+        this.socket.on('plisthealth', function (data) {
+            data.forEach(function (healthdata) {
+                $('#healthbar-' + healthdata.id).animate({width: healthdata.health + '%'});
             });
         });
         this.socket.on('map', function (data) {
@@ -362,7 +388,8 @@ var GameEngine = new function () {
             $('#mapname-p').html(data.name);
         });
         this.socket.on('maploc', function (data) {
-            GameEngine.mapPosition(data.x, data.y, data.z, true);
+            var anim = ((localStorage['optMinimapAnimation'])?JSON.parse(localStorage['optMinimapAnimation']):true);
+            GameEngine.mapPosition(data.x, data.y, data.z, anim);
         });
         this.socket.on('maplocnoanim', function (data) {
             if (GameEngine.debug.datainput) { console.log('maplocnoanim: ' + data); }
@@ -403,11 +430,21 @@ var GameEngine = new function () {
         this.socket.on('inv', function(data) {
             var listData = "";
             data.forEach(function(item) {
-                listData += "<span class='itemtooltip' data-name='" + item.name + "' data-id='" + item.id + "'><li class='inv-item'><img src='http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif' width='32px' height='32px'/><p>";
+                listData += "<span class='itemtooltip menuinv' data-name='" + item.name + "' data-id='" + item.id + "'><li class='inv-item'><img src='http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif' width='32px' height='32px'/><p>";
                 listData += item.htmlname;
                 listData += "</p></li></span>";
             });
             $('#carrying').html(listData);
+        });
+        this.socket.on('bars', function(data) {
+            // set bar labels
+            $('#text-health').html(data.health.current + ' / ' + data.health.max);
+            $('#text-magic').html(data.magic.current + ' / ' + data.magic.max);
+            $('#text-energy').html(data.energy.current + ' / ' + data.energy.max);
+            // animate bars
+            var perc = Math.round((data.health.current * 100) / data.health.max); $('#bar-health').animate({width: perc + "%"});
+            var perc = Math.round((data.magic.current * 100) / data.magic.max); $('#bar-magic').animate({width: perc + "%"});
+            var perc = Math.round((data.energy.current * 100) / data.energy.max); $('#bar-energy').animate({width: perc + "%"});
         });
     };
 
@@ -473,6 +510,11 @@ var GameEngine = new function () {
             } else if (command.toLowerCase() === '/clearcache') {
                 GameEngine.toolTipCache = [];
                 this.parseInput('Your cache has been cleared.');
+            } else if (command.toLowerCase() === '/options') {
+                if(!$('#options-container').is(':visible')) {
+                    $('#options-container').stop().fadeIn('fast');
+                    GameEngine.loadOptions();
+                }
             } else {
                 if (this.connected) {
                     this.socket.emit('cmd', {cmd: command.substr(1)});
@@ -605,7 +647,7 @@ var GameEngine = new function () {
                 if($(this).data('type') == 'item')
                     GameEngine.socket.emit('itemtip', { id: $(this).data('id') });
                 else
-                    GameEngine.socket.emit('ptip', { id: $(this).data('id'), type: $(this).data('type') });
+                    GameEngine.socket.emit('ptip', { id: $(this).data('name'), type: $(this).data('type') });
             } else
                 $('#itemtooltip-container').html(foundCacheData[0].data);
         }

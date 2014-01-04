@@ -192,16 +192,7 @@
               </table>
             </div>
             <div id="items-container">
-                <ul id="carrying">
-                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
-                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
-                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
-                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
-                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
-                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
-                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
-                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
-                </ul>
+                <ul id="carrying"></ul>
                 <ul id="equipped" style="display:none;">
                     <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
                     <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
@@ -346,8 +337,14 @@
               <div class="prop-name">Environment</div>
               <div class="prop-value"><a href="#" id="room-environment" onclick="GameEngine.editorEditProperty(this)">..</a></div>
             </div>
-
           </div>
+        </div>
+        <!-- Options -->
+        <div id="options-container">
+          <div class="optionsHeading">Minimap Options</div>
+          <div class="optionsSubheading">Things you can set with the minimap.</div>
+          <br/>
+          <input id="optMinimapAnimation" type="checkbox">&nbsp;Minimap Animation
         </div>
     </body>
 </html>
