@@ -91,10 +91,11 @@ var Character = function (config) {
 
     // not saved
     self.online = false;    // boolean
-    self.player = '';            // object (Player)
-    self.room = '';              // object (Room)
-    self.replyto = '';           // string
+    self.player = '';       // object (Player)
+    self.room = '';         // object (Room)
+    self.replyto = '';      // string
     self.nickname = '';     // string
+    self.regen = false;     // function (self.handleRegen())
 
     self.init = function (config) {
         self.id = config.id || 0;
@@ -201,9 +202,14 @@ var Character = function (config) {
         }
         // look around
         LOGIC.look(self.player);
+        // set up timers
+        self.regen = setInterval(self.handleRegen, 30000);
     };
     
     self.logout = function () {
+        // stop timers
+        clearInterval(self.regen);
+        self.regen = false;
         // announce to room
         self.room.announce(self.htmlname + " has just logged out of Armeria!");
         // announce to hipchat (on live server)
@@ -327,6 +333,21 @@ var Character = function (config) {
             magic: { current: self.stats.magic, max: self.stats.maxmagic },
             energy: { current: self.stats.energy, max: self.stats.maxenergy }
         }
+    };
+
+    self.handleRegen = function() {
+        var healthint = ((self.stats.health == self.stats.maxhealth) ? false : Math.round(self.stats.maxhealth) * 0.2);
+        var magicint = ((self.stats.magic == self.stats.maxmagic) ? false : Math.round(self.stats.maxmagic) * 0.2);
+        var energyint = ((self.stats.energy == self.stats.maxenergy) ? false : Math.round(self.stats.maxenergy) * 0.2);
+
+        if(healthint)
+            self.stats.health += healthint;
+        if(magicint)
+            self.stats.magic += magicint;
+        if(energyint)
+            self.stats.energy += energyint;
+
+        self.player.update({bars: 1});
     };
 
     self.init(config);
