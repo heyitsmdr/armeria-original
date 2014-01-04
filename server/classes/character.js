@@ -198,7 +198,7 @@ var Character = function (config) {
         if (LIVE) { hipchatmsg(self.name + ' has just logged in!', 'green'); }
         // priviledged character?
         if (self.privs.length >= 1) {
-            self.player.msg("<div style='padding:10px;width:100%;margin-top:10px;border:2px solid #540303;background-color:#2b0505;color:#BA3C3C;box-sizing:border-box'>You are using a priviledged character. You have abilities that other characters do not possess. Do NOT use any of these abilities to help other characters in the game in ANY WAY.<br><br>Your character has been granted the following permissions: " + self.privs.join(', ') + ".</div>");
+            self.player.msg("<div style='padding:10px;width:50%;margin-top:10px;border:2px solid #540303;background-color:#2b0505;color:#BA3C3C;box-sizing:border-box'>You are using a priviledged character. You have abilities that other characters do not possess. Do NOT use any of these abilities to help other characters in the game in ANY WAY.<br><br>Your character has been granted the following permissions: " + self.privs.join(', ') + ".</div>");
         }
         // look around
         LOGIC.look(self.player);
@@ -341,11 +341,11 @@ var Character = function (config) {
         var energyint = ((self.stats.energy == self.stats.maxenergy) ? false : Math.round(self.stats.maxenergy) * 0.2);
 
         if(healthint)
-            self.stats.health += healthint;
+            self.stats.health = (self.stats.health + healthint > self.stats.maxhealth) ? self.stats.maxhealth : self.stats.health + healthint;
         if(magicint)
-            self.stats.magic += magicint;
+            self.stats.magic = (self.stats.magic + magicint > self.stats.maxmagic) ? self.stats.maxmagic : self.stats.magic + magicint;
         if(energyint)
-            self.stats.energy += energyint;
+            self.stats.energy = (self.stats.energy + energyint > self.stats.maxenergy) ? self.stats.maxenergy : self.stats.energy + energyint;
 
         self.player.update({bars: 1});
     };
