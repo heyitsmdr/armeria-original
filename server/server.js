@@ -342,7 +342,7 @@ io.sockets.on('connection', function(socket){
     socket.on('ptip', function(data){
         switch(data.type) {
             case 'player':
-                var C = CHARACTERS.getCharacterByName(data.id, true, false);
+                var C = CHARACTERS.getCharacterById(data.id);
                 var tooltip = "<span class='tipIdentifier'>" + C.name + ((C.nickname)?' ('+C.nickname+')':'') + "</span>";
                 if(C.builder)
                     tooltip += "<br>Game Builder";

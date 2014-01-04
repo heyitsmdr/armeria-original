@@ -39,7 +39,7 @@ var Characters = function () {
     self.getCharacterById = function (id) {
         var i;
         for (i = 0; i < self.objects.length; i++) {
-            if (self.objects[i].id === id) { return self.objects[i]; }
+            if (self.objects[i].id == id) { return self.objects[i]; }
         }
         return false;
     };

@@ -642,12 +642,12 @@ var GameEngine = new function () {
         $('#itemtooltip-container').html('Loading...');
         $('#itemtooltip-container').show();
         if (GameEngine.connected) {
-            var foundCacheData = getIndex(GameEngine.toolTipCache, 'id', (($(this).data('type')=='player')?$(this).data('name'):$(this).data('id')));
+            var foundCacheData = getIndex(GameEngine.toolTipCache, 'id', $(this).data('id'));
             if(foundCacheData.length == 0) {
                 if($(this).data('type') == 'item')
                     GameEngine.socket.emit('itemtip', { id: $(this).data('id') });
                 else
-                    GameEngine.socket.emit('ptip', { id: $(this).data('name'), type: $(this).data('type') });
+                    GameEngine.socket.emit('ptip', { id: $(this).data('id'), type: $(this).data('type') });
             } else
                 $('#itemtooltip-container').html(foundCacheData[0].data);
         }
