@@ -129,14 +129,8 @@ var GameEngine = new function () {
         var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
         window.requestAnimationFrame = requestAnimationFrame;
         // set up custom context menus
-        $('.itemtooltip').contextmenu({
-            menu: {
-                'Use' : '#',
-                'Drop' : '#'
-            }
-        });
         $.contextMenu({
-            selector: '.itemtooltip', 
+            selector: '.menuinv', 
             callback: function(key, options) {
                 switch(key) {
                     case 'use':
@@ -149,7 +143,20 @@ var GameEngine = new function () {
             },
             items: {
                 "use": {name: "Use", icon: "use"},
-                "drop": {name: "Drop Here", icon: "drop"}
+                "drop": {name: "Drop", icon: "drop"}
+            }
+        });
+        $.contextMenu({
+            selector: '.menuitem', 
+            callback: function(key, options) {
+                switch(key) {
+                    case 'pickup':
+                        GameEngine.parseCommand('/get ' + this[0].getAttribute('data-name'));
+                        break;
+                }
+            },
+            items: {
+                "pickup": {name: "Pickup", icon: "pickup"}
             }
         });
 
@@ -351,9 +358,9 @@ var GameEngine = new function () {
             $('#roomlist').html('');
             data.forEach(function (listdata) {
                 if (listdata.picture === false) {
-                    $('#roomlist').html("<li class='player' data-id='" + listdata.id + "' data-type='" + listdata.type + "'><p style='padding-left: 15px'>" + listdata.name + "</p></li>" + $('#roomlist').html());
+                    $('#roomlist').html("<li class='player menu" + listdata.type + "' data-id='" + listdata.id + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "'><p style='padding-left: 15px'>" + listdata.name + "</p></li>" + $('#roomlist').html());
                 } else {
-                    $('#roomlist').html("<li class='player' data-id='" + listdata.id + "' data-type='" + listdata.type + "'><img src='" + listdata.picture + "' width='40px' height='40px'><p>" + listdata.name + "</p></li>" + $('#roomlist').html());
+                    $('#roomlist').html("<li class='player menu" + listdata.type + "' data-id='" + listdata.id + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "'><img src='" + listdata.picture + "' width='40px' height='40px'><p>" + listdata.name + "</p></li>" + $('#roomlist').html());
                 }
             });
         });
@@ -403,7 +410,7 @@ var GameEngine = new function () {
         this.socket.on('inv', function(data) {
             var listData = "";
             data.forEach(function(item) {
-                listData += "<span class='itemtooltip' data-name='" + item.name + "' data-id='" + item.id + "'><li class='inv-item'><img src='http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif' width='32px' height='32px'/><p>";
+                listData += "<span class='itemtooltip menuinv' data-name='" + item.name + "' data-id='" + item.id + "'><li class='inv-item'><img src='http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif' width='32px' height='32px'/><p>";
                 listData += item.htmlname;
                 listData += "</p></li></span>";
             });

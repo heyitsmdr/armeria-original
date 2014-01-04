@@ -604,6 +604,7 @@ var Room = function(config, mapobj) {
             plist.push({
                 id: item.id,
                 name: item.get('htmlname'),
+                textname: item.get('name'),
                 picture: '',
                 type: 'item'
             });
@@ -612,6 +613,7 @@ var Room = function(config, mapobj) {
             plist.push({
                 id: player.character.name,
                 name: player.character.htmlname,
+                textname: player.character.name,
                 picture: player.character.picture,
                 type: 'player'
             });
@@ -620,6 +622,7 @@ var Room = function(config, mapobj) {
             plist.push({
                 id: mob.id,
                 name: mob.get('htmlname'),
+                textname: mob.get('name'),
                 picture: '',
                 type: 'mob'
             });
