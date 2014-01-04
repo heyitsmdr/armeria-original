@@ -358,10 +358,15 @@ var GameEngine = new function () {
             $('#roomlist').html('');
             data.forEach(function (listdata) {
                 if (listdata.picture === false) {
-                    $('#roomlist').html("<li class='player menu" + listdata.type + "' data-id='" + listdata.id + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "'><p style='padding-left: 15px'>" + listdata.name + "</p></li>" + $('#roomlist').html());
+                    $('#roomlist').html("<li class='player menu" + listdata.type + "' data-id='" + listdata.textname + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "'><div id='healthbar-" + listdata.id + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div><p style='padding-left: 15px'>" + listdata.name + "</p></li>" + $('#roomlist').html());
                 } else {
-                    $('#roomlist').html("<li class='player menu" + listdata.type + "' data-id='" + listdata.id + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "'><img src='" + listdata.picture + "' width='40px' height='40px'><p>" + listdata.name + "</p></li>" + $('#roomlist').html());
+                    $('#roomlist').html("<li class='player menu" + listdata.type + "' data-id='" + listdata.textname + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "'><div id='healthbar-" + listdata.id + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div><img src='" + listdata.picture + "' width='40px' height='40px'><p>" + listdata.name + "</p></li>" + $('#roomlist').html());
                 }
+            });
+        });
+        this.socket.on('plisthealth', function (data) {
+            data.forEach(function (healthdata) {
+                $('#healthbar-' + healthdata.id).animate({width: healthdata.health + '%'});
             });
         });
         this.socket.on('map', function (data) {

@@ -611,10 +611,11 @@ var Room = function(config, mapobj) {
         });
         self.eachPlayer(function(player){
             plist.push({
-                id: player.character.name,
+                id: player.character.id,
                 name: player.character.htmlname,
                 textname: player.character.name,
                 picture: player.character.picture,
+                health: ((player.character.stats.health < player.character.stats.maxhealth)?(100 - Math.round((player.character.stats.health * 100) / player.character.stats.maxhealth)):'0'),
                 type: 'player'
             });
         });
@@ -630,6 +631,17 @@ var Room = function(config, mapobj) {
         return plist;
     };
     
+    self.getPlayerListHealthData = function() {
+        var plist = [];
+        self.eachPlayer(function(player){
+            plist.push({
+                id: player.character.id,
+                health: ((player.character.stats.health < player.character.stats.maxhealth)?(100 - Math.round((player.character.stats.health * 100) / player.character.stats.maxhealth)):'0')
+            });
+        });
+        return plist;
+    };
+
     self.announce = function(data) {
         self.eachPlayer(function(p){
             p.msg(data);

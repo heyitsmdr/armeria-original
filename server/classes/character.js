@@ -347,7 +347,13 @@ var Character = function (config) {
         if(energyint)
             self.stats.energy = (self.stats.energy + energyint > self.stats.maxenergy) ? self.stats.maxenergy : self.stats.energy + energyint;
 
+        // update you
         self.player.update({bars: 1});
+
+        // update room
+        self.player.character.room.eachPlayer(function(p) {
+            p.update({plisthealth: 1});
+        });
     };
 
     self.init(config);
