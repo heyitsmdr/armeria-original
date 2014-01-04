@@ -83,6 +83,10 @@ var Player = function(socket) {
         if(what.inventory) {
             self.emit('inv', self.character.getInventoryData());
         }
+        // Update Bars
+        if(what.bars) {
+            self.emit('bars', self.character.getBarData());
+        }
     }
     
     self.socket = socket;

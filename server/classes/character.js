@@ -73,7 +73,7 @@ var Character = function (config) {
     self.id = 0;        // int
     self.name = '';      // string
     self.htmlname = '';  // string
-    self.location = [];  // array (map, x, y, z)
+    self.location = {};  // array (map, x, y, z)
     self.picture = '';   // string
     self.builder = true;   // boolean
     self.channels = [];  // array of strings
@@ -81,8 +81,8 @@ var Character = function (config) {
     self.gender = '';    // string
     self.race = '';      // string
     self.characterClass = '';     // string
-    self.stats = [];     // array (health maxhealth magic maxmagic energy maxenergy str int cha armor resistance)
-    self.statmods = [];  // array (strmod intmod chamod pdmgmod mdmgmod resistancemod)
+    self.stats = {};     // array (health maxhealth magic maxmagic energy maxenergy str int cha armor resistance)
+    self.statmods = {};  // array (strmod intmod chamod pdmgmod mdmgmod resistancemod)
     self.level = 1;     // int
     self.age = 0;       // int
     self.inventory = []; // array of strings
@@ -190,7 +190,7 @@ var Character = function (config) {
             });
         });
         // update local player
-        self.player.update({minimap: 1, maplocnoanim: 1, inventory: 1});
+        self.player.update({minimap: 1, maplocnoanim: 1, inventory: 1, bars: 1});
         // announce to room
         self.room.announceExcept(self.player, self.htmlname + " has just logged in to Armeria!");
         // announce to hipchat (on live server)
@@ -320,6 +320,14 @@ var Character = function (config) {
         });
         return obj;
     }
+
+    self.getBarData = function(data) {
+        return {
+            health: { current: self.stats.health, max: self.stats.maxhealth },
+            magic: { current: self.stats.magic, max: self.stats.maxmagic },
+            energy: { current: self.stats.energy, max: self.stats.maxenergy }
+        }
+    };
 
     self.init(config);
 };
