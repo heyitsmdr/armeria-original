@@ -725,7 +725,7 @@ var Logic = function() {
             whodata.push('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> ' + p.character.htmlname + ((p.character.title)?', ' + p.character.title:'') + ' @ ' + p.character.room.map.name);
             count++;
         });
-        player.msg('<br>' + whodata.join('<br>') + '<br>');
+        player.msg(whodata.join('<br>') + '<br>');
         player.msg('There ' + ((count>1)?'are ':'is ') + count + ' visible player' + ((count>1)?'s':'') + ' online.');
     };
 
