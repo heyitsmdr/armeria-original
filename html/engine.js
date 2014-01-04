@@ -65,7 +65,13 @@ var GameEngine = new function () {
                 $('#input').val('d');
                 break;
             case 27:
-                $('#input').val('/edit');
+                if($('#options-container').is(':visible')) {
+                    $('#options-container').stop().fadeOut('fast');
+                    GameEngine.saveOptions();
+                    GameEngine.parseInput("Options saved.");
+                }
+                else
+                    $('#input').val('/edit');
                 break;
             default:
                 return;
@@ -162,6 +168,14 @@ var GameEngine = new function () {
 
         // focus input box
         $('#input').focus();
+    };
+
+    this.loadOptions = function() {
+        $('#optMinimapAnimation').prop('checked', ((localStorage['optMinimapAnimation'])?JSON.parse(localStorage['optMinimapAnimation']):true));
+    };
+
+    this.saveOptions = function() {
+        localStorage['optMinimapAnimation'] = JSON.stringify($('#optMinimapAnimation').prop('checked'));
     };
 
     this.noForums = function () {
@@ -374,7 +388,8 @@ var GameEngine = new function () {
             $('#mapname-p').html(data.name);
         });
         this.socket.on('maploc', function (data) {
-            GameEngine.mapPosition(data.x, data.y, data.z, true);
+            var anim = ((localStorage['optMinimapAnimation'])?JSON.parse(localStorage['optMinimapAnimation']):true);
+            GameEngine.mapPosition(data.x, data.y, data.z, anim);
         });
         this.socket.on('maplocnoanim', function (data) {
             if (GameEngine.debug.datainput) { console.log('maplocnoanim: ' + data); }
@@ -495,6 +510,11 @@ var GameEngine = new function () {
             } else if (command.toLowerCase() === '/clearcache') {
                 GameEngine.toolTipCache = [];
                 this.parseInput('Your cache has been cleared.');
+            } else if (command.toLowerCase() === '/options') {
+                if(!$('#options-container').is(':visible')) {
+                    $('#options-container').stop().fadeIn('fast');
+                    GameEngine.loadOptions();
+                }
             } else {
                 if (this.connected) {
                     this.socket.emit('cmd', {cmd: command.substr(1)});
