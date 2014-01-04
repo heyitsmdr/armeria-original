@@ -647,7 +647,7 @@ var GameEngine = new function () {
                 if($(this).data('type') == 'item')
                     GameEngine.socket.emit('itemtip', { id: $(this).data('id') });
                 else
-                    GameEngine.socket.emit('ptip', { id: $(this).data('name'), type: $(this).data('type') });
+                    GameEngine.socket.emit('ptip', { id: $(this).data('id'), type: $(this).data('type') });
             } else
                 $('#itemtooltip-container').html(foundCacheData[0].data);
         }
