@@ -7,14 +7,14 @@ var Logic = function() {
         return true;
     };
     self._createTable = function(title, data) {
-        var output = "<br><table class='embed'><tr><td colspan='2' class='title'>" + title + "</td>";
+        var output = "<table class='embed'><tr><td colspan='2' class='title'>" + title + "</td>";
         output += "<tr><td class='head'>Property</td><td class='head'>Value</td></tr>";
         data.forEach(function(d){
             if (d.property == 'divider') {
                 output += "<tr><td class='propDivider'></td>";
                 output += "<td class='valueDivider'></td></tr>";
             } else {
-                output += "<tr><td class='prop'>" + d.property + "</td>";
+                output += "<tr><td class='prop'>" + d.property + ((d.subtext)?'<br><span class="subtext">'+d.subtext+"</span>":'') + "</td>";
                 output += "<td class='value'>" + d.value + "</td></tr>";
             }
         });

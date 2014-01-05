@@ -84,6 +84,11 @@ var Library = function(){
                     {
                         property: "Level",
                         value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"level\")'>" + obj.get('level') + "</a>"
+                    },
+                    {
+                        property: "Picture",
+                        subtext: "Format: tileset, x, y",
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"picture\")'>" + (obj.get('picture') || 'No picture set.') + "</a>"
                     }
                 ]));
                 break;
