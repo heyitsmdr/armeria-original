@@ -38,9 +38,10 @@
 
         <link rel="stylesheet" type="text/css" href="libraries/gritter/css/jquery.gritter.css">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,800,700,600' rel='stylesheet' type='text/css'>
-        <!-- Scripts -->
+        <!-- jQuery -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-darkness/jquery-ui.min.css">
         <!-- Engine -->
         <? if(file_exists('./engine.min.js')): ?>
         <script src="engine.min.js?buildTime=<?=filemtime('./engine.min.js')?>"></script>
@@ -56,6 +57,10 @@
         <script src="libraries/contextmenu/jquery.ui.position.js"></script>
         <script src="libraries/contextmenu/jquery.contextMenu.js"></script>
         <link rel="stylesheet" href="libraries/contextmenu/jquery.contextMenu.css" /> 
+        <script src="libraries/codemirror/lib/codemirror.js"></script>
+        <link rel="stylesheet" href="libraries/codemirror/lib/codemirror.css">
+        <script src="libraries/codemirror/mode/javascript/javascript.js"></script>
+        <link rel="stylesheet" href="libraries/codemirror/theme/monokai.css">
 
         <script type="text/javascript">
           var serverHost = location.hostname + ":2772";
@@ -345,6 +350,10 @@
           <div class="optionsSubheading">Things you can set with the minimap.</div>
           <br/>
           <input id="optMinimapAnimation" type="checkbox">&nbsp;Minimap Animation
+        </div>
+        <!-- Script Editor -->
+        <div id="script-container" title="Script Editor">
+          <div id="script-editor"></div>
         </div>
     </body>
 </html>

@@ -28,6 +28,8 @@ var GameEngine = new function () {
     this.sendHistory = [];      // Array of strings that you sent to the server (for up/down history)
     this.sendHistPtr = false;   // Pointer for navigating the history
     this.lineCount = 0;         // Number of lines parsed
+    this.codeMirror = false;    // CodeMirror instance
+    this.lastLibraryId = false; // Last Library ID
 
     this.init = function () {
         // set port
@@ -475,6 +477,9 @@ var GameEngine = new function () {
             var perc = Math.round((data.magic.current * 100) / data.magic.max); $('#bar-magic').animate({width: perc + "%"});
             var perc = Math.round((data.energy.current * 100) / data.energy.max); $('#bar-energy').animate({width: perc + "%"});
         });
+        this.socket.on('script', function(data) {
+            GameEngine.openScriptEditor(data.id, data.value);
+        });
     };
 
     this.parseLinks = function (text) {
@@ -666,6 +671,10 @@ var GameEngine = new function () {
     };
     
     this.editProperty = function(libraryId, propName) {
+        if(propName == 'script') {
+            this.socket.emit('getscript', {id: libraryId});
+            return;
+        }
         var propValue = prompt('What do you want to change ' + libraryId + '.' + propName + ' to?');
         if(propValue) {
             this.parseCommand('/library ' + libraryId + ' ' + propName + ' ' + propValue);
@@ -722,4 +731,29 @@ var GameEngine = new function () {
         }
     };
 
+    this.openScriptEditor = function(libraryId, scriptContents) {
+        GameEngine.lastLibraryId = libraryId;
+
+        $('#script-container').dialog({
+            height: 450,
+            width: 640,
+            buttons: {
+                "Save & Close": function() {
+                    GameEngine.socket.emit('savescript', {id:GameEngine.lastLibraryId, value:JSON.stringify(GameEngine.codeMirror.getValue())});
+                    $(this).dialog('close')
+                },
+                "Close": function() { $(this).dialog('close') }
+            }
+        });
+        if(!GameEngine.codeMirror) {
+            GameEngine.codeMirror = CodeMirror(document.getElementById('script-editor'), {
+                value: JSON.parse(scriptContents),
+                mode:  "javascript",
+                theme: "monokai",
+                lineNumbers: true
+            });
+        } else {
+            GameEngine.codeMirror.setValue(JSON.parse(scriptContents));
+        }
+    };
 }();

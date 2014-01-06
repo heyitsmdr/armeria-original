@@ -234,7 +234,7 @@ io.sockets.on('connection', function(socket){
         var cmd = matchcmd(sections[0], new Array('say', 'score', 'move', ['look', 'examine'], 'me',
             'whisper', 'reply', 'attack', 'create', 'destroy', ['room', 'rm'], 'drop', 'get',
             'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp'],
-            'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit', 'refresh'));
+            'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit', 'refresh', 'hurt'));
         sections.shift();
         var cmd_args = sections.join(' ');
 
@@ -320,6 +320,9 @@ io.sockets.on('connection', function(socket){
             case 'refresh':
                 LOGIC.refresh(player);
                 break;
+            case 'hurt':
+                LOGIC.hurt(player);
+                break;
             default:
                 if(!LOGIC.emote(player, cmd.toLowerCase()))
                     player.msg('That command is not recognized. Try again.');
@@ -381,6 +384,22 @@ io.sockets.on('connection', function(socket){
                 tooltip += "<br>" + M.get('title');
                 player.emit('itemtip', { id: data.id, content: tooltip });
                 break;
+        }
+    });
+    socket.on('getscript', function(data){
+        if(!player.character.hasPriv('libraryManagement')) { return; }
+        var obj = LIBRARY.getById(data.id);
+        if(obj) {
+            player.emit('script', {id: obj.id, value:obj.get('script')});
+        }
+    });
+    socket.on('savescript', function(data){
+        if(!player.character.hasPriv('libraryManagement')) { return; }
+        var obj = LIBRARY.getById(data.id);
+        if(obj) {
+            obj.set('script', data.value);
+            obj.reloadScript(player);
+            player.msg('Script saved and reloaded.');
         }
     });
 });
