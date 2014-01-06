@@ -36,6 +36,7 @@ var Item = function(config) {
     self.htmlname;
     self.level;
     self.picture;
+    self.rarity;
 
     self.init = function(config) {
         self.id = config.id;
@@ -43,6 +44,7 @@ var Item = function(config) {
         self.htmlname = config.htmlname;
         self.level = config.level;
         self.picture = config.picture;
+        self.rarity = config.rarity;
 
         console.log('[init] item template loaded: ' + self.id);
     };
@@ -53,7 +55,8 @@ var Item = function(config) {
             name: self.name,
             htmlname: self.htmlname,
             level: self.level,
-            picture: self.picture
+            picture: self.picture,
+            rarity: self.rarity
         };
         
         DB.items.update({id: self.id}, data, {upsert: true});

@@ -89,6 +89,11 @@ var Library = function(){
                         property: "Picture",
                         subtext: "Format: tileset, x, y",
                         value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"picture\")'>" + (obj.get('picture') || 'No picture set.') + "</a>"
+                    },
+                    {
+                        property: "Rarity",
+                        subtext: "Valid: 0,1,2,3,4",
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"rarity\")'>" + (obj.get('rarity') || 'No rarity set.') + "</a>"
                     }
                 ]));
                 break;

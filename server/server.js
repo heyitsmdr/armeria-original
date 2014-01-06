@@ -336,7 +336,27 @@ io.sockets.on('connection', function(socket){
         // level
         tooltip += "<br>Level " + obj.get('level');
         // rare, unique, etc
-        tooltip += "<br><br>This item is rare.";
+        var rarity = String(obj.get('rarity'));
+        switch(rarity) {
+            case '0':
+                rarity = 'common';
+                break;
+            case '1':
+                rarity = 'unique';
+                break;
+            case '2':
+                rarity = 'rare';
+                break;
+            case '3':
+                rarity = 'epic';
+                break;
+            case '4':
+                rarity = 'an artifact';
+                break;
+            default:
+                rarity = 'common';
+        }
+        tooltip += "<br><br>This item is " + rarity + ".";
         player.emit('itemtip', { id: data.id, content: tooltip });
     });
     socket.on('ptip', function(data){

@@ -374,8 +374,10 @@ var GameEngine = new function () {
                 if (listdata.picture === false) {
                     $('#roomlist').html("<li class='player menu" + listdata.type + "' data-id='" + listdata.id + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "'><div id='healthbar-" + listdata.id + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div><p style='padding-left: 15px'>" + listdata.name + "</p></li>" + $('#roomlist').html());
                 } else {
-                    $('#roomlist').html("<li class='player menu" + listdata.type + "' data-id='" + listdata.id + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "'><div id='healthbar-" + listdata.id + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div><img src='" + listdata.picture + "' width='40px' height='40px'><p>" + listdata.name + "</p></li>" + $('#roomlist').html());
+                    $('#roomlist').html("<li class='player menu" + listdata.type + "' data-id='" + listdata.id + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "'><div id='healthbar-" + listdata.id + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div><div id='border-" + listdata.id + "' class='pictureBorder'><img src='" + listdata.picture + "'></div><p>" + listdata.name + "</p></li>" + $('#roomlist').html());
                 }
+                if(listdata.type.toLowerCase() == 'item')
+                    GameEngine.setItemRarity(document.getElementById('border-' + listdata.id), String(listdata.rarity));
             });
         });
         this.socket.on('plisthealth', function (data) {
@@ -462,6 +464,29 @@ var GameEngine = new function () {
         $('#game').html($('#game').html() + ((parseLinks) ? this.parseLinks(newString) : newString));
         this.toggleLineDisplay();
         $('#game').scrollTop(999999);
+    };
+
+    this.setItemRarity = function(div, rarityLevel) {
+        div.style.backgroundImage = "url('images/items/icon-borders.png')";
+        switch(rarityLevel) {
+            case "0":
+                div.style.backgroundPosition = "0px 0px";
+                break;
+            case "1":
+                div.style.backgroundPosition = "-32px 0px";
+                break;
+            case "2":
+                div.style.backgroundPosition = "-64px 0px";
+                break;
+            case "3":
+                div.style.backgroundPosition = "-96px 0px";
+                break;
+            case "4":
+                div.style.backgroundPosition = "-128px 0px";
+                break;
+            default:
+                div.style.backgroundPosition = "0px 0px";
+        }
     };
 
     this.toggleLineDisplay = function() {

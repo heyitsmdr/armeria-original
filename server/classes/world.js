@@ -606,7 +606,8 @@ var Room = function(config, mapobj) {
                 name: item.get('htmlname'),
                 textname: item.get('name'),
                 picture: '',
-                type: 'item'
+                type: 'item',
+                rarity: item.get('rarity')
             });
         });
         self.eachPlayer(function(player){
