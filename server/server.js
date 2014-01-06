@@ -234,7 +234,7 @@ io.sockets.on('connection', function(socket){
         var cmd = matchcmd(sections[0], new Array('say', 'score', 'move', ['look', 'examine'], 'me',
             'whisper', 'reply', 'attack', 'create', 'destroy', ['room', 'rm'], 'drop', 'get',
             'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp'],
-            'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit'));
+            'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit', 'refresh'));
         sections.shift();
         var cmd_args = sections.join(' ');
 
@@ -316,6 +316,9 @@ io.sockets.on('connection', function(socket){
                 break;
             case 'edit':
                 LOGIC.edit(player, cmd_args);
+                break;
+            case 'refresh':
+                LOGIC.refresh(player);
                 break;
             default:
                 if(!LOGIC.emote(player, cmd.toLowerCase()))

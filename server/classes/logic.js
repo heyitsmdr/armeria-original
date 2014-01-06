@@ -762,6 +762,18 @@ var Logic = function() {
             update: ((refresh=='refresh')?true:false)
         });
     };
+
+    self.refresh = function(player) {
+        player.update({
+            plist: true,
+            minimap: true,
+            maploc: true,
+            inventory: true,
+            bars: true
+        });
+        player.msg('Your client has been refreshed.');
+    };
+
     /* ## END: BASIC ## */
 
     /*  ## ITEM MANAGEMENT ## */
