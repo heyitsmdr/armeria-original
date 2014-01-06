@@ -19,9 +19,30 @@ var Library = function(){
         });
     }
 
+    self.createUid = function() {
+        var uid = ("0000" + (Math.random()*Math.pow(36,4) << 0).toString(36)).substr(-4);
+        // check
+        while(true) {
+            if(self.getByUid(uid)) {
+                uid = ("0000" + (Math.random()*Math.pow(36,4) << 0).toString(36)).substr(-4);
+            } else {
+                break;
+            }
+        }
+        return uid;
+    };
+
     self.getById = function(id) {
         for(var i = 0; i < self.objects.length; i++) {
             if(self.objects[i].id == id)
+                return self.objects[i];
+        }
+        return false;
+    };
+
+    self.getByUid = function(uid) {
+        for(var i = 0; i < self.objects.length; i++) {
+            if(self.objects[i].uid == uid)
                 return self.objects[i];
         }
         return false;
@@ -145,6 +166,7 @@ var LibraryEntry = function(config) {
     // basics
     self._id;
     self.id;
+    self.uid;
     self.parent;
     self.type;
     self.overrides;
@@ -153,6 +175,7 @@ var LibraryEntry = function(config) {
     self.init = function(config) {
         self._id = config._id;
         self.id = config.id;
+        self.uid = LIBRARY.createUid();
         self.type = config.type;
         self.overrides = config.overrides;
         switch(self.type) {

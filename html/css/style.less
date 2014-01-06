@@ -92,6 +92,12 @@ body{
 	height: 41px;
 	z-index: 98;
 	overflow: hidden;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 .inv-item{
 	margin-top: 2px;
@@ -99,24 +105,29 @@ body{
 	height: 50px;
 	z-index: 98;
 	overflow: hidden;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
-.player .pictureBorder {
+.player .pictureBorder, .inv-item .pictureBorder {
 	float: left;
 	margin: 4px 7px 1px 8px;
 	width: 32px;
   	height: 32px;
 }
-.player img{
+.player .pictureSrc{
+	background-size: cover;
 	box-sizing:border-box;
   	-moz-box-sizing:border-box;
   	-webkit-box-sizing:border-box;
+  	border-radius: 4px;
   	width: 32px;
   	height: 32px;
 }
-.inv-item img{
-	float: left;
-	margin: 5px;
-	margin-right: 10px;
+.inv-item .pictureSrc{
 	box-sizing:border-box;
   	-moz-box-sizing:border-box;
   	-webkit-box-sizing:border-box;

@@ -371,13 +371,31 @@ var GameEngine = new function () {
             // clear current list
             $('#roomlist').html('');
             data.forEach(function (listdata) {
-                if (listdata.picture === false) {
-                    $('#roomlist').html("<li class='player menu" + listdata.type + "' data-id='" + listdata.id + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "'><div id='healthbar-" + listdata.id + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div><p style='padding-left: 15px'>" + listdata.name + "</p></li>" + $('#roomlist').html());
-                } else {
-                    $('#roomlist').html("<li class='player menu" + listdata.type + "' data-id='" + listdata.id + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "'><div id='healthbar-" + listdata.id + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div><div id='border-" + listdata.id + "' class='pictureBorder'><img src='" + listdata.picture + "'></div><p>" + listdata.name + "</p></li>" + $('#roomlist').html());
+                var _HTML = "<li class='player menu" + listdata.type + "' data-id='" + listdata.id + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "'>{HEALTHBAR}{PICTURE}<p>" + listdata.name + "</p></li>";
+                switch(listdata.type.toLowerCase()) {
+                    case 'player':
+                        _HTML = _HTML.replace('{HEALTHBAR}', "<div id='healthbar-" + listdata.id + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div>");
+                        _HTML = _HTML.replace('{PICTURE}', "<div id='roomborder-" + listdata.id + "' class='pictureBorder'><div class='pictureSrc' style='background-image:url(" + listdata.picture + ")'></div></div>");
+                        break;
+                    case 'mob':
+                        _HTML = _HTML.replace('{HEALTHBAR}', "<div id='healthbar-" + listdata.uid + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div>");
+                        _HTML = _HTML.replace('{PICTURE}', "<div id='roomborder-" + listdata.uid + "' class='pictureBorder'><div class='pictureSrc' style='background-image:url(" + listdata.picture + ")'></div></div>");
+                        break;
+                    case 'item':
+                        _HTML = _HTML.replace('{HEALTHBAR}', "");
+                        _HTML = _HTML.replace('{PICTURE}', "<div id='roomborder-" + listdata.uid + "' class='pictureBorder'><div id='roompicture-" + listdata.uid + "' class='pictureSrc'></div></div>");
+                        break;
+                    default:
+                        _HTML = _HTML.replace('{HEALTHBAR}', "");
+                        _HTML = _HTML.replace('{PICTURE}', "<div id='roomborder-" + listdata.id + "' class='pictureBorder'><div class='pictureSrc' style='background-image:url(" + listdata.picture + ")'></div></div>");
                 }
-                if(listdata.type.toLowerCase() == 'item')
-                    GameEngine.setItemRarity(document.getElementById('border-' + listdata.id), String(listdata.rarity));
+
+                $('#roomlist').html(_HTML + $('#roomlist').html());
+
+                if(listdata.type.toLowerCase() == 'item') {
+                    GameEngine.setItemRarity(document.getElementById('roomborder-' + listdata.uid), String(listdata.rarity));
+                    GameEngine.setItemPicture(document.getElementById('roompicture-' + listdata.uid), listdata.picture);
+                }
             });
         });
         this.socket.on('plisthealth', function (data) {
@@ -432,11 +450,16 @@ var GameEngine = new function () {
         this.socket.on('inv', function(data) {
             var listData = "";
             data.forEach(function(item) {
-                listData += "<span class='itemtooltip menuinv' data-name='" + item.name + "' data-id='" + item.id + "'><li class='inv-item'><img src='http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif' width='32px' height='32px'/><p>";
+                listData += "<span class='itemtooltip menuinv' data-name='" + item.name + "' data-id='" + item.id + "'><li class='inv-item'>";
+                listData += "<div class='pictureBorder' id='invborder-" + item.uid + "'><div id='invpicture-" + item.uid + "' class='pictureSrc'></div></div>" + "<p>";
                 listData += item.htmlname;
                 listData += "</p></li></span>";
             });
             $('#carrying').html(listData);
+            data.forEach(function(item) {
+                GameEngine.setItemRarity(document.getElementById('invborder-' + item.uid), String(item.rarity));
+                GameEngine.setItemPicture(document.getElementById('invpicture-' + item.uid), item.picture);
+            });
         });
         this.socket.on('bars', function(data) {
             // set bar labels
@@ -487,6 +510,15 @@ var GameEngine = new function () {
             default:
                 div.style.backgroundPosition = "0px 0px";
         }
+    };
+
+    this.setItemPicture = function(div, pictureContent) {
+        var tilesheet = "url('images/items/icon-" + pictureContent.split(',')[0] + ".png')";
+        var sx = parseInt(pictureContent.split(',')[1]) * 32;
+        var sy = parseInt(pictureContent.split(',')[2]) * 32;
+
+        div.style.backgroundImage = tilesheet;
+        div.style.backgroundPosition = "-" + sx + "px -" + sy + "px";
     };
 
     this.toggleLineDisplay = function() {

@@ -313,7 +313,8 @@ var Character = function (config) {
                 id: i.id,
                 name: i.get('name'),
                 htmlname: i.get('htmlname'),
-                rarity: i.get('rarity')
+                rarity: i.get('rarity'),
+                picture: i.get('picture').replace(' ', '') || ''
             });
         });
         return items;
