@@ -371,22 +371,26 @@ var GameEngine = new function () {
             // clear current list
             $('#roomlist').html('');
             data.forEach(function (listdata) {
-                var _HTML = "<li class='player menu" + listdata.type + "' data-id='" + listdata.id + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "'>{HEALTHBAR}{PICTURE}<p>" + listdata.name + "</p></li>";
+                var _HTML = "<li class='player menu" + listdata.type + "' data-id='" + listdata.id + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "' {DBLCLICK}>{HEALTHBAR}{PICTURE}<p>" + listdata.name + "</p></li>";
                 switch(listdata.type.toLowerCase()) {
                     case 'player':
                         _HTML = _HTML.replace('{HEALTHBAR}', "<div id='healthbar-" + listdata.id + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div>");
+                        _HTML = _HTML.replace('{DBLCLICK}', "");
                         _HTML = _HTML.replace('{PICTURE}', "<div id='roomborder-" + listdata.id + "' class='pictureBorder'><div class='pictureSrc' style='background-image:url(" + listdata.picture + ")'></div></div>");
                         break;
                     case 'mob':
                         _HTML = _HTML.replace('{HEALTHBAR}', "<div id='healthbar-" + listdata.uid + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div>");
+                        _HTML = _HTML.replace('{DBLCLICK}', "");
                         _HTML = _HTML.replace('{PICTURE}', "<div id='roomborder-" + listdata.uid + "' class='pictureBorder'><div class='pictureSrc' style='background-image:url(" + listdata.picture + ")'></div></div>");
                         break;
                     case 'item':
                         _HTML = _HTML.replace('{HEALTHBAR}', "");
+                        _HTML = _HTML.replace('{DBLCLICK}', "ondblclick='GameEngine.parseCommand(\"/get " + listdata.textname + "\")'");
                         _HTML = _HTML.replace('{PICTURE}', "<div id='roomborder-" + listdata.uid + "' class='pictureBorder'><div id='roompicture-" + listdata.uid + "' class='pictureSrc'></div></div>");
                         break;
                     default:
                         _HTML = _HTML.replace('{HEALTHBAR}', "");
+                        _HTML = _HTML.replace('{DBLCLICK}', "");
                         _HTML = _HTML.replace('{PICTURE}', "<div id='roomborder-" + listdata.id + "' class='pictureBorder'><div class='pictureSrc' style='background-image:url(" + listdata.picture + ")'></div></div>");
                 }
 
