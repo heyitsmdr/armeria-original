@@ -310,9 +310,12 @@ var Character = function (config) {
         var items = [];
         self.eachInventoryItem(function(i) {
             items.push({
+                uid: i.uid,
                 id: i.id,
                 name: i.get('name'),
                 htmlname: i.get('htmlname'),
+                rarity: i.get('rarity'),
+                picture: i.get('picture').replace(' ', '') || ''
             });
         });
         return items;

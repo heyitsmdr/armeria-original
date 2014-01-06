@@ -234,7 +234,7 @@ io.sockets.on('connection', function(socket){
         var cmd = matchcmd(sections[0], new Array('say', 'score', 'move', ['look', 'examine'], 'me',
             'whisper', 'reply', 'attack', 'create', 'destroy', ['room', 'rm'], 'drop', 'get',
             'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp'],
-            'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit'));
+            'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit', 'refresh', 'hurt'));
         sections.shift();
         var cmd_args = sections.join(' ');
 
@@ -317,6 +317,12 @@ io.sockets.on('connection', function(socket){
             case 'edit':
                 LOGIC.edit(player, cmd_args);
                 break;
+            case 'refresh':
+                LOGIC.refresh(player);
+                break;
+            case 'hurt':
+                LOGIC.hurt(player);
+                break;
             default:
                 if(!LOGIC.emote(player, cmd.toLowerCase()))
                     player.msg('That command is not recognized. Try again.');
@@ -336,7 +342,27 @@ io.sockets.on('connection', function(socket){
         // level
         tooltip += "<br>Level " + obj.get('level');
         // rare, unique, etc
-        tooltip += "<br><br>This item is rare.";
+        var rarity = String(obj.get('rarity'));
+        switch(rarity) {
+            case '0':
+                rarity = 'common';
+                break;
+            case '1':
+                rarity = 'unique';
+                break;
+            case '2':
+                rarity = 'rare';
+                break;
+            case '3':
+                rarity = 'epic';
+                break;
+            case '4':
+                rarity = 'an artifact';
+                break;
+            default:
+                rarity = 'common';
+        }
+        tooltip += "<br><br>This item is " + rarity + ".";
         player.emit('itemtip', { id: data.id, content: tooltip });
     });
     socket.on('ptip', function(data){
@@ -358,6 +384,22 @@ io.sockets.on('connection', function(socket){
                 tooltip += "<br>" + M.get('title');
                 player.emit('itemtip', { id: data.id, content: tooltip });
                 break;
+        }
+    });
+    socket.on('getscript', function(data){
+        if(!player.character.hasPriv('libraryManagement')) { return; }
+        var obj = LIBRARY.getById(data.id);
+        if(obj) {
+            player.emit('script', {id: obj.id, value:obj.get('script')});
+        }
+    });
+    socket.on('savescript', function(data){
+        if(!player.character.hasPriv('libraryManagement')) { return; }
+        var obj = LIBRARY.getById(data.id);
+        if(obj) {
+            obj.set('script', data.value);
+            obj.reloadScript(player);
+            player.msg('Script saved and reloaded.');
         }
     });
 });

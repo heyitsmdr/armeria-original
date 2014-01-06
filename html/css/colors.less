@@ -105,9 +105,8 @@ a{
 }
 .targethealthbar {
 	background-color: rgba(255,0,0,0.1);
-	height: 100%;
 	position: absolute;
-	height: 50px;
+	height: 41px;
 }
 #items-container{
     .Bg(light, 0.1);
@@ -228,6 +227,13 @@ span.pink {
     color: #f39;
     span.bpink {font-weight: bold;}
 }
+// ITEM RARITY
+span.rarity0 { color:#fff; }
+span.rarity1 { color:#48f748; }
+span.rarity2 { color:#2856ED; }
+span.rarity3 { color:#f736f1; }
+span.rarity4 { color:#fc0; }
+
 /* Output Lines */
 div.outputLine {
 	padding: 4px 0px;
@@ -251,9 +257,14 @@ table.embed td.prop {
     color:#fff;
     background-color: rgba(255, 0, 0, 0.1);
 }
+table.embed td.prop span.subtext {
+	font-size: 11px;
+	color: #ddd;
+}
 table.embed td.value {
     color:#fff;
     background-color: rgba(255, 0, 0, 0.1);
+    vertical-align: middle;
 }
 table.embed td.value a {
 	color: #fff;

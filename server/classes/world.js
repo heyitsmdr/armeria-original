@@ -602,11 +602,13 @@ var Room = function(config, mapobj) {
         // Note: Order is Last to First
         self.eachItem(function(item){
             plist.push({
+                uid: item.uid,
                 id: item.id,
                 name: item.get('htmlname'),
                 textname: item.get('name'),
-                picture: '',
-                type: 'item'
+                picture: item.get('picture').replace(' ', '') || '',
+                type: 'item',
+                rarity: item.get('rarity')
             });
         });
         self.eachPlayer(function(player){

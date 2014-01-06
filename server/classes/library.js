@@ -19,9 +19,30 @@ var Library = function(){
         });
     }
 
+    self.createUid = function() {
+        var uid = ("0000" + (Math.random()*Math.pow(36,4) << 0).toString(36)).substr(-4);
+        // check
+        while(true) {
+            if(self.getByUid(uid)) {
+                uid = ("0000" + (Math.random()*Math.pow(36,4) << 0).toString(36)).substr(-4);
+            } else {
+                break;
+            }
+        }
+        return uid;
+    };
+
     self.getById = function(id) {
         for(var i = 0; i < self.objects.length; i++) {
             if(self.objects[i].id == id)
+                return self.objects[i];
+        }
+        return false;
+    };
+
+    self.getByUid = function(uid) {
+        for(var i = 0; i < self.objects.length; i++) {
+            if(self.objects[i].uid == uid)
                 return self.objects[i];
         }
         return false;
@@ -31,8 +52,32 @@ var Library = function(){
         
     };
 
-    self.addItem = function(player, parent) {
+    self.createEntry = function(player, entryType, parentString) {
+        var uid = LIBRARY.createUid();
 
+        switch(entryType) {
+            case 'item':
+                var i = ITEMS.getById(parentString)
+                if(!i) {
+                    player.msg('Could not find item parent.');
+                    return;
+                }
+                DB.library.insert({
+                    id: 'item' + parentString + '-' + uid,
+                    parent: parentString,
+                    type: 'item',
+                    overrides: {}
+                });
+                DB.library.find({id: 'item' + parentString + '-' + uid}, function(err, lib){
+                    if(err) {
+                        player.msg('Could not add item to database.');
+                        return;
+                    }
+                    self.objects.push(new LibraryEntry(lib[0]));
+                });
+                player.msg('Entry added to database: ' + 'item' + parentString + '-' + uid);
+                break;
+        }
     };
 
     self.listType = function(player, args, type) {
@@ -71,8 +116,12 @@ var Library = function(){
         switch(obj.type) {
             case 'item':
                 player.msg(LOGIC._createTable(
-                "Item Properties: " + obj.id,
+                "Item Properties: " + obj.id + " (" + obj.parentText + ")",
                 [
+                    {
+                        property: "Identifier",
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"id\")'>" + obj.id + "</a>"
+                    },
                     {
                         property: "Name",
                         value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"name\")'>" + obj.get('name') + "</a>"
@@ -84,6 +133,20 @@ var Library = function(){
                     {
                         property: "Level",
                         value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"level\")'>" + obj.get('level') + "</a>"
+                    },
+                    {
+                        property: "Picture",
+                        subtext: "Format: tileset, x, y",
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"picture\")'>" + (obj.get('picture') || 'No picture set.') + "</a>"
+                    },
+                    {
+                        property: "Rarity",
+                        subtext: "Valid: 0,1,2,3,4",
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"rarity\")'>" + (obj.get('rarity') || 'No rarity set.') + "</a>"
+                    },
+                    {
+                        property: "Script",
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"script\")'>" + ((obj.get('script'))?'Script set.':'No script set.') + "</a>"
                     }
                 ]));
                 break;
@@ -105,7 +168,7 @@ var Library = function(){
                     },
                     {
                         property: "Script",
-                        value: obj.get('script')
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"script\")'>" + ((obj.get('script'))?'Script set.':'No script set.') + "</a>"
                     }
                 ]));
                 break;
@@ -135,7 +198,9 @@ var LibraryEntry = function(config) {
     // basics
     self._id;
     self.id;
+    self.uid;
     self.parent;
+    self.parentText;
     self.type;
     self.overrides;
     self.gameScript = false;
@@ -143,8 +208,10 @@ var LibraryEntry = function(config) {
     self.init = function(config) {
         self._id = config._id;
         self.id = config.id;
+        self.uid = LIBRARY.createUid();
         self.type = config.type;
         self.overrides = config.overrides;
+        self.parentText = config.parent;
         switch(self.type) {
             case 'item':
                 self.parent = ITEMS.getById(config.parent);
@@ -155,21 +222,32 @@ var LibraryEntry = function(config) {
             default:
                 self.parent = config.parent;
         }
+
         // load a script?
-        if(self.get('script')) {
-            try {
-                // write to temp data folder
-                fs.writeFile(script_path + self._id + '.js', self.get('script'), function(err) {
-                    self.gameScript = require(script_path + self._id + '.js').GameScript;
-                    self.gameScript = new self.gameScript(self); 
-                });
-            } catch (err) {
-                self.gameScript = false;
-                console.log('[script] error loading: /data/scripts/' + self._id + '.js');
-            }
-        }
-        console.log('[init] library ' + self.type + ' loaded: ' + self.id + ' (parent: ' + self.parent.id + ') level ' + self.get('level'));
+        self.reloadScript();
+        console.log('[init] library ' + self.type + ' loaded: ' + self.id + ' (parent: ' + self.parent.id + ')');
+        return self;
     };
+
+    self.reloadScript = function(player) {
+        var uid = LIBRARY.createUid();
+        if(self.get('script')) {
+            // write to temp data folder
+            fs.writeFile(script_path + self._id + '.' + uid + '.js', JSON.parse(self.get('script')), function(err) {
+                try {
+                    self.gameScript = require(script_path + self._id + '.' + uid + '.js').GameScript;
+                    self.gameScript = new self.gameScript(self); 
+                } catch(e) {
+                    self.gameScript = false;
+                    console.log('[script] error loading: /data/scripts/' + self._id + '.js');
+                    if(player) {
+                        player.msg("<span class='red'>ERROR: /data/scripts/" + self._id + "." + uid + ".js</span>");
+                        player.msg("<span class='red'>MESSAGE: " + e.message + "</span>");
+                    }
+                }
+            });
+        }
+    }
 
     self.get = function(stat) {
         return eval("self.overrides." + stat + " || self.parent." + stat);
@@ -179,6 +257,12 @@ var LibraryEntry = function(config) {
         if(val=='true') { val = true; }
         if(val=='false') { val = false; }
         
+        if(prop == 'id') {
+            self.id = val;
+            self.save();
+            return;
+        }
+
         self.overrides[prop] = val;
         self.save();
     };
@@ -222,15 +306,6 @@ var LibraryEntry = function(config) {
     };
     /* END: SCRIPT FUNCTIONS */
 
-    self.stringify = function() {
-        return JSON.stringify({
-            id: self.id,
-            parent: self.parent,
-            type: self.type,
-            overrides: self.overrides
-        }, null, '\t');
-    }
-
     self.save = function() {
         var data = {
             id: self.id,
@@ -238,7 +313,7 @@ var LibraryEntry = function(config) {
             overrides: self.overrides
         };
         
-        DB.library.update({id: self.id}, data, {upsert: true});
+        DB.library.update({_id: self._id}, data, {upsert: true});
     };
 
     self.init(config);

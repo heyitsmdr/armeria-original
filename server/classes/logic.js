@@ -7,14 +7,14 @@ var Logic = function() {
         return true;
     };
     self._createTable = function(title, data) {
-        var output = "<br><table class='embed'><tr><td colspan='2' class='title'>" + title + "</td>";
+        var output = "<table class='embed'><tr><td colspan='2' class='title'>" + title + "</td>";
         output += "<tr><td class='head'>Property</td><td class='head'>Value</td></tr>";
         data.forEach(function(d){
             if (d.property == 'divider') {
                 output += "<tr><td class='propDivider'></td>";
                 output += "<td class='valueDivider'></td></tr>";
             } else {
-                output += "<tr><td class='prop'>" + d.property + "</td>";
+                output += "<tr><td class='prop'>" + d.property + ((d.subtext)?'<br><span class="subtext">'+d.subtext+"</span>":'') + "</td>";
                 output += "<td class='value'>" + d.value + "</td></tr>";
             }
         });
@@ -513,6 +513,9 @@ var Logic = function() {
             case 'map':
                 WORLD.createMap(player, argsremaining);
                 break;
+            case 'item':
+                LIBRARY.createEntry(player, 'item', argsremaining);
+                break;
             default:
                 player.msg("Unknown creation item.");
         }
@@ -696,13 +699,11 @@ var Logic = function() {
 
     self.library = function(player, args) {
         if(!player.character.hasPriv('libraryManagement')) { return self._invalidcmd(player); }
+        if(!args) { player.msg('Valid library commands: listitems (li), listmobs (lm).'); return; }
         var action = getarg(args, 0, false);
         var argsremaining = getarg(args, 1, true);
-        action = matchcmd(action, new Array('additem', ['listitems', 'lsitems', 'li'], ['listmobs', 'lsmobs', 'lm']));
+        action = matchcmd(action, new Array(['listitems', 'lsitems', 'li'], ['listmobs', 'lsmobs', 'lm']));
         switch(action.toLowerCase()) {
-            case 'additem':
-                LIBRARY.addItem(player, argsremaining);
-                break;
             case 'listitems':
                 LIBRARY.listType(player, argsremaining, 'Item');
                 break;
@@ -762,6 +763,29 @@ var Logic = function() {
             update: ((refresh=='refresh')?true:false)
         });
     };
+
+    self.refresh = function(player) {
+        player.update({
+            plist: true,
+            minimap: true,
+            maploc: true,
+            inventory: true,
+            bars: true
+        });
+        player.msg('Your client has been refreshed.');
+    };
+
+    self.hurt = function(player) {
+        player.character.stats.health = (player.character.stats.health - Math.round(player.character.stats.health * 0.70));
+        player.character.stats.magic = (player.character.stats.magic - Math.round(player.character.stats.magic * 0.50));
+        player.character.stats.energy = (player.character.stats.energy - Math.round(player.character.stats.energy * 0.25));
+
+        player.update({bars:true});
+        player.character.room.eachPlayer(function(p) {
+            p.update({plisthealth: 1});
+        });
+    };
+
     /* ## END: BASIC ## */
 
     /*  ## ITEM MANAGEMENT ## */

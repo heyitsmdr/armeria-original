@@ -86,23 +86,56 @@ body{
 	overflow: auto;
     min-height:200px;
 }
-.player, .inv-item{
+.player {
+	margin-top: 2px;
+	width: 100%;
+	height: 41px;
+	z-index: 98;
+	overflow: hidden;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.inv-item{
 	margin-top: 2px;
 	width: 100%;
 	height: 50px;
 	z-index: 98;
 	overflow: hidden;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
-.player img, .inv-item img{
+.player .pictureBorder, .inv-item .pictureBorder {
 	float: left;
-	margin: 5px;
-	margin-right: 10px;
+	margin: 4px 7px 1px 8px;
+	width: 32px;
+  	height: 32px;
+}
+.player .pictureSrc{
+	background-size: cover;
 	box-sizing:border-box;
   	-moz-box-sizing:border-box;
   	-webkit-box-sizing:border-box;
+  	border-radius: 4px;
+  	width: 32px;
+  	height: 32px;
+}
+.inv-item .pictureSrc{
+	box-sizing:border-box;
+  	-moz-box-sizing:border-box;
+  	-webkit-box-sizing:border-box;
+  	width: 32px;
+  	height: 32px;
 }
 .player p{
-	line-height: 50px;
+	line-height: 41px;
 }
 #score{
 	position: absolute;
@@ -445,4 +478,13 @@ td.score-value{
 	.optionsSubheading {
 		color: #fff;
 	}
+}
+
+// SCRIPT EDITOR
+#script-container {
+	display: none;
+}
+#script-editor {
+	height: 100%;
+	width: 100%;
 }
