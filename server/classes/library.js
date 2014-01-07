@@ -152,19 +152,23 @@ var Library = function(){
                 break;
             case 'mob':
                 player.msg(LOGIC._createTable(
-                "Mob Properties: " + obj.id,
+                "Mob Properties: " + obj.id + " (" + obj.parentText + ")",
                 [
                     {
+                        property: "Identifier",
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"id\")'>" + obj.id + "</a>"
+                    },
+                    {
                         property: "Name",
-                        value: obj.get('name')
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"name\")'>" + obj.get('name') + "</a>"
                     },
                     {
                         property: "HTMLName",
-                        value: obj.get('htmlname').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"htmlname\")'>" + obj.get('htmlname').replace(/</g, '&lt;').replace(/>/g, '&gt;') + "</a>"
                     },
                     {
                         property: "Level",
-                        value: obj.get('level')
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"level\")'>" + obj.get('level') + "</a>"
                     },
                     {
                         property: "Script",
