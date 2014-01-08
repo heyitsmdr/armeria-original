@@ -202,12 +202,12 @@ var LibraryEntry = function(config) {
     // basics
     self._id;
     self.id;
-    self.uid;
     self.parent;
     self.parentText;
     self.type;
     self.overrides;
     self.gameScript = false;
+    self.instanceData = {};
 
     self.init = function(config) {
         self._id = config._id;
@@ -233,6 +233,10 @@ var LibraryEntry = function(config) {
         return self;
     };
 
+    self.newInstance = function() {
+        return self._id + "-" + LIBRARY.createUid();
+    };
+
     self.reloadScript = function(player) {
         var uid = LIBRARY.createUid();
         if(self.get('script')) {
@@ -253,11 +257,14 @@ var LibraryEntry = function(config) {
         }
     }
 
-    self.get = function(stat) {
-        return eval("self.overrides." + stat + " || self.parent." + stat);
+    self.get = function(stat, instanceId) {
+        if(instanceId)
+            return eval("self.instanceData." + instanceId + "." + stat + " || self.overrides." + stat + " || self.parent." + stat);
+        else
+            return eval("self.overrides." + stat + " || self.parent." + stat);
     }
 
-    self.set = function(prop, val) {
+    self.set = function(prop, val, instanceId) {
         if(val=='true') { val = true; }
         if(val=='false') { val = false; }
         
@@ -267,8 +274,17 @@ var LibraryEntry = function(config) {
             return;
         }
 
-        self.overrides[prop] = val;
-        self.save();
+        if(instanceId) {
+            if(self.instanceData[instanceId] === undefined) {
+                self.instanceData[instanceId] = {};
+                self.instanceData[instanceId][prop] = val;
+            } else {
+                self.instanceData[instanceId][prop] = val;
+            }
+        } else {
+            self.overrides[prop] = val;
+            self.save();
+        }
     };
 
     /* ITEM ONLY FUNCTIONS */

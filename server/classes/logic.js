@@ -177,7 +177,7 @@ var Logic = function() {
         player.msg(msgStart_self + what + "'");
         // Emit to Mobs
         player.character.room.eachMob(function(mob){
-            mob.emit('onSay', player, what);
+            mob.obj.emit('onSay', player, what);
         });
     }
 
@@ -453,7 +453,7 @@ var Logic = function() {
         else
             player.msg('<span class="yellow">' + player.character.room.name + '</span><br/>' + player.character.room.desc);
         player.character.room.eachMob(function(m){
-                player.msg(m.get('htmlname') + ' is here.');
+                player.msg(m.obj.get('htmlname') + ' is here.');
         });
         player.character.room.eachPlayerExcept(player, function(p){
                 player.msg(p.character.htmlname + ' ' + p.character.roomdesc);
@@ -535,7 +535,7 @@ var Logic = function() {
                 player.msg('Your inventory now contains a ' + obj.get('htmlname') + '.');
                 break;
             case 'mob':
-                player.character.room.addMob(obj);
+                player.character.room.addMob(obj, obj.newInstance());
                 player.character.room.eachPlayer(function(p){
                     p.msg(obj.get('htmlname') + ' appeared in a puff of smoke!');
                     p.emit("sound", {sfx: 'teleport.mp3', volume: 75});

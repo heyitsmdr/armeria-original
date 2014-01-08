@@ -525,7 +525,7 @@ var Room = function(config, mapobj) {
     // no-save
     self.map;             // object (Map)
     self.players = [];    // array of objects (Player)
-    self.mobs = [];       // array of objects (LibraryItem)
+    self.mobs = [];       // array of objects ({obj: LibraryItem, instance: String})
     self.items = [];      // array of objects (LibraryItem)
     self.sayhistory = []; // array of objects (string)
 
@@ -588,14 +588,21 @@ var Room = function(config, mapobj) {
         self.sayhistory.push(say);
     };
 
-    self.addMob = function(mob) {
-        self.mobs.push(mob);
+    self.addMob = function(mob, inst) {
+        self.mobs.push({
+            obj: mob,
+            instance: inst
+        });
         self.announceUpdate();
     };
     
-    self.removeMob = function(mob) {
-        var i = self.mobs.indexOf(mob);
-        self.mobs.splice(i, 1);
+    self.removeMob = function(mob, inst) {
+        for(var i = 0; i < self.mobs.length; i++) {
+            if(self.mobs[i].instance == inst) {
+                self.mobs.splace(i, 1);
+                break;
+            }
+        }
         self.announceUpdate();
     };
 
@@ -682,11 +689,12 @@ var Room = function(config, mapobj) {
         });
         self.eachMob(function(mob){
             plist.push({
-                id: mob.id,
-                name: mob.get('htmlname'),
-                textname: mob.get('name'),
+                id: mob.obj.id,
+                name: mob.obj.get('htmlname'),
+                textname: mob.obj.get('name'),
                 picture: '',
-                type: 'mob'
+                type: 'mob',
+                instanceId: mob.instance
             });
         });
         return plist;
