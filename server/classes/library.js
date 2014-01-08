@@ -322,4 +322,5 @@ var LibraryEntry = function(config) {
 
     self.init(config);
 };
+
 exports.Library = Library;

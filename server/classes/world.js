@@ -62,14 +62,17 @@ var Map = function(config, fn) {
     var self = this;
     
     // no-save
-    self.filename;      // string
-    
+    self.filename;          // string
+    self.spawnTimer;        // timer
+
     // save
-    self._id;           // object (ObjectId)
-    self.name;          // string
-    self.author;        // string
-    self.rooms = [];    // array of objects (Room)
-    
+    self._id;               // object (ObjectId)
+    self.name;              // string
+    self.author;            // string
+    self.rooms = [];        // array of objects (Room)
+    self.spawns = [];       // array of strings
+    self.restrictions = []; // array of strings
+
     self.init = function(config, fn) {
         self._id = config._id;
         self.filename = fn;
@@ -78,6 +81,11 @@ var Map = function(config, fn) {
         config.rooms.forEach(function(r){
             self.rooms.push(new Room(r, self));
         });
+        self.spawns = config.spawns || {};
+        self.restrictions = config.restrictions || {};
+
+        self.spawnTimer = setInterval(self.handleSpawns, 30000);
+
         console.log('[init] map loaded: ' + self.name);
     }
     
@@ -85,7 +93,9 @@ var Map = function(config, fn) {
         return {
             name: self.name,
             author: self.author,
-            rooms: self.roomStringify()
+            rooms: self.roomStringify(),
+            spawns: self.spawns,
+            restrictions: self.restrictions
         };
     };
     
@@ -455,6 +465,55 @@ var Map = function(config, fn) {
         }
         if(shouldOk)
             player.msg('Ok.');
+    };
+
+    self.handleSpawns = function() {
+        return true;
+        // type, startroom, id, timer, rule
+        if(self.spawns && self.spawns.length > 0) {
+            self.spawns.forEach(function(spawn){
+                if(spawn.type == 'mob') {
+                    var roomStart = self.getRoom(spawn.startroom.x, spawn.startroom.y, spawn.startroom.z);
+                    var mobObj = LIBRARY.getById(spawn.id);
+                    if(roomStart && mobObj) {
+                        if(spawn.rule == 'singleRoom') {
+                            // check restrictions
+                            if(self.checkSingleRoomMobCount(spawn.id, spawn.startroom.x, spawn.startroom.y, spawn.startroom.z)) {
+                                // SPAWN
+                                roomStart.addMob(mobObj);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    };
+
+    self.checkSingleRoomMobCount = function(mobId, x, y, z) {
+        if(self.restrictions) {
+            for(var i = 0; i < self.restrictions.length; i++) {
+                if(self.restrictions[i].type == 'singleRoomMobCount' &&
+                   self.restrictions[i].id == mobId &&
+                   self.restrictions[i].location.x == x &&
+                   self.restrictions[i].location.y == y &&
+                   self.restrictions[i].location.z == z) {
+                        // check how many are there
+                        var roomObj = self.getRoom(x, y , z);
+                        if(!roomObj) { return false; }
+                        var counter = 0;
+                        roomObj.eachMob(function(m) {
+                            if(m.id == mobId)
+                                counter++;
+                        });
+                        if(counter < self.restrictions[i].max)
+                            return true;
+                        else
+                            return false;
+                }
+            }
+        }
+
+        return true;
     };
 
     self.init(config, fn);
