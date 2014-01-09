@@ -152,19 +152,23 @@ var Library = function(){
                 break;
             case 'mob':
                 player.msg(LOGIC._createTable(
-                "Mob Properties: " + obj.id,
+                "Mob Properties: " + obj.id + " (" + obj.parentText + ")",
                 [
                     {
+                        property: "Identifier",
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"id\")'>" + obj.id + "</a>"
+                    },
+                    {
                         property: "Name",
-                        value: obj.get('name')
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"name\")'>" + obj.get('name') + "</a>"
                     },
                     {
                         property: "HTMLName",
-                        value: obj.get('htmlname').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"htmlname\")'>" + obj.get('htmlname').replace(/</g, '&lt;').replace(/>/g, '&gt;') + "</a>"
                     },
                     {
                         property: "Level",
-                        value: obj.get('level')
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"level\")'>" + obj.get('level') + "</a>"
                     },
                     {
                         property: "Script",
@@ -198,12 +202,12 @@ var LibraryEntry = function(config) {
     // basics
     self._id;
     self.id;
-    self.uid;
     self.parent;
     self.parentText;
     self.type;
     self.overrides;
     self.gameScript = false;
+    self.instanceData = {};
 
     self.init = function(config) {
         self._id = config._id;
@@ -229,6 +233,10 @@ var LibraryEntry = function(config) {
         return self;
     };
 
+    self.newInstance = function() {
+        return self._id + "-" + LIBRARY.createUid();
+    };
+
     self.reloadScript = function(player) {
         var uid = LIBRARY.createUid();
         if(self.get('script')) {
@@ -249,11 +257,14 @@ var LibraryEntry = function(config) {
         }
     }
 
-    self.get = function(stat) {
-        return eval("self.overrides." + stat + " || self.parent." + stat);
+    self.get = function(stat, instanceId) {
+        if(instanceId)
+            return eval("self.instanceData." + instanceId + "." + stat + " || self.overrides." + stat + " || self.parent." + stat);
+        else
+            return eval("self.overrides." + stat + " || self.parent." + stat);
     }
 
-    self.set = function(prop, val) {
+    self.set = function(prop, val, instanceId) {
         if(val=='true') { val = true; }
         if(val=='false') { val = false; }
         
@@ -263,8 +274,17 @@ var LibraryEntry = function(config) {
             return;
         }
 
-        self.overrides[prop] = val;
-        self.save();
+        if(instanceId) {
+            if(self.instanceData[instanceId] === undefined) {
+                self.instanceData[instanceId] = {};
+                self.instanceData[instanceId][prop] = val;
+            } else {
+                self.instanceData[instanceId][prop] = val;
+            }
+        } else {
+            self.overrides[prop] = val;
+            self.save();
+        }
     };
 
     /* ITEM ONLY FUNCTIONS */
@@ -318,4 +338,5 @@ var LibraryEntry = function(config) {
 
     self.init(config);
 };
+
 exports.Library = Library;

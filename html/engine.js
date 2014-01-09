@@ -373,35 +373,34 @@ var GameEngine = new function () {
             // clear current list
             $('#roomlist').html('');
             data.forEach(function (listdata) {
-                var _HTML = "<li class='player menu" + listdata.type + "' data-id='" + listdata.id + "' data-type='" + listdata.type + "' data-name='" + listdata.textname + "' {DBLCLICK}>{HEALTHBAR}{PICTURE}<p>" + listdata.name + "</p></li>";
+                var _HTML = "<li class='player menu" + listdata.type + "' data-id='" + listdata.id + "' data-type='" + listdata.type + "' {INSTANCEDATA} data-name='" + listdata.textname + "' {DBLCLICK}>{HEALTHBAR}{PICTURE}<p>" + listdata.name + "</p></li>";
                 switch(listdata.type.toLowerCase()) {
                     case 'player':
                         _HTML = _HTML.replace('{HEALTHBAR}', "<div id='healthbar-" + listdata.id + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div>");
                         _HTML = _HTML.replace('{DBLCLICK}', "");
+                        _HTML = _HTML.replace('{INSTANCEDATA}', "");
                         _HTML = _HTML.replace('{PICTURE}', "<div id='roomborder-" + listdata.id + "' class='pictureBorder'><div class='pictureSrc' style='background-image:url(" + listdata.picture + ")'></div></div>");
                         break;
                     case 'mob':
                         _HTML = _HTML.replace('{HEALTHBAR}', "<div id='healthbar-" + listdata.uid + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div>");
                         _HTML = _HTML.replace('{DBLCLICK}', "");
+                        _HTML = _HTML.replace('{INSTANCEDATA}', "data-instance='" + listdata.instanceId + "'");
                         _HTML = _HTML.replace('{PICTURE}', "<div id='roomborder-" + listdata.uid + "' class='pictureBorder'><div class='pictureSrc' style='background-image:url(" + listdata.picture + ")'></div></div>");
                         break;
                     case 'item':
                         _HTML = _HTML.replace('{HEALTHBAR}', "");
                         _HTML = _HTML.replace('{DBLCLICK}', "ondblclick='GameEngine.parseCommand(\"/get " + listdata.textname + "\")'");
-                        _HTML = _HTML.replace('{PICTURE}', "<div id='roomborder-" + listdata.uid + "' class='pictureBorder'><div id='roompicture-" + listdata.uid + "' class='pictureSrc'></div></div>");
+                        _HTML = _HTML.replace('{PICTURE}', "<div style='" + GameEngine.setItemRarity(String(listdata.rarity)) + "' class='pictureBorder'><div style='" + GameEngine.setItemPicture(listdata.picture) + "' class='pictureSrc'></div></div>");
+                        _HTML = _HTML.replace('{INSTANCEDATA}', "");
                         break;
                     default:
                         _HTML = _HTML.replace('{HEALTHBAR}', "");
                         _HTML = _HTML.replace('{DBLCLICK}', "");
                         _HTML = _HTML.replace('{PICTURE}', "<div id='roomborder-" + listdata.id + "' class='pictureBorder'><div class='pictureSrc' style='background-image:url(" + listdata.picture + ")'></div></div>");
+                        _HTML = _HTML.replace('{INSTANCEDATA}', "");
                 }
 
                 $('#roomlist').html(_HTML + $('#roomlist').html());
-
-                if(listdata.type.toLowerCase() == 'item') {
-                    GameEngine.setItemRarity(document.getElementById('roomborder-' + listdata.uid), String(listdata.rarity));
-                    GameEngine.setItemPicture(document.getElementById('roompicture-' + listdata.uid), listdata.picture);
-                }
             });
         });
         this.socket.on('plisthealth', function (data) {
@@ -457,15 +456,11 @@ var GameEngine = new function () {
             var listData = "";
             data.forEach(function(item) {
                 listData += "<span class='itemtooltip menuinv' data-name='" + item.name + "' data-id='" + item.id + "'><li class='inv-item'>";
-                listData += "<div class='pictureBorder' id='invborder-" + item.uid + "'><div id='invpicture-" + item.uid + "' class='pictureSrc'></div></div>" + "<p>";
+                listData += "<div class='pictureBorder' style='" + GameEngine.setItemRarity(String(item.rarity)) + "'><div style='" + GameEngine.setItemPicture(item.picture) + "' class='pictureSrc'></div></div>" + "<p>";
                 listData += item.htmlname;
                 listData += "</p></li></span>";
             });
             $('#carrying').html(listData);
-            data.forEach(function(item) {
-                GameEngine.setItemRarity(document.getElementById('invborder-' + item.uid), String(item.rarity));
-                GameEngine.setItemPicture(document.getElementById('invpicture-' + item.uid), item.picture);
-            });
         });
         this.socket.on('bars', function(data) {
             // set bar labels
@@ -498,36 +493,33 @@ var GameEngine = new function () {
         $('#game').scrollTop(999999);
     };
 
-    this.setItemRarity = function(div, rarityLevel) {
-        div.style.backgroundImage = "url('images/items/icon-borders.png')";
+    this.setItemRarity = function(rarityLevel) {
         switch(rarityLevel) {
             case "0":
-                div.style.backgroundPosition = "0px 0px";
+                return 'background:url("images/items/icon-borders.png") 0px 0px;';
                 break;
             case "1":
-                div.style.backgroundPosition = "-32px 0px";
+                return 'background:url("images/items/icon-borders.png") -32px 0px;';
                 break;
             case "2":
-                div.style.backgroundPosition = "-64px 0px";
+                return 'background:url("images/items/icon-borders.png") -64px 0px;';
                 break;
             case "3":
-                div.style.backgroundPosition = "-96px 0px";
+                return 'background:url("images/items/icon-borders.png") -96px 0px;';
                 break;
             case "4":
-                div.style.backgroundPosition = "-128px 0px";
+                return 'background:url("images/items/icon-borders.png") -128px 0px;';
                 break;
             default:
-                div.style.backgroundPosition = "0px 0px";
+                return 'background:url("images/items/icon-borders.png") 0px 0px;';
         }
     };
 
-    this.setItemPicture = function(div, pictureContent) {
-        var tilesheet = "url('images/items/icon-" + pictureContent.split(',')[0] + ".png')";
+    this.setItemPicture = function(pictureContent) {
         var sx = parseInt(pictureContent.split(',')[1]) * 32;
         var sy = parseInt(pictureContent.split(',')[2]) * 32;
 
-        div.style.backgroundImage = tilesheet;
-        div.style.backgroundPosition = "-" + sx + "px -" + sy + "px";
+        return 'background:url("images/items/icon-' + pictureContent.split(',')[0] + '.png") -' + sx + 'px -' + sy + 'px';
     };
 
     this.toggleLineDisplay = function() {

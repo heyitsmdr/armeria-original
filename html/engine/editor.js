@@ -74,7 +74,7 @@ self.editorSetTerrain = function () {
     // set within editor
     $('#room-terrain').html(typeString);
     // send to server
-    GameEngine.socket.emit('cmd', {cmd: 'modify room terrain ' + typeString});
+    GameEngine.parseCommand('/room terrain ' + typeString);
 };
 
 self.editorSetDefaultTerrain = function () {
@@ -96,7 +96,7 @@ self.editorEditProperty = function (prop) {
         $(prop).html(newContent);
         // send to server
         if ($(prop).attr('id').split('-')[0] === 'room') {
-            GameEngine.socket.emit('cmd', {cmd: 'modify room ' + $(prop).attr('id').split('-')[1] + ' ' + newContent});
+            GameEngine.parseCommand('/room ' + $(prop).attr('id').split('-')[1] + ' ' + newContent);
         }
     }
 };
