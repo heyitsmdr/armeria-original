@@ -145,6 +145,9 @@ var GameEngine = new function () {
                     case 'use':
                         GameEngine.parseCommand('/use ' + this[0].getAttribute('data-name'));
                         break;
+                    case 'equip':
+                        GameEngine.parseCommand('/equip ' + this[0].getAttribute('data-name'));
+                        break;
                     case 'drop':
                         GameEngine.parseCommand('/drop ' + this[0].getAttribute('data-name'));
                         break;
