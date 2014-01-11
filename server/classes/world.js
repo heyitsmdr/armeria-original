@@ -49,10 +49,12 @@ var World = function() {
         self.maps.push(new_map);
         // create first room
         var new_room = new Room({
+            name: 'Your First Room',
+            desc: 'This is your first room in this area.',
             x: 0,
             y: 0,
             z: 0,
-            type: 'grassTRBL'
+            type: 'floors.dirt floors.grass 11110000'
         }, new_map);
         new_map.rooms.push(new_room);
         new_map.save();
