@@ -88,26 +88,10 @@ var Map = function(config, fn) {
         config.rooms.forEach(function(r){
             self.rooms.push(new Room(r, self));
         });
-        self.spawns = config.spawns || {};
-        self.restrictions = config.restrictions || {};
+        self.spawns = config.spawns || [];
+        self.restrictions = config.restrictions || [];
 
-        self.spawnTimer = setInterval(function() {
-            // type, startroom, id, timer, rule
-            if(self.spawns && self.spawns.length > 0) {
-                self.spawns.forEach(function(spawn){
-                    if(spawn.type == 'mob') {
-                        var roomStart = self.getRoom(spawn.startroom.x, spawn.startroom.y, spawn.startroom.z);
-                        var mobObj = LIBRARY.getById(spawn.id);
-                        if(roomStart && mobObj) {
-                            if(self.checkRoomMobRestrictions(spawn.id, roomStart, spawn.startroom.x, spawn.startroom.y, spawn.startroom.z)) {
-                                // SPAWN
-                                roomStart.addMob(mobObj, mobObj.newInstance());
-                            }
-                        }
-                    }
-                });
-            }
-        }, 30000);
+        self.spawnTimer = setInterval(self.handleSpawns, 30000);
 
         console.log('[init] map loaded: ' + self.name + " (" + self.spawnTimer + ")");
     }
@@ -502,6 +486,24 @@ var Map = function(config, fn) {
         }
         if(shouldOk)
             player.msg('Ok.');
+    };
+
+    self.handleSpawns = function() {
+        // type, startroom, id, timer, rule
+        if(self.spawns && self.spawns.length > 0) {
+            self.spawns.forEach(function(spawn){
+                if(spawn.type == 'mob') {
+                    var roomStart = self.getRoom(spawn.startroom.x, spawn.startroom.y, spawn.startroom.z);
+                    var mobObj = LIBRARY.getById(spawn.id);
+                    if(roomStart && mobObj) {
+                        if(self.checkRoomMobRestrictions(spawn.id, roomStart, spawn.startroom.x, spawn.startroom.y, spawn.startroom.z)) {
+                            // SPAWN
+                            roomStart.addMob(mobObj, mobObj.newInstance());
+                        }
+                    }
+                }
+            });
+        }
     };
 
     self.checkRoomMobRestrictions = function(mobId, roomObj, x, y, z) {
