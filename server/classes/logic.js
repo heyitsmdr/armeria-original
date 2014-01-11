@@ -515,6 +515,8 @@ var Logic = function() {
                 break;
             case 'item':
                 LIBRARY.createEntry(player, 'item', argsremaining);
+            case 'mob':
+                LIBRARY.createEntry(player, 'mob', argsremaining);
                 break;
             default:
                 player.msg("Unknown creation item.");

@@ -77,6 +77,27 @@ var Library = function(){
                 });
                 player.msg('Entry added to database: ' + 'item' + parentString + '-' + uid);
                 break;
+            case 'mob':
+                var i = MOBS.getById(parentString)
+                if(!i) {
+                    player.msg('Could not find mob parent.');
+                    return;
+                }
+                DB.library.insert({
+                    id: 'mob' + parentString + '-' + uid,
+                    parent: parentString,
+                    type: 'mob',
+                    overrides: {}
+                });
+                DB.library.find({id: 'mob' + parentString + '-' + uid}, function(err, lib){
+                    if(err) {
+                        player.msg('Could not add mob to database.');
+                        return;
+                    }
+                    self.objects.push(new LibraryEntry(lib[0]));
+                });
+                player.msg('Entry added to database: ' + 'mob' + parentString + '-' + uid);
+                break;
         }
     };
 
