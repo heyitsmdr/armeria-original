@@ -569,7 +569,7 @@ var GameEngine = new function () {
             } else if (command.toLowerCase() === '/clearcache') {
                 GameEngine.toolTipCache = [];
                 this.parseInput('Your cache has been cleared.');
-            } else if (command.toLowerCase() === '/options') {
+            } else if (command.toLowerCase() === '/options' || command.toLowerCase() === '/opt') {
                 if(!$('#options-container').is(':visible')) {
                     $('#options-container').stop().fadeIn('fast');
                     GameEngine.loadOptions();
