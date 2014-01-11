@@ -65,7 +65,7 @@ var Library = function(){
                 DB.library.insert({
                     id: 'item' + parentString + '-' + uid,
                     parent: i,
-                    parentString: parentString
+                    parentString: parentString,
                     type: 'item',
                     overrides: {}
                 });
@@ -87,7 +87,7 @@ var Library = function(){
                 DB.library.insert({
                     id: 'mob' + parentString + '-' + uid,
                     parent: m,
-                    parentString: parentString
+                    parentString: parentString,
                     type: 'mob',
                     overrides: {}
                 });

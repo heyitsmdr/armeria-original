@@ -299,7 +299,7 @@
             </div>
             <div class="prop-set">
               <div class="prop-name">Click Action</div>
-              <div class="prop-value"><a href="#" id="builder-clickaction" onclick="GameEngine.editorChangeClickAction()">teleport</a></div>
+              <div class="prop-value"><a href="#" id="builder-clickaction" data-action="teleport" onclick="GameEngine.editorChangeClickAction()"><span style="color:#51d2fc">teleport</span></a></div>
             </div>
             <!-- Area Properties -->
             <div class="prop-cat">
