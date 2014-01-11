@@ -30,6 +30,11 @@ var World = function() {
     };
 
     self.createMap = function(player, title) {
+        if(!title) {
+            player.msg('Usage: /create map [title]');
+            return;
+        }
+
         var mapobj = self.getMap(title);
         if(mapobj) {
             player.msg('A map with that name already exists. Choose another.');
