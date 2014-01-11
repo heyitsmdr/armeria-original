@@ -93,7 +93,7 @@ var Map = function(config, fn) {
 
         self.spawnTimer = setInterval(self.handleSpawns, 30000);
 
-        console.log('[init] map loaded: ' + self.name);
+        console.log('[init] map loaded: ' + self.name + " (" + self.spawnTimer + ")");
     }
     
     self.getSaveData = function() {
@@ -106,8 +106,15 @@ var Map = function(config, fn) {
         };
     };
     
-    self.save = function() {        
-        DB.maps.update({_id: self._id}, self.getSaveData(), {upsert: true});
+    self.save = function() {
+        if(self._id)
+            DB.maps.update({_id: self._id}, self.getSaveData(), {upsert: true});
+        else
+            DB.maps.insert(self.getSaveData(), function(err, inserted) {
+                if(!err) {
+                    self._id = inserted._id;
+                }
+            });
     };
 
     self.roomStringify = function() {

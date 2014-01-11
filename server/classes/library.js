@@ -64,7 +64,8 @@ var Library = function(){
                 }
                 DB.library.insert({
                     id: 'item' + parentString + '-' + uid,
-                    parent: parentString,
+                    parent: i,
+                    parentString: parentString
                     type: 'item',
                     overrides: {}
                 });
@@ -78,14 +79,15 @@ var Library = function(){
                 player.msg('Entry added to database: ' + 'item' + parentString + '-' + uid);
                 break;
             case 'mob':
-                var i = MOBS.getById(parentString)
-                if(!i) {
+                var m = MOBS.getById(parentString)
+                if(!m) {
                     player.msg('Could not find mob parent.');
                     return;
                 }
                 DB.library.insert({
                     id: 'mob' + parentString + '-' + uid,
-                    parent: parentString,
+                    parent: m,
+                    parentString: parentString
                     type: 'mob',
                     overrides: {}
                 });
@@ -210,6 +212,9 @@ var Library = function(){
                 self.editEntry(player, obj.id);
                 break;
             case 'mob':
+                obj.set(prop.toLowerCase(), val);
+                player.msg('Library entry has been updated.');
+                self.editEntry(player, obj.id);
                 break;
         }
     };
@@ -351,6 +356,7 @@ var LibraryEntry = function(config) {
         var data = {
             id: self.id,
             type: self.type,
+            parent: self.parentText,
             overrides: self.overrides
         };
         
