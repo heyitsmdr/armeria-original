@@ -61,6 +61,7 @@
         <link rel="stylesheet" href="libraries/codemirror/lib/codemirror.css">
         <script src="libraries/codemirror/mode/javascript/javascript.js"></script>
         <link rel="stylesheet" href="libraries/codemirror/theme/monokai.css">
+        <script src="libraries/pixi/pixi.dev.js"></script>
 
         <script type="text/javascript">
           var serverHost = location.hostname + ":2772";
@@ -217,6 +218,7 @@
         <div id="right-content">
             <div id="game"></div>
                 <div id="minimap">
+                    <div id="map-pixi" style="display:none;" width="256" height="256"></div>
                     <canvas id="map-canvas" width="256" height="256"></canvas>
                     <div id="player"></div>
                     <div id="mapshadow"></div>

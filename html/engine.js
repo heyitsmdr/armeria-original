@@ -90,7 +90,8 @@ var GameEngine = new function () {
         // setup soundmanager2
         soundManager.setup({url: '/libraries/soundmanager2/swf/', ontimeout: function () { console.log('SoundManager timed out.'); }});
         soundManager.debugMode = false;
-        // grab 2d context for map and load tileset
+        // setup minimap
+        // GameEngine.initMinimap(); **** FOR PIXI ****
         GameEngine.mapcv = document.getElementById('map-canvas');
         GameEngine.mapctx = GameEngine.mapcv.getContext('2d');
         GameEngine.mapctx.lineWidth = 3;
