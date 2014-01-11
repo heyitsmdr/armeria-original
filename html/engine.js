@@ -740,7 +740,7 @@ var GameEngine = new function () {
         });
         if(!GameEngine.codeMirror) {
             GameEngine.codeMirror = CodeMirror(document.getElementById('script-editor'), {
-                value: JSON.parse(scriptContents),
+                value: ((scriptContents)?JSON.parse(scriptContents):''),
                 mode:  "javascript",
                 theme: "monokai",
                 lineNumbers: true
