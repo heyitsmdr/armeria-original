@@ -468,7 +468,6 @@ var Map = function(config, fn) {
     };
 
     self.handleSpawns = function() {
-        return true;
         // type, startroom, id, timer, rule
         if(self.spawns && self.spawns.length > 0) {
             self.spawns.forEach(function(spawn){
@@ -476,12 +475,9 @@ var Map = function(config, fn) {
                     var roomStart = self.getRoom(spawn.startroom.x, spawn.startroom.y, spawn.startroom.z);
                     var mobObj = LIBRARY.getById(spawn.id);
                     if(roomStart && mobObj) {
-                        if(spawn.rule == 'singleRoom') {
-                            // check restrictions
-                            if(self.checkSingleRoomMobCount(spawn.id, spawn.startroom.x, spawn.startroom.y, spawn.startroom.z)) {
-                                // SPAWN
-                                roomStart.addMob(mobObj);
-                            }
+                        if(self.checkRoomMobRestrictions(spawn.id, roomStart, spawn.startroom.x, spawn.startroom.y, spawn.startroom.z)) {
+                            // SPAWN
+                            roomStart.addMob(mobObj, mobObj.newInstance());
                         }
                     }
                 }
@@ -489,7 +485,7 @@ var Map = function(config, fn) {
         }
     };
 
-    self.checkSingleRoomMobCount = function(mobId, x, y, z) {
+    self.checkRoomMobRestrictions = function(mobId, roomObj, x, y, z) {
         if(self.restrictions) {
             for(var i = 0; i < self.restrictions.length; i++) {
                 if(self.restrictions[i].type == 'singleRoomMobCount' &&
@@ -498,11 +494,9 @@ var Map = function(config, fn) {
                    self.restrictions[i].location.y == y &&
                    self.restrictions[i].location.z == z) {
                         // check how many are there
-                        var roomObj = self.getRoom(x, y , z);
-                        if(!roomObj) { return false; }
                         var counter = 0;
                         roomObj.eachMob(function(m) {
-                            if(m.id == mobId)
+                            if(m.obj.id == mobId)
                                 counter++;
                         });
                         if(counter < self.restrictions[i].max)
@@ -672,7 +666,7 @@ var Room = function(config, mapobj) {
                 id: item.id,
                 name: item.get('htmlname'),
                 textname: item.get('name'),
-                picture: item.get('picture').replace(' ', '') || '',
+                picture: ((item.get('picture'))?item.get('picture').replace(' ', ''):''),
                 type: 'item',
                 rarity: item.get('rarity')
             });

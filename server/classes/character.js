@@ -315,7 +315,7 @@ var Character = function (config) {
                 name: i.get('name'),
                 htmlname: i.get('htmlname'),
                 rarity: i.get('rarity'),
-                picture: i.get('picture').replace(' ', '') || ''
+                picture: ((i.get('picture'))?i.get('picture').replace(' ', ''):'')
             });
         });
         return items;
