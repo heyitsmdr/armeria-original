@@ -37,14 +37,16 @@ var Item = function(config) {
     self.level;
     self.picture;
     self.rarity;
+    self.equipslot;
 
     self.init = function(config) {
         self.id = config.id;
         self.name = config.name;
         self.htmlname = config.htmlname;
-        self.level = config.level;
+        self.level = config.level || 1;
         self.picture = config.picture;
-        self.rarity = config.rarity;
+        self.rarity = config.rarity || 0;
+        self.equipslot = config.equipslot || '';
 
         console.log('[init] item template loaded: ' + self.id);
     };
@@ -56,7 +58,8 @@ var Item = function(config) {
             htmlname: self.htmlname,
             level: self.level,
             picture: self.picture,
-            rarity: self.rarity
+            rarity: self.rarity,
+            equipslot: self.equipslot
         };
         
         DB.items.update({id: self.id}, data, {upsert: true});

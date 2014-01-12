@@ -70,24 +70,25 @@ var Character = function (config) {
     var self = this;
     
     // saved
-    self.id = 0;        // int
-    self.name = '';      // string
-    self.htmlname = '';  // string
-    self.location = {};  // array (map, x, y, z)
-    self.picture = '';   // string
-    self.builder = true;   // boolean
-    self.channels = [];  // array of strings
-    self.roomdesc = '';  // string
-    self.gender = '';    // string
-    self.race = '';      // string
+    self.id = 0;          // int
+    self.name = '';       // string
+    self.htmlname = '';   // string
+    self.location = {};   // array (map, x, y, z)
+    self.picture = '';    // string
+    self.builder = true;  // boolean
+    self.channels = [];   // array of strings
+    self.roomdesc = '';   // string
+    self.gender = '';     // string
+    self.race = '';       // string
     self.characterClass = '';     // string
-    self.stats = {};     // array (health maxhealth magic maxmagic energy maxenergy str int cha armor resistance)
-    self.statmods = {};  // array (strmod intmod chamod pdmgmod mdmgmod resistancemod)
-    self.level = 1;     // int
-    self.age = 0;       // int
-    self.inventory = []; // array of strings
-    self.title = '';     // string
-    self.privs = [];     // array of strings
+    self.stats = {};      // array (health maxhealth magic maxmagic energy maxenergy str int cha armor resistance)
+    self.statmods = {};   // array (strmod intmod chamod pdmgmod mdmgmod resistancemod)
+    self.level = 1;       // int
+    self.age = 0;         // int
+    self.inventory = [];  // array of strings
+    self.equipment = {};  // equipment for each slot
+    self.title = '';      // string
+    self.privs = [];      // array of strings
 
     // not saved
     self.online = false;    // boolean
@@ -106,7 +107,7 @@ var Character = function (config) {
         self.builder = config.builder || true;
         self.channels = config.channels || [];
         self.roomdesc = config.roomdesc || 'is here.';
-        self.gender = config.gender || 'Male';
+        self.gender = config.gender || 'male';
         self.race = config.race || 'Human';
         self.characterClass = config.characterClass || 'Novice';
         self.stats = config.stats || {health: 100, maxhealth: 100, magic: 100, maxmagic: 100, energy: 100, maxenergy: 100, exp: 0, exptl: 200, str: 10, int: 10, cha: 10, pdmg: 10, mdmg: 10, armor: 10, resistance: 10};
@@ -114,6 +115,7 @@ var Character = function (config) {
         self.level = config.level || 1;
         self.age = config.age || 18;
         self.inventory = config.inventory || [];
+        self.equipment = config.equipment || {weapon: '', body: '', feet: ''};
         self.title = config.title || '';
         self.privs = config.privs || [];
 
@@ -138,6 +140,7 @@ var Character = function (config) {
             level: self.level,
             age: self.age,
             inventory: self.inventory,
+            equipment: self.equipment,
             title: self.title,
             privs: self.privs
         };
@@ -191,7 +194,7 @@ var Character = function (config) {
             });
         });
         // update local player
-        self.player.update({minimap: 1, maplocnoanim: 1, inventory: 1, bars: 1});
+        self.player.update({minimap: 1, maplocnoanim: 1, inventory: 1, equipment: 1, bars: 1});
         // announce to room
         self.room.announceExcept(self.player, self.htmlname + " has just logged in to Armeria!");
         // announce to hipchat (on live server)
@@ -266,12 +269,17 @@ var Character = function (config) {
         return true;
     };
 
-	self.addInventoryItem = function (itemId) {
-		var obj = LIBRARY.getById(itemId);
+	self.addInventoryItem = function (item) {
+		var obj = false;
+        if(typeof(item) == 'string')
+            obj = LIBRARY.getById(item);
+        else if(typeof(item) == 'object')
+            obj = item;
+
 		if (!obj) { return false; }
 		if (obj.type !== 'item') { return false; }
 			
-		self.inventory.push(itemId);
+		self.inventory.push(obj.id);
 
         self.player.update({inventory: 1});
         
@@ -306,6 +314,19 @@ var Character = function (config) {
         });
     };
 
+    self.eachEquippedItem = function(callback) {
+        var iid;
+        iid = LIBRARY.getById(self.equipment.weapon);
+        if(iid)
+            callback(iid);
+        iid = LIBRARY.getById(self.equipment.body);
+        if(iid)
+            callback(iid);
+        iid = LIBRARY.getById(self.equipment.feet);
+        if(iid)
+            callback(iid);
+    };
+
     self.getInventoryData = function() {
         var items = [];
         self.eachInventoryItem(function(i) {
@@ -315,12 +336,28 @@ var Character = function (config) {
                 name: i.get('name'),
                 htmlname: i.get('htmlname'),
                 rarity: i.get('rarity'),
-                picture: i.get('picture').replace(' ', '') || ''
+                picture: ((i.get('picture'))?i.get('picture').replace(' ', ''):'')
             });
         });
         return items;
     };
     
+    self.getEquipmentData = function() {
+        var items = [];
+        self.eachEquippedItem(function(i){
+            items.push({
+                uid: i.uid,
+                id: i.id,
+                name: i.get('name'),
+                htmlname: i.get('htmlname'),
+                rarity: i.get('rarity'),
+                picture: ((i.get('picture'))?i.get('picture').replace(' ', ''):''),
+                equipslot: i.get('equipslot')
+            });
+        });
+        return items;
+    };
+
     self.getInventoryItem = function(data) {
         var obj = false;
         self.eachInventoryItem(function(i) {
@@ -329,6 +366,71 @@ var Character = function (config) {
         });
         return obj;
     }
+
+    self.getEquippedItem = function(data) {
+        var obj = false;
+        self.eachEquippedItem(function(i){
+            if(i.get('name').toLowerCase().indexOf(data.toLowerCase()) > -1)
+                obj = i;
+        });
+        return obj;
+    };
+
+    self.addEquipment = function(equipType, item) {
+        var obj = false;
+        if(typeof(item) == 'string')
+            obj = LIBRARY.getById(itemId);
+        else if(typeof(item) == 'object')
+            obj = item;
+
+        if (!obj) { return false; }
+
+        switch(equipType) {
+            case 'weapon':
+                self.equipment.weapon = obj.id;
+                break;
+            case 'body':
+                self.equipment.body = obj.id;
+                break;
+            case 'feet':
+                self.equipment.feet = obj.id;
+                break;
+            default:
+                return false;
+        }
+
+        self.player.update({equipment: 1});
+
+        return true;
+    };
+
+    self.removeEquipment = function(equipType, item) {
+        var obj = false;
+        if(typeof(item) == 'string')
+            obj = LIBRARY.getById(itemId);
+        else if(typeof(item) == 'object')
+            obj = item;
+
+        if (!obj) { return false; }
+
+        switch(equipType) {
+            case 'weapon':
+                self.equipment.weapon = '';
+                break;
+            case 'body':
+                self.equipment.body = '';
+                break;
+            case 'feet':
+                self.equipment.feet = '';
+                break;
+            default:
+                return false;
+        }
+
+        self.player.update({equipment: 1});
+
+        return true;
+    };
 
     self.getBarData = function(data) {
         return {

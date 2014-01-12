@@ -61,6 +61,7 @@
         <link rel="stylesheet" href="libraries/codemirror/lib/codemirror.css">
         <script src="libraries/codemirror/mode/javascript/javascript.js"></script>
         <link rel="stylesheet" href="libraries/codemirror/theme/monokai.css">
+        <script src="libraries/pixi/pixi.dev.js"></script>
 
         <script type="text/javascript">
           var serverHost = location.hostname + ":2772";
@@ -198,16 +199,7 @@
             </div>
             <div id="items-container">
                 <ul id="carrying"></ul>
-                <ul id="equipped" style="display:none;">
-                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
-                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
-                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
-                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
-                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
-                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
-                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
-                    <li class="inv-item"><img src="http://www.priorityonejets.com/wp-content/uploads/2011/05/square_placeholder-small6.gif" width="32px" height="32px"/><p>1</p></li>
-                </ul>
+                <ul id="equipped" style="display:none;"></ul>
             </div>
             <div id="inventory-tab" class="item-tab tab-selected" onclick="GameEngine.toggleCarryEquip(this)"><p>Carrying</p></div>
             <div id="equipment-tab" class="item-tab" onclick="GameEngine.toggleCarryEquip(this)"><p>Equipped</p></div>
@@ -217,6 +209,7 @@
         <div id="right-content">
             <div id="game"></div>
                 <div id="minimap">
+                    <div id="map-pixi" style="display:none;" width="256" height="256"></div>
                     <canvas id="map-canvas" width="256" height="256"></canvas>
                     <div id="player"></div>
                     <div id="mapshadow"></div>
@@ -299,7 +292,7 @@
             </div>
             <div class="prop-set">
               <div class="prop-name">Click Action</div>
-              <div class="prop-value"><a href="#" id="builder-clickaction" onclick="GameEngine.editorChangeClickAction()">teleport</a></div>
+              <div class="prop-value"><a href="#" id="builder-clickaction" data-action="teleport" onclick="GameEngine.editorChangeClickAction()"><span style="color:#51d2fc">teleport</span></a></div>
             </div>
             <!-- Area Properties -->
             <div class="prop-cat">

@@ -234,7 +234,7 @@ io.sockets.on('connection', function(socket){
         var cmd = matchcmd(sections[0], new Array('say', 'score', 'move', ['look', 'examine'], 'me',
             'whisper', 'reply', 'attack', 'create', 'destroy', ['room', 'rm'], 'drop', 'get',
             'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp'],
-            'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit', 'refresh', 'hurt'));
+            'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit', 'refresh', 'hurt', 'equip', 'remove'));
         sections.shift();
         var cmd_args = sections.join(' ');
 
@@ -323,6 +323,12 @@ io.sockets.on('connection', function(socket){
             case 'hurt':
                 LOGIC.hurt(player);
                 break;
+            case 'equip':
+                LOGIC.equip(player, cmd_args);
+                break;
+            case 'remove':
+                LOGIC.remove(player, cmd_args);
+                break;
             default:
                 if(!LOGIC.emote(player, cmd.toLowerCase()))
                     player.msg('That command is not recognized. Try again.');
@@ -339,8 +345,19 @@ io.sockets.on('connection', function(socket){
         // library id (builders only)
         if(player.character.builder)
             tooltip += "<br><span style='color:#666666'>" + obj.id + "</span>";
-        // level
-        tooltip += "<br>Level " + obj.get('level');
+        // type and level
+        var equipslot = obj.get('equipslot');
+        switch(equipslot) {
+            case 'weapon':
+                equipslot = ' Weapon';
+                break;
+            case 'body':
+                equipslot = ' Body Piece';
+                break;
+            default:
+                equipslot = '';
+        }
+        tooltip += "<br>Level " + obj.get('level') + equipslot;
         // rare, unique, etc
         var rarity = String(obj.get('rarity'));
         switch(rarity) {
@@ -396,7 +413,11 @@ io.sockets.on('connection', function(socket){
     socket.on('savescript', function(data){
         if(!player.character.hasPriv('libraryManagement')) { return; }
         var obj = LIBRARY.getById(data.id);
-        if(obj) {
+        if(obj && data.value == '""') {
+            obj.set('script', '');
+            obj.reloadScript(player);
+            player.msg('Script removed.');
+        } else if (obj && data.value) {
             obj.set('script', data.value);
             obj.reloadScript(player);
             player.msg('Script saved and reloaded.');

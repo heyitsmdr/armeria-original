@@ -30,6 +30,11 @@ var World = function() {
     };
 
     self.createMap = function(player, title) {
+        if(!title) {
+            player.msg('Usage: /create map [title]');
+            return;
+        }
+
         var mapobj = self.getMap(title);
         if(mapobj) {
             player.msg('A map with that name already exists. Choose another.');
@@ -44,10 +49,12 @@ var World = function() {
         self.maps.push(new_map);
         // create first room
         var new_room = new Room({
+            name: 'Your First Room',
+            desc: 'This is your first room in this area.',
             x: 0,
             y: 0,
             z: 0,
-            type: 'grassTRBL'
+            type: 'floors.dirt floors.grass 11110000'
         }, new_map);
         new_map.rooms.push(new_room);
         new_map.save();
@@ -81,12 +88,12 @@ var Map = function(config, fn) {
         config.rooms.forEach(function(r){
             self.rooms.push(new Room(r, self));
         });
-        self.spawns = config.spawns || {};
-        self.restrictions = config.restrictions || {};
+        self.spawns = config.spawns || [];
+        self.restrictions = config.restrictions || [];
 
         self.spawnTimer = setInterval(self.handleSpawns, 30000);
 
-        console.log('[init] map loaded: ' + self.name);
+        console.log('[init] map loaded: ' + self.name + " (" + self.spawnTimer + ")");
     }
     
     self.getSaveData = function() {
@@ -99,8 +106,15 @@ var Map = function(config, fn) {
         };
     };
     
-    self.save = function() {        
-        DB.maps.update({_id: self._id}, self.getSaveData(), {upsert: true});
+    self.save = function() {
+        if(self._id)
+            DB.maps.update({_id: self._id}, self.getSaveData(), {upsert: true});
+        else
+            DB.maps.insert(self.getSaveData(), function(err, inserted) {
+                if(!err) {
+                    self._id = inserted._id;
+                }
+            });
     };
 
     self.roomStringify = function() {
@@ -213,32 +227,39 @@ var Map = function(config, fn) {
         var x = player.character.location.x;
         var y = player.character.location.y;
         var z = player.character.location.z;
-        switch(dir.substr(0, 1).toLowerCase()) {
-            case 'n':
-                y--;
-                break;
-            case 's':
-                y++;
-                break;
-            case 'e':
-                x++;
-                break;
-            case 'w':
-                x--;
-                break;
-            case 'u':
-                z++;
-                break;
-            case 'd':
-                z--;
-                break;
-            default:
-                player.msg('Invalid direction.');
-                return;
+        if(dir.indexOf('@') > -1) {
+            dir = dir.substr(1);
+            x = parseInt(dir.split(',')[0]);
+            y = parseInt(dir.split(',')[1]);
+            z = parseInt(dir.split(',')[2]);
+        } else {
+            switch(dir.substr(0, 1).toLowerCase()) {
+                case 'n':
+                    y--;
+                    break;
+                case 's':
+                    y++;
+                    break;
+                case 'e':
+                    x++;
+                    break;
+                case 'w':
+                    x--;
+                    break;
+                case 'u':
+                    z++;
+                    break;
+                case 'd':
+                    z--;
+                    break;
+                default:
+                    player.msg('Invalid direction.');
+                    return;
+            }
         }
         var destroy_room = player.character.room.map.getRoom(x, y, z);
         if(!destroy_room) {
-            player.msg('There is no room in that direction.');
+            player.msg('There is no room there.');
             return;
         }
         if(destroy_room.players.length > 0) {
@@ -468,7 +489,6 @@ var Map = function(config, fn) {
     };
 
     self.handleSpawns = function() {
-        return true;
         // type, startroom, id, timer, rule
         if(self.spawns && self.spawns.length > 0) {
             self.spawns.forEach(function(spawn){
@@ -476,12 +496,9 @@ var Map = function(config, fn) {
                     var roomStart = self.getRoom(spawn.startroom.x, spawn.startroom.y, spawn.startroom.z);
                     var mobObj = LIBRARY.getById(spawn.id);
                     if(roomStart && mobObj) {
-                        if(spawn.rule == 'singleRoom') {
-                            // check restrictions
-                            if(self.checkSingleRoomMobCount(spawn.id, spawn.startroom.x, spawn.startroom.y, spawn.startroom.z)) {
-                                // SPAWN
-                                roomStart.addMob(mobObj);
-                            }
+                        if(self.checkRoomMobRestrictions(spawn.id, roomStart, spawn.startroom.x, spawn.startroom.y, spawn.startroom.z)) {
+                            // SPAWN
+                            roomStart.addMob(mobObj, mobObj.newInstance());
                         }
                     }
                 }
@@ -489,7 +506,7 @@ var Map = function(config, fn) {
         }
     };
 
-    self.checkSingleRoomMobCount = function(mobId, x, y, z) {
+    self.checkRoomMobRestrictions = function(mobId, roomObj, x, y, z) {
         if(self.restrictions) {
             for(var i = 0; i < self.restrictions.length; i++) {
                 if(self.restrictions[i].type == 'singleRoomMobCount' &&
@@ -498,11 +515,9 @@ var Map = function(config, fn) {
                    self.restrictions[i].location.y == y &&
                    self.restrictions[i].location.z == z) {
                         // check how many are there
-                        var roomObj = self.getRoom(x, y , z);
-                        if(!roomObj) { return false; }
                         var counter = 0;
                         roomObj.eachMob(function(m) {
-                            if(m.id == mobId)
+                            if(m.obj.id == mobId)
                                 counter++;
                         });
                         if(counter < self.restrictions[i].max)
@@ -672,7 +687,7 @@ var Room = function(config, mapobj) {
                 id: item.id,
                 name: item.get('htmlname'),
                 textname: item.get('name'),
-                picture: item.get('picture').replace(' ', '') || '',
+                picture: ((item.get('picture'))?item.get('picture').replace(' ', ''):''),
                 type: 'item',
                 rarity: item.get('rarity')
             });

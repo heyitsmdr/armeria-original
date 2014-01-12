@@ -67,15 +67,36 @@ var Library = function(){
                     parent: parentString,
                     type: 'item',
                     overrides: {}
-                });
-                DB.library.find({id: 'item' + parentString + '-' + uid}, function(err, lib){
+                }, function(err, resp) {
                     if(err) {
                         player.msg('Could not add item to database.');
                         return;
+                    } else {
+                        self.objects.push(new LibraryEntry(resp));
                     }
-                    self.objects.push(new LibraryEntry(lib[0]));
                 });
                 player.msg('Entry added to database: ' + 'item' + parentString + '-' + uid);
+                break;
+            case 'mob':
+                var m = MOBS.getById(parentString)
+                if(!m) {
+                    player.msg('Could not find mob parent.');
+                    return;
+                }
+                DB.library.insert({
+                    id: 'mob' + parentString + '-' + uid,
+                    parent: parentString,
+                    type: 'mob',
+                    overrides: {}
+                }, function(err, resp) {
+                    if(err) {
+                        player.msg('Could not add mob to database.');
+                        return;
+                    } else {
+                        self.objects.push(new LibraryEntry(resp));
+                    }
+                });
+                player.msg('Entry added to database: ' + 'mob' + parentString + '-' + uid);
                 break;
         }
     };
@@ -87,12 +108,12 @@ var Library = function(){
                 switch(lib.type) {
                     case 'item':
                         objs.push({
-                            property: "<span class='itemtooltip' data-id='" + lib.id + "' onclick='GameEngine.parseCommand(\"/spawn " + lib.id + "\")'>" + lib.id + "</span>",
+                            property: "<span class='itemtooltip libitem' data-id='" + lib.id + "' onclick='GameEngine.parseCommand(\"/spawn " + lib.id + "\")'>" + lib.id + "</span>",
                             value: lib.get('name')
                         });
                         break;
                     default:
-                        objs.push({ property: lib.id, value: lib.get('name') });
+                        objs.push({ property: "<span class='libitem' data-id='" + lib.id + "'>" + lib.id + "</span>", value: lib.get('name') });
                 }
             }
         });
@@ -189,6 +210,9 @@ var Library = function(){
                 self.editEntry(player, obj.id);
                 break;
             case 'mob':
+                obj.set(prop.toLowerCase(), val);
+                player.msg('Library entry has been updated.');
+                self.editEntry(player, obj.id);
                 break;
         }
     };
@@ -210,7 +234,7 @@ var LibraryEntry = function(config) {
     self.instanceData = {};
 
     self.init = function(config) {
-        self._id = config._id;
+        self._id = config._id || '';
         self.id = config.id;
         self.uid = LIBRARY.createUid();
         self.type = config.type;
@@ -247,7 +271,7 @@ var LibraryEntry = function(config) {
                     self.gameScript = new self.gameScript(self); 
                 } catch(e) {
                     self.gameScript = false;
-                    console.log('[script] error loading: /data/scripts/' + self._id + '.js');
+                    console.log('[script] error loading: /data/scripts/' + self._id + '.' + uid + '.js');
                     if(player) {
                         player.msg("<span class='red'>ERROR: /data/scripts/" + self._id + "." + uid + ".js</span>");
                         player.msg("<span class='red'>MESSAGE: " + e.message + "</span>");
@@ -259,9 +283,19 @@ var LibraryEntry = function(config) {
 
     self.get = function(stat, instanceId) {
         if(instanceId)
-            return eval("self.instanceData." + instanceId + "." + stat + " || self.overrides." + stat + " || self.parent." + stat);
-        else
-            return eval("self.overrides." + stat + " || self.parent." + stat);
+            if(eval("self.instanceData." + instanceId + "." + stat) != undefined)
+                return eval("self.instanceData." + instanceId + "." + stat)
+            else if(eval("self.overrides." + stat) != undefined)
+                return eval("self.overrides." + stat);
+            else
+                return eval("self.parent." + stat);
+        else {
+            if(eval("self.overrides." + stat) != undefined)
+                return eval("self.overrides." + stat);
+            else
+                return eval("self.parent." + stat);
+            
+        }
     }
 
     self.set = function(prop, val, instanceId) {
@@ -330,6 +364,7 @@ var LibraryEntry = function(config) {
         var data = {
             id: self.id,
             type: self.type,
+            parent: self.parentText,
             overrides: self.overrides
         };
         

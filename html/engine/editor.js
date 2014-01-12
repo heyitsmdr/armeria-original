@@ -82,10 +82,15 @@ self.editorSetDefaultTerrain = function () {
 };
 
 self.editorChangeClickAction = function () {
-    if ($('#builder-clickaction').html() === 'teleport') {
-        $('#builder-clickaction').html('build');
+    if ($('#builder-clickaction').data('action') == 'teleport') {
+        $('#builder-clickaction').html('<span style="color:#51fc5c">build</span>');
+        $('#builder-clickaction').data('action', 'build');
+    } else if ($('#builder-clickaction').data('action') == 'build') {
+        $('#builder-clickaction').html('<span style="color:#fc6d51">destroy</span>');
+        $('#builder-clickaction').data('action', 'destroy');
     } else {
-        $('#builder-clickaction').html('teleport');
+        $('#builder-clickaction').html('<span style="color:#51d2fc">teleport</span>');
+        $('#builder-clickaction').data('action', 'teleport');
     }
 };
 
@@ -121,14 +126,16 @@ self.editorClick = function (evt) {
     x = parseInt(GameEngine.maproom.x, 10) + parseInt(x, 10);
     y = parseInt(GameEngine.maproom.y, 10) + parseInt(y, 10);
     // send to server
-    if ($('#builder-clickaction').html() === 'teleport') {
+    if ($('#builder-clickaction').data('action') == 'teleport') {
         GameEngine.socket.emit('cmd', {cmd: 'tp ' + x + ' ' + y});
-    } else if ($('#builder-clickaction').html() === 'build') {
+    } else if ($('#builder-clickaction').data('action') == 'build') {
         if ($('#builder-terrain').html() === 'null null') {
             $.gritter.add({title: 'Build Error', text: 'Please set a Default Terrain before building.'});
         } else {
             GameEngine.socket.emit('cmd', {cmd: 'create room @' + x + ',' + y + ',' + GameEngine.maproom.z + ' -terrain "' + $('#builder-terrain').html() + ' 00000000"'});
         }
+    } else if ($('#builder-clickaction').data('action') == 'destroy') {
+        GameEngine.socket.emit('cmd', {cmd: 'destroy room @' + x + ',' + y + ',' + GameEngine.maproom.z});
     }
     GameEngine.socket.emit('cmd', {cmd: 'edit refresh'});
 };
