@@ -342,7 +342,7 @@ var GameEngine = new function () {
             var hn = location.hostname;
             this.socket = io.connect('http://' + ((hn === 'armeria.ngrok.com') ? 'armeria-serv.ngrok.com' : hn) + ((hn === 'armeria.ngrok.com') ? '' : ':' + GameEngine.port), {
                 'reconnect': true,
-                'reconnection delay': 1000,
+                'reconnection delay': 6000,
                 'max reconnection attempts': 10
             });
             this._socketEvents();
