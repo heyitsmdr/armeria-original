@@ -155,6 +155,7 @@ var GameEngine = new function () {
             },
             items: {
                 "use": {name: "Use", icon: "use"},
+                "equip": {name: "Equip", icon: "equip"},
                 "drop": {name: "Drop", icon: "drop"}
             }
         });
@@ -169,6 +170,19 @@ var GameEngine = new function () {
             },
             items: {
                 "pickup": {name: "Pickup", icon: "pickup"}
+            }
+        });
+        $.contextMenu({
+            selector: '.menueq', 
+            callback: function(key, options) {
+                switch(key) {
+                    case 'unequip':
+                        GameEngine.parseCommand('/remove ' + this[0].getAttribute('data-name'));
+                        break;
+                }
+            },
+            items: {
+                "unequip": {name: "Unequip", icon: "unequip"}
             }
         });
 
@@ -263,8 +277,8 @@ var GameEngine = new function () {
     this._getFBInfo = function (callback) {
         FB.api('/me', function (resp) {
             GameEngine.fbinfo = resp;
-            FB.api('/' + GameEngine.fbinfo.id + '?fields=picture', function (resp) {
-                GameEngine.fbinfo.picture = resp.picture.data.url;
+            FB.api('/me/picture', function (resp) {
+                GameEngine.fbinfo.picture = resp.data.url;
                 callback();
             });
         });
@@ -356,7 +370,8 @@ var GameEngine = new function () {
                     name: GameEngine.fbinfo.name,
                     picture: GameEngine.fbinfo.picture,
                     token: GameEngine.fbaccesstoken,
-                    nick: GameEngine.fbinfo.username
+                    nick: GameEngine.fbinfo.username,
+                    gender: GameEngine.fbinfo.gender
                 });
             }
         });
@@ -465,6 +480,16 @@ var GameEngine = new function () {
                 listData += "</p></li></span>";
             });
             $('#carrying').html(listData);
+        });
+        this.socket.on('eq', function(data) {
+            var listData = "";
+            data.forEach(function(item) {
+                listData += "<span class='itemtooltip menueq' data-name='" + item.name + "' data-id='" + item.id + "'><li class='inv-item'>";
+                listData += "<div class='pictureBorder' style='" + GameEngine.setItemRarity(String(item.rarity)) + "'><div style='" + GameEngine.setItemPicture(item.picture) + "' class='pictureSrc'></div></div>" + "<p>";
+                listData += item.htmlname;
+                listData += "</p><span class='equip-slot'>" + item.equipslot + "</span></li></span>";
+            });
+            $('#equipped').html(listData);
         });
         this.socket.on('bars', function(data) {
             // set bar labels

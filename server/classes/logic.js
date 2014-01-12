@@ -802,6 +802,86 @@ var Logic = function() {
         });
         player.msg(inv);
     };
+
+    self.equip = function(player, itemName) {
+        if(!itemName) {
+            player.msg('Usage: /equip [item]');
+            return;
+        }
+
+        var inventoryItem = player.character.getInventoryItem(itemName);
+        if(inventoryItem === false) {
+            player.msg('Item not found in your inventory.');
+            return;
+        }
+
+        var success = false;
+        switch(inventoryItem.get('equipslot')) {
+            case 'weapon':
+                if(player.character.equipment.weapon) {
+                    player.msg('You already have a weapon equipped.');
+                    return;
+                }
+                success = player.character.addEquipment('weapon', inventoryItem);
+                break;
+            case 'body':
+                case 'weapon':
+                if(player.character.equipment.body) {
+                    player.msg('You already have a body piece equipped.');
+                    return;
+                }
+                success = player.character.addEquipment('body', inventoryItem);
+                break;
+
+            case 'feet':
+                case 'weapon':
+                if(player.character.equipment.feet) {
+                    player.msg('You already have footware equipped.');
+                    return;
+                }
+                success = player.character.addEquipment('feet', inventoryItem);
+                break;
+            default:
+                player.msg('Item is not equippable.');
+                return;
+        }
+
+        if(!success) {
+            player.msg('Item could not be equipped.');
+            return;
+        }
+
+        player.character.removeInventoryItem(inventoryItem);
+
+        player.character.room.announceExcept(player, player.character.htmlname + ' equipped a ' + inventoryItem.get('htmlname') + ' to himself.');
+        player.msg('You equipped a ' + inventoryItem.get('htmlname') + ' to yourself.');
+    };
+
+    self.remove = function(player, itemName) {
+        if(!itemName) {
+            player.msg('Usage: /remove [item]');
+            return;
+        }
+
+        var equippedItem = player.character.getEquippedItem(itemName);
+        if(equippedItem === false) {
+            player.msg('Item is not equipped.');
+            return;
+        }
+
+        var success = player.character.removeEquipment(equippedItem.get('equipslot'), equippedItem);
+
+        if(!success) {
+            player.msg('Item could not be unequipped.');
+            return;
+        }
+
+        player.character.addInventoryItem(equippedItem);
+
+        player.character.room.announceExcept(player, player.character.htmlname + ' removed a ' + inventoryItem.get('htmlname') + ' from himself.');
+        player.msg('You removed a ' + inventoryItem.get('htmlname') + ' from yourself.');
+    };
+
     /*  ## END: ITEM MANAGEMENT ## */
 
     /*  ## EMOTES ## */
