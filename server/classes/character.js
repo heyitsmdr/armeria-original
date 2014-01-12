@@ -107,7 +107,7 @@ var Character = function (config) {
         self.builder = config.builder || true;
         self.channels = config.channels || [];
         self.roomdesc = config.roomdesc || 'is here.';
-        self.gender = config.gender || 'Male';
+        self.gender = config.gender || 'male';
         self.race = config.race || 'Human';
         self.characterClass = config.characterClass || 'Novice';
         self.stats = config.stats || {health: 100, maxhealth: 100, magic: 100, maxmagic: 100, energy: 100, maxenergy: 100, exp: 0, exptl: 200, str: 10, int: 10, cha: 10, pdmg: 10, mdmg: 10, armor: 10, resistance: 10};
@@ -270,7 +270,12 @@ var Character = function (config) {
     };
 
 	self.addInventoryItem = function (itemId) {
-		var obj = LIBRARY.getById(itemId);
+		var obj = false;
+        if(typeof(item) == 'string')
+            obj = LIBRARY.getById(itemId);
+        else if(typeof(item) == 'object')
+            obj = item;
+        
 		if (!obj) { return false; }
 		if (obj.type !== 'item') { return false; }
 			

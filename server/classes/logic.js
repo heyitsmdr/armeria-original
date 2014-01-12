@@ -51,6 +51,18 @@ var Logic = function() {
     self._removeHTML = function(data) {
         return data.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     };
+    self._genderWord = function(p, wordMale, wordFemale) {
+        switch(p.character.gender.toLowerCase()) {
+            case 'male':
+                return wordMale;
+                break;
+            case 'female':
+                return wordFemale;
+                break;
+            default:
+                return wordMale;
+        }
+    }
     /* ## END: LOGIC HELPER FUNCTIONS ## */
 
     /* ## LOGIN AUTHORIZATION ## */
@@ -87,6 +99,7 @@ var Logic = function() {
             var gamechar = CHARACTERS.create(data.id, data.name);
             player.character = gamechar;
             player.character.picture = data.picture;
+            player.character.gender = data.gender;
             player.character.player = player;
             player.character.nickname = data.nick;
             if(gamechar) {
@@ -853,7 +866,7 @@ var Logic = function() {
 
         player.character.removeInventoryItem(inventoryItem);
 
-        player.character.room.announceExcept(player, player.character.htmlname + ' equipped a ' + inventoryItem.get('htmlname') + ' to himself.');
+        player.character.room.announceExcept(player, player.character.htmlname + ' equipped a ' + inventoryItem.get('htmlname') + ' to ' + self._genderWord(player, 'himself', 'herself') + '.');
         player.msg('You equipped a ' + inventoryItem.get('htmlname') + ' to yourself.');
     };
 
@@ -878,8 +891,8 @@ var Logic = function() {
 
         player.character.addInventoryItem(equippedItem);
 
-        player.character.room.announceExcept(player, player.character.htmlname + ' removed a ' + inventoryItem.get('htmlname') + ' from himself.');
-        player.msg('You removed a ' + inventoryItem.get('htmlname') + ' from yourself.');
+        player.character.room.announceExcept(player, player.character.htmlname + ' removed a ' + equippedItem.get('htmlname') + ' from ' + self._genderWord(player, 'himself', 'herself') + '.');
+        player.msg('You removed a ' + equippedItem.get('htmlname') + ' from yourself.');
     };
 
     /*  ## END: ITEM MANAGEMENT ## */
