@@ -345,8 +345,16 @@ io.sockets.on('connection', function(socket){
         // library id (builders only)
         if(player.character.builder)
             tooltip += "<br><span style='color:#666666'>" + obj.id + "</span>";
-        // level
-        tooltip += "<br>Level " + obj.get('level');
+        // type and level
+        var equipslot = obj.get('equipslot');
+        switch(equipslot) {
+            case 'weapon':
+                equipslot = ' Weapon';
+                break;
+            default:
+                equipslot = '';
+        }
+        tooltip += "<br>Level " + obj.get('level') + equipslot;
         // rare, unique, etc
         var rarity = String(obj.get('rarity'));
         switch(rarity) {
