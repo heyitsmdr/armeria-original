@@ -402,14 +402,14 @@ io.sockets.on('connection', function(socket){
     socket.on('savescript', function(data){
         if(!player.character.hasPriv('libraryManagement')) { return; }
         var obj = LIBRARY.getById(data.id);
-        if(obj && data.value) {
-            obj.set('script', data.value);
-            obj.reloadScript(player);
-            player.msg('Script saved and reloaded.');
-        } else if (obj && !data.value) {
+        if(obj && data.value == '""') {
             obj.set('script', '');
             obj.reloadScript(player);
             player.msg('Script removed.');
+        } else if (obj && data.value) {
+            obj.set('script', data.value);
+            obj.reloadScript(player);
+            player.msg('Script saved and reloaded.');
         }
     });
 });

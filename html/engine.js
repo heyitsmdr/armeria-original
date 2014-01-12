@@ -774,7 +774,7 @@ var GameEngine = new function () {
                 lineNumbers: true
             });
         } else {
-            GameEngine.codeMirror.setValue(JSON.parse(scriptContents));
+            GameEngine.codeMirror.setValue(((scriptContents)?JSON.parse(scriptContents):''));
         }
     };
 }();

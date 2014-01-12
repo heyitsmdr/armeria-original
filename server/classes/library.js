@@ -273,7 +273,7 @@ var LibraryEntry = function(config) {
                     self.gameScript = new self.gameScript(self); 
                 } catch(e) {
                     self.gameScript = false;
-                    console.log('[script] error loading: /data/scripts/' + self._id + '.js');
+                    console.log('[script] error loading: /data/scripts/' + self._id + '.' + uid + '.js');
                     if(player) {
                         player.msg("<span class='red'>ERROR: /data/scripts/" + self._id + "." + uid + ".js</span>");
                         player.msg("<span class='red'>MESSAGE: " + e.message + "</span>");
