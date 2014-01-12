@@ -185,7 +185,23 @@ var GameEngine = new function () {
                 "unequip": {name: "Unequip", icon: "unequip"}
             }
         });
-
+        $.contextMenu({
+            selector: '.libitem', 
+            callback: function(key, options) {
+                switch(key) {
+                    case 'lookup':
+                        GameEngine.parseCommand('/lib ' + this[0].getAttribute('data-id'));
+                        break;
+                    case 'spawn':
+                        GameEngine.parseCommand('/spawn ' + this[0].getAttribute('data-id'));
+                        break;
+                }
+            },
+            items: {
+                "lookup": {name: "Lookup", icon: "lookup"},
+                "spawn": {name: "Spawn", icon: "spawn"}
+            }
+        });
         // focus input box
         $('#input').focus();
     };

@@ -351,6 +351,9 @@ io.sockets.on('connection', function(socket){
             case 'weapon':
                 equipslot = ' Weapon';
                 break;
+            case 'body':
+                equipslot = ' Body Piece';
+                break;
             default:
                 equipslot = '';
         }

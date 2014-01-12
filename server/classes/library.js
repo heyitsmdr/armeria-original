@@ -108,12 +108,12 @@ var Library = function(){
                 switch(lib.type) {
                     case 'item':
                         objs.push({
-                            property: "<span class='itemtooltip' data-id='" + lib.id + "' onclick='GameEngine.parseCommand(\"/spawn " + lib.id + "\")'>" + lib.id + "</span>",
+                            property: "<span class='itemtooltip libitem' data-id='" + lib.id + "' onclick='GameEngine.parseCommand(\"/spawn " + lib.id + "\")'>" + lib.id + "</span>",
                             value: lib.get('name')
                         });
                         break;
                     default:
-                        objs.push({ property: lib.id, value: lib.get('name') });
+                        objs.push({ property: "<span class='libitem' data-id='" + lib.id + "'>" + lib.id + "</span>", value: lib.get('name') });
                 }
             }
         });
