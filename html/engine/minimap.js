@@ -8,8 +8,6 @@ self.mapz = 0;              // Map Z-Coordinate
 self.maproom = false;       // Object within this.mapdata that contains the current room
 self.mapctx = false;        // Minimap Canvas 2D Context
 self.mapcv = false;         // Minimap Canvas
-self.maptileset = [];       // Images of Tilesets
-self.mapts = [];            // Image Properties
 self.mapanim = false;       // Map Animation for setInterval
 self.mapoffsetx = 0;        // Minimap offset - x
 self.mapoffsety = 0;        // Minimap offset - y
@@ -18,6 +16,8 @@ self.mapdestoffsety = 0;    // Minimap destination offset - y
 self.mapmarker = false;     // Image of Map Marker
 
 self.initMinimap = function() {
+    // set up tileset
+    self.setupTileset();
     // set up stage
     self.mapstage = new PIXI.Stage(0x262626);
     self.maprenderer = PIXI.autoDetectRenderer(256, 256);

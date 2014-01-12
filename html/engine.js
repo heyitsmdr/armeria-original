@@ -22,14 +22,13 @@ var GameEngine = new function () {
     this.connected = false;     // Connected or not (boolean)
     this.connecting = false;    // Connection in process (to block certain functions)
     this.toolTipCache = [];     // Array of tool tip data used for cache
-    this.tilesets = [];         // Tilesets
     this.server = false;        // Server class
     this.serverOffline = false; // Set to True if Socket.IO is not found (server offline)
     this.sendHistory = [];      // Array of strings that you sent to the server (for up/down history)
     this.sendHistPtr = false;   // Pointer for navigating the history
     this.lineCount = 0;         // Number of lines parsed
     this.codeMirror = false;    // CodeMirror instance
-    this.lastLibraryId = false; // Last Library ID
+    this.lastLibraryId = false; // Last Library ID (for script editor)
 
     this.init = function () {
         // set port
@@ -91,15 +90,15 @@ var GameEngine = new function () {
         soundManager.setup({url: '/libraries/soundmanager2/swf/', ontimeout: function () { console.log('SoundManager timed out.'); }});
         soundManager.debugMode = false;
         // setup minimap
-        // GameEngine.initMinimap(); **** FOR PIXI ****
-        GameEngine.mapcv = document.getElementById('map-canvas');
+        GameEngine.initMinimap();
+        /*GameEngine.mapcv = document.getElementById('map-canvas');
         GameEngine.mapctx = GameEngine.mapcv.getContext('2d');
         GameEngine.mapctx.lineWidth = 3;
         GameEngine.mapctx.lineJoin = 'round';
         GameEngine.mapctx.strokeStyle = '#ffffff';
         GameEngine.setupTileset();
         GameEngine.mapmarker = new Image();
-        GameEngine.mapmarker.src = "images/tiles/playerMark.png";
+        GameEngine.mapmarker.src = "images/tiles/playerMark.png";*/
         // setup error reporting
         window.onerror = function (msg, url, linenumber) {
             if (msg === 'ReferenceError: io is not defined') {
@@ -226,46 +225,6 @@ var GameEngine = new function () {
         });
         $(document).on('mouseleave', selector, GameEngine.toolTipLeave);
         $(document).on('mousemove', selector, GameEngine.toolTipMove);
-    };
-
-    this.setupTileset = function () {
-        /* TILE DEFINITIONS */
-        GameEngine.tilesets = ['floors'];
-
-        /* NOTE: Edges are automatically calculated since they will always be
-                 to the right of the tile (if edges = true). */
-
-        //GameEngine.mapts['floors'] = [
-        GameEngine.mapts.floors = [
-            {def: 'grass', sx: 0, sy: 0, edges: true},
-            {def: 'dirt', sx: 0, sy: 1, edges: true}
-        ];
-
-        // Calculate Real sx and sy && Calculate edges (if needed) && Load images
-        GameEngine.tilesets.forEach(function (tset) {
-            GameEngine.tsSetReal(GameEngine.mapts[tset]);
-            GameEngine.mapts[tset].forEach(function (ts) { if (ts.edges) { GameEngine.tsSetEdges(ts); } });
-            GameEngine.maptileset[tset] = new Image();
-            GameEngine.maptileset[tset].src = "images/tiles/" + tset + ".png";
-        });
-    };
-
-    this.tsSetReal = function (ts) {
-        ts.forEach(function (tile) {
-            tile.sx *= 32;
-            tile.sy *= 32;
-        });
-    };
-
-    this.tsSetEdges = function (tile) {
-        tile.edgeTop = tile.sx + 32;
-        tile.edgeRight = tile.sx + 64;
-        tile.edgeBottom = tile.sx + 96;
-        tile.edgeLeft = tile.sx + 128;
-        tile.cornerTopLeft = tile.sx + 160;
-        tile.cornerTopRight = tile.sx + 192;
-        tile.cornerBottomRight = tile.sx + 224;
-        tile.cornerBottomLeft = tile.sx + 256;
     };
     /*jslint nomen: true*/
     this._doFBLogin = function () {

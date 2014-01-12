@@ -50,6 +50,7 @@
         <script src="engine.js?buildTime=<?=filemtime('./engine.js')?>"></script>
         <script src="engine/editor.js?buildTime=<?=filemtime('./engine/editor.js')?>"></script>
         <script src="engine/minimap.js?buildTime=<?=filemtime('./engine/minimap.js')?>"></script>
+        <script src="engine/tileset.js?buildTime=<?=filemtime('./engine/tileset.js')?>"></script>
         <? endif; ?>
         <!-- Libraries -->
         <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
@@ -209,8 +210,7 @@
         <div id="right-content">
             <div id="game"></div>
                 <div id="minimap">
-                    <div id="map-pixi" style="display:none;" width="256" height="256"></div>
-                    <canvas id="map-canvas" width="256" height="256"></canvas>
+                    <div id="map-canvas" width="256" height="256"></div>
                     <div id="player"></div>
                     <div id="mapshadow"></div>
                     <div id="playerMark"></div>
