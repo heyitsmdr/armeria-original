@@ -528,6 +528,7 @@ var Logic = function() {
                 break;
             case 'item':
                 LIBRARY.createEntry(player, 'item', argsremaining);
+                break;
             case 'mob':
                 LIBRARY.createEntry(player, 'mob', argsremaining);
                 break;

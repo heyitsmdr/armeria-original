@@ -483,11 +483,13 @@ var GameEngine = new function () {
         });
         this.socket.on('eq', function(data) {
             var listData = "";
+            var index = 0;
             data.forEach(function(item) {
                 listData += "<span class='itemtooltip menueq' data-name='" + item.name + "' data-id='" + item.id + "'><li class='inv-item'>";
                 listData += "<div class='pictureBorder' style='" + GameEngine.setItemRarity(String(item.rarity)) + "'><div style='" + GameEngine.setItemPicture(item.picture) + "' class='pictureSrc'></div></div>" + "<p>";
                 listData += item.htmlname;
-                listData += "</p><span class='equip-slot'>" + item.equipslot + "</span></li></span>";
+                listData += "</p><div style='top:" + (15 + (45 * index)) + "px' class='equip-slot'>" + item.equipslot + "</div></li></span>";
+                index++;
             });
             $('#equipped').html(listData);
         });

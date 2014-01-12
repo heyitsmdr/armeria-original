@@ -64,17 +64,16 @@ var Library = function(){
                 }
                 DB.library.insert({
                     id: 'item' + parentString + '-' + uid,
-                    parent: i,
-                    parentString: parentString,
+                    parent: parentString,
                     type: 'item',
                     overrides: {}
-                });
-                DB.library.find({id: 'item' + parentString + '-' + uid}, function(err, lib){
+                }, function(err, resp) {
                     if(err) {
                         player.msg('Could not add item to database.');
                         return;
+                    } else {
+                        self.objects.push(new LibraryEntry(resp));
                     }
-                    self.objects.push(new LibraryEntry(lib[0]));
                 });
                 player.msg('Entry added to database: ' + 'item' + parentString + '-' + uid);
                 break;
@@ -86,17 +85,16 @@ var Library = function(){
                 }
                 DB.library.insert({
                     id: 'mob' + parentString + '-' + uid,
-                    parent: m,
-                    parentString: parentString,
+                    parent: parentString,
                     type: 'mob',
                     overrides: {}
-                });
-                DB.library.find({id: 'mob' + parentString + '-' + uid}, function(err, lib){
+                }, function(err, resp) {
                     if(err) {
                         player.msg('Could not add mob to database.');
                         return;
+                    } else {
+                        self.objects.push(new LibraryEntry(resp));
                     }
-                    self.objects.push(new LibraryEntry(lib[0]));
                 });
                 player.msg('Entry added to database: ' + 'mob' + parentString + '-' + uid);
                 break;
@@ -236,7 +234,7 @@ var LibraryEntry = function(config) {
     self.instanceData = {};
 
     self.init = function(config) {
-        self._id = config._id;
+        self._id = config._id || '';
         self.id = config.id;
         self.uid = LIBRARY.createUid();
         self.type = config.type;
@@ -285,9 +283,19 @@ var LibraryEntry = function(config) {
 
     self.get = function(stat, instanceId) {
         if(instanceId)
-            return eval("self.instanceData." + instanceId + "." + stat + " || self.overrides." + stat + " || self.parent." + stat);
-        else
-            return eval("self.overrides." + stat + " || self.parent." + stat);
+            if(eval("self.instanceData." + instanceId + "." + stat) != undefined)
+                return eval("self.instanceData." + instanceId + "." + stat)
+            else if(eval("self.overrides." + stat) != undefined)
+                return eval("self.overrides." + stat);
+            else
+                return eval("self.parent." + stat);
+        else {
+            if(eval("self.overrides." + stat) != undefined)
+                return eval("self.overrides." + stat);
+            else
+                return eval("self.parent." + stat);
+            
+        }
     }
 
     self.set = function(prop, val, instanceId) {
