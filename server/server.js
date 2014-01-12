@@ -406,6 +406,10 @@ io.sockets.on('connection', function(socket){
             obj.set('script', data.value);
             obj.reloadScript(player);
             player.msg('Script saved and reloaded.');
+        } else if (obj && !data.value) {
+            obj.set('script', '');
+            obj.reloadScript(player);
+            player.msg('Script removed.');
         }
     });
 });
