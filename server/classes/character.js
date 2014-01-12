@@ -269,17 +269,17 @@ var Character = function (config) {
         return true;
     };
 
-	self.addInventoryItem = function (itemId) {
+	self.addInventoryItem = function (item) {
 		var obj = false;
         if(typeof(item) == 'string')
-            obj = LIBRARY.getById(itemId);
+            obj = LIBRARY.getById(item);
         else if(typeof(item) == 'object')
             obj = item;
-        
+
 		if (!obj) { return false; }
 		if (obj.type !== 'item') { return false; }
 			
-		self.inventory.push(itemId);
+		self.inventory.push(obj.id);
 
         self.player.update({inventory: 1});
         
