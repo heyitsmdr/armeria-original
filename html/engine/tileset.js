@@ -56,7 +56,7 @@ self.initTextures = function() {
 				self.mapts[ts][tile].textureEdge = [];
 				edges.forEach(function(e) {
 					self.mapts[ts][tile].textureEdge[e] = [];
-					self.mapts[ts][tile].textureEdge[e].texture = new PIXI.Texture(self.mapts[ts].baseTexture, new PIXI.Rectangle(self.mapts[ts][tile].sx - offset, self.mapts[ts][tile].sy - offset, 32, 32));
+					self.mapts[ts][tile].textureEdge[e].texture = new PIXI.Texture(self.mapts[ts].baseTexture, new PIXI.Rectangle(self.mapts[ts][tile].sx - offset, self.mapts[ts][tile].sy, 32, 32));
 					offset += 32;
 				});
 			}

@@ -97,12 +97,22 @@ self.mapRender = function(mapdata, z) {
 
         if(room.z == z) {
             var spriteRoom = new PIXI.DisplayObjectContainer();
-            var sprite = new PIXI.Sprite(self.mapts[tileBaseSheet][tileBaseTile].texture);
-            sprite.position.x = room.x * 32;
-            sprite.position.y = room.y * 32;
-            if(GameEngine.debug.pixi) { console.log('pixi: adding sprite to stage at ' + sprite.position.x + ',' + sprite.position.y) }
 
-            spriteRoom.addChild(sprite);
+            if(tileBase != "null") {
+                var base = new PIXI.Sprite(self.mapts[tileBaseSheet][tileBaseTile].texture);
+                base.position.x = room.x * 32;
+                base.position.y = room.y * 32;
+                spriteRoom.addChild(base);
+            }
+            
+            if(tilePrimary != "null") {
+                var primary = new PIXI.Sprite(self.getPrimaryTextureWithEdges(tilePrimarySheet, tilePrimaryTile, tileEdges.substr(0, 4)));
+                primary.position.x = room.x * 32;
+                primary.position.y = room.y * 32;
+                spriteRoom.addChild(primary);
+            }
+
+
             self.mapcontainer.addChild(spriteRoom);
         }
     });
@@ -117,6 +127,19 @@ self.mapPosition = function(x, y, z, anim) {
     } else {
         self.destinationX = -(x * 32) + 112;
         self.destinationY = -(y * 32) + 112;
+    }
+};
+
+self.getPrimaryTextureWithEdges = function(sheet, tile, edgeData) {
+    var edges = ((edgeData.substr(0,1)=='1')?'t':'') +
+                ((edgeData.substr(1,1)=='1')?'r':'') +
+                ((edgeData.substr(2,1)=='1')?'b':'') +
+                ((edgeData.substr(3,1)=='1')?'l':'');
+
+    if(edges) {
+        return self.mapts[sheet][tile].textureEdge[edges].texture;
+    } else {
+        return self.mapts[sheet][tile].texture;
     }
 };
 
