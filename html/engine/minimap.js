@@ -4,6 +4,9 @@ self.mapstage = false;      // Pixi Stage for Minimap
 self.maprenderer = false;   // Pixi Renderer
 self.mapcontainer = false;  // Pixi DisplayObjectContainer
 self.mapdata = false;       // Entire minimap data
+self.destinationX = 0;      // New Player X (for animation)
+self.destinationY = 0;      // New Player Y (for animation)
+
 self.mapz = 0;              // Map Z-Coordinate
 self.maproom = false;       // Object within this.mapdata that contains the current room
 self.mapctx = false;        // Minimap Canvas 2D Context
@@ -27,15 +30,17 @@ self.initMinimap = function() {
     requestAnimFrame(self.pixiRender);
     // init container
     self.mapcontainer = new PIXI.DisplayObjectContainer();
+    // add to stage
+    self.mapstage.addChild(self.mapcontainer);
 
-    console.log('minimap: pixi stage initiated');
+    console.log('pixi: stage initiated');
 };
 
 self.mmTest = function(x, y) {
     // load texture
-    var floor_grass = PIXI.Texture.fromImage("images/tiles/floors.png");
+    var floor_grass = self.mapts['floors']['grass'].texture;
 
-    floor_grass.setFrame(new PIXI.Rectangle(0, 0, 32, 32));
+    floor_grass.setFrame(new PIXI.Rectangle(32, 32, 32, 32));
 
     var room = new PIXI.Sprite(floor_grass);
 
@@ -44,44 +49,78 @@ self.mmTest = function(x, y) {
 
     // add to container
     self.mapcontainer.addChild(room);
-
-    self.mapstage.addChild(self.mapcontainer);
 }
 
 self.pixiRender = function() {
     requestAnimFrame(self.pixiRender);
 
+    // animate moving?
+    if(self.destinationX > self.mapcontainer.position.x)
+        self.mapcontainer.position.x += 4;
+    else if(self.destinationX < self.mapcontainer.position.x)
+        self.mapcontainer.position.x -= 4;
+
+    if(self.destinationY > self.mapcontainer.position.y)
+        self.mapcontainer.position.y += 4;
+    else if(self.destinationY < self.mapcontainer.position.y)
+        self.mapcontainer.position.y -= 4;
+
     self.maprenderer.render(self.mapstage);
 }
 
-self.mapGetTilesetDefinition = function (definition) {
-    var tileset = definition.split('.')[0], tile = definition.split('.')[1], k;
-    for (k = 0; k < GameEngine.mapts[tileset].length; k++) {
-        if (GameEngine.mapts[tileset][k].def.toLowerCase() === tile.toLowerCase()) {
-            return GameEngine.mapts[tileset][k];
-        }
-    }
-
-    // default to grass
-    return GameEngine.mapts[tileset][0];
-};
-
-self._mapRender = function(mapdata, offsetx, offsety) {
-    var renderMethod;
-
+// mapdata = [{x, y, z, terrain, env}];
+self.mapRender = function(mapdata, z) {
     // load or restore map data
     if (mapdata === false) {
         mapdata = this.mapdata;
-        renderMethod = "restore";
     } else {
         this.mapdata = mapdata;
-        renderMethod = "load";
     }
 
+    // check z
+    if(z === undefined) { z = 0; }
 
+    // clear current stage
+    self.mapcontainer.children.forEach(function(child) {
+        self.mapcontainer.removeChild(child);
+    });
+
+    mapdata.forEach(function(room) {
+        var tileBase = room.terrain.split(' ')[0];
+        var tilePrimary = room.terrain.split(' ')[1];
+        var tileEdges = room.terrain.split(' ')[2];
+
+        var tileBaseSheet = tileBase.split('.')[0];
+        var tileBaseTile = tileBase.split('.')[1];
+        var tilePrimarySheet = tilePrimary.split('.')[0];
+        var tilePrimaryTile = tilePrimary.split('.')[1];
+
+        if(room.z == z) {
+            var spriteRoom = new PIXI.DisplayObjectContainer();
+            var sprite = new PIXI.Sprite(self.mapts[tileBaseSheet][tileBaseTile].texture);
+            sprite.position.x = room.x * 32;
+            sprite.position.y = room.y * 32;
+            if(GameEngine.debug.pixi) { console.log('pixi: adding sprite to stage at ' + sprite.position.x + ',' + sprite.position.y) }
+
+            spriteRoom.addChild(sprite);
+            self.mapcontainer.addChild(spriteRoom);
+        }
+    });
 }
 
-self.mapRender = function (mapdata, offsetx, offsety) {
+self.mapPosition = function(x, y, z, anim) {
+    if(!anim) {
+        self.mapcontainer.position.x = -(x * 32) + 112;
+        self.mapcontainer.position.y = -(y * 32) + 112;
+        self.destinationX = self.mapcontainer.position.x;
+        self.destinationY = self.mapcontainer.position.y;
+    } else {
+        self.destinationX = -(x * 32) + 112;
+        self.destinationY = -(y * 32) + 112;
+    }
+};
+
+self._mapRender = function (mapdata, offsetx, offsety) {
     var i, x, y, z, left, top, layerBase, layerPrimary, layerEdgeCorners, defBase, defPrimary, tsBase, tsPrimary;
     if (mapdata === false) {
         mapdata = this.mapdata;
@@ -156,7 +195,7 @@ self.mapGridAt = function (x, y, z) {
     return false;
 };
 
-self.mapPosition = function (x, y, z, anim) {
+self._mapPosition = function (x, y, z, anim) {
     if (!this.mapdata) { console.log('GameEngine.mapPosition(' + x + ', ' + y + ', ' + z + '): failed - local map cache empty'); return; }
     if (!this.mapGridAt(x, y, z)) { console.log('GameEngine.mapPosition(' + x + ', ' + y + ', ' + z + '): failed - destination doesnt exist in local map cache'); return; }
     if (this.mapz !== z) {

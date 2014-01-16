@@ -9,7 +9,7 @@
 
 var GameEngine = new function () {
     "use strict";
-    this.debug = {datainput: false};
+    this.debug = {datainput: false, pixi: false};
     this.funcvars = {};         // Various static variables for functions
     this.version = false;       // Version
     this.port = 2772;           // Port

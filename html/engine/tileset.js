@@ -12,57 +12,55 @@ self.setupTileset = function () {
 
 	// For Animation: animStartX, animStartY, animEndX, animEndY
 
-    self.mapts.floors = [
-        {def: 'grass', sx: 15, sy: 0, edges: true, anim: false},
-        {def: 'dirt', sx: 15, sy: 1, edges: true, anim: false}
-    ];
+    self.mapts.floors = {
+        "grass": {sx: 15, sy: 0, edges: true, anim: false},
+        "dirt": {sx: 15, sy: 1, edges: true, anim: false}
+    };
 
     // Texture Sources
-    self.maptextures.floors = { src: "temp-floors.png" };
+    self.maptextures.floors = { src: "floors.png" };
 
     // Calculate Real Sx and Sy
     self.calculateRealSxSy();
-    // Calculate Edges
-    self.calculateEdges();
     // Load Textures
-  	self.loadTextures();
+    var assetFiles = [];
+    self.tilesets.forEach(function(ts) {
+    	assetFiles.push('images/tiles/' + self.maptextures[ts].src);
+    });
+    var loader = new PIXI.AssetLoader(assetFiles);
+	loader.onComplete = self.initTextures;
+	loader.load();
+	console.log('pixi: loading assets..');
 };
 
 self.calculateRealSxSy = function () {
 	self.tilesets.forEach(function(ts) {
-		self.mapts[ts].forEach(function(tile) {
-			tile.sx *= 32;
-			tile.sy *= 32;
-		});
+		Object.keys(self.mapts['floors']).forEach(function(tile) {
+			this[tile].sx *= 32;
+			this[tile].sy *= 32;
+		}, self.mapts['floors']);
 	});
 };
 
-self.calculateEdges = function() {
+self.initTextures = function() {
 	self.tilesets.forEach(function(ts) {
-		self.mapts[ts].forEach(function(tile) {
-			if(tile.edges) {
-				tile.edgeT = tile.sx - 32;
-				tile.edgeR = tile.sx - 64;
-				tile.edgeTR = tile.sx - 96;
-				tile.edgeB = tile.sx - 128;
-				tile.edgeTB = tile.sx - 160;
-				tile.edgeRB = tile.sx - 192;
-				tile.edgeTRB = tile.sx - 224;
-				tile.edgeL = tile.sx - 256;
-				tile.edgeTL = tile.sx - 288;
-				tile.edgeRL = tile.sx - 320;
-				tile.edgeTRL = tile.sx - 352;
-				tile.edgeBL = tile.sx - 384;
-				tile.edgeTBL = tile.sx - 416;
-				tile.edgeRBL = tile.sx - 448;
-				tile.edgeTRBL = tile.sx - 480;
+		self.mapts[ts].baseTexture = PIXI.BaseTexture.fromImage('images/tiles/' + self.maptextures[ts].src);
+		Object.keys(self.mapts[ts]).forEach(function(tile) {
+			// set main (loading from cache since these were loaded with AssetLoader)
+			self.mapts[ts][tile].texture = new PIXI.Texture(self.mapts[ts].baseTexture, new PIXI.Rectangle(self.mapts[ts][tile].sx, self.mapts[ts][tile].sy, 32, 32));
+
+			// set edges
+			var edges = ['t','r','tr','b','tb','rb','trb','l','tl','rl','dtrl','bl','tbl','rbl','trbl'];
+			var offset = 32;
+			if(self.mapts[ts][tile].edges) {
+				self.mapts[ts][tile].textureEdge = [];
+				edges.forEach(function(e) {
+					self.mapts[ts][tile].textureEdge[e] = [];
+					self.mapts[ts][tile].textureEdge[e].texture = new PIXI.Texture(self.mapts[ts].baseTexture, new PIXI.Rectangle(self.mapts[ts][tile].sx - offset, self.mapts[ts][tile].sy - offset, 32, 32));
+					offset += 32;
+				});
 			}
 		});
 	});
-};
-
-self.loadTextures = function() {
-	self.tilesets.forEach(function(ts) {
-		self.maptextures[ts].txt = PIXI.Texture.fromImage('images/tiles/' + self.maptextures[ts].src);
-	});
+	console.log('pixi: textures loaded!');
 };
