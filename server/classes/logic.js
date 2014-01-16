@@ -397,15 +397,15 @@ var Logic = function() {
                     player.msg('Ok.');
                     old_room.eachPlayerExcept(char.player, function(p){
                         p.msg(char.htmlname + ' disappeared in a flash of light!');
-                        p.emit("sound", {sfx: 'teleport.mp3', volume: 75});
+                        p.emit("sound", {sfx: 'teleport.wav', volume: 75});
                     });
                     new_room.eachPlayerExcept(char.player, function(p){
                         p.msg(char.htmlname + ' appeared in a puff of smoke!');
-                        p.emit("sound", {sfx: 'teleport.mp3', volume: 75});
+                        p.emit("sound", {sfx: 'teleport.wav', volume: 75});
                     });
                     char.player.msg('<br>.-~ * . - ~ * . -~ * Your surroundings have magically changed.<br>');
                     self.look(char.player);
-                    char.player.emit("sound", {sfx: 'teleport.mp3', volume: 75});
+                    char.player.emit("sound", {sfx: 'teleport.wav', volume: 75});
                 }
                 return;
             }
@@ -448,15 +448,15 @@ var Logic = function() {
         if(player.character.switchRooms(dest_map, dest_x, dest_y, dest_z)) {
             old_room.eachPlayerExcept(player, function(p){
                 p.msg(player.character.htmlname + ' disappeared in a flash of light!');
-                p.emit("sound", {sfx: 'teleport.mp3', volume: 75});
+                p.emit("sound", {sfx: 'teleport.wav', volume: 75});
             });
             new_room.eachPlayerExcept(player, function(p){
                 p.msg(player.character.htmlname + ' appeared in a puff of smoke!');
-                p.emit("sound", {sfx: 'teleport.mp3', volume: 75});
+                p.emit("sound", {sfx: 'teleport.wav', volume: 75});
             });
             player.msg('<br>.-~ * . - ~ * . -~ * Your surroundings have magically changed.<br>');
             self.look(player);
-            player.emit("sound", {sfx: 'teleport.mp3', volume: 75});
+            player.emit("sound", {sfx: 'teleport.wav', volume: 75});
         }
     }
 

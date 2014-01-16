@@ -91,14 +91,6 @@ var GameEngine = new function () {
         soundManager.debugMode = false;
         // setup minimap
         GameEngine.initMinimap();
-        /*GameEngine.mapcv = document.getElementById('map-canvas');
-        GameEngine.mapctx = GameEngine.mapcv.getContext('2d');
-        GameEngine.mapctx.lineWidth = 3;
-        GameEngine.mapctx.lineJoin = 'round';
-        GameEngine.mapctx.strokeStyle = '#ffffff';
-        GameEngine.setupTileset();
-        GameEngine.mapmarker = new Image();
-        GameEngine.mapmarker.src = "images/tiles/playerMark.png";*/
         // setup error reporting
         window.onerror = function (msg, url, linenumber) {
             if (msg === 'ReferenceError: io is not defined') {
@@ -133,9 +125,6 @@ var GameEngine = new function () {
         GameEngine.registerToolTip('div#text-magic.bar-shadow', '<strong>Magic:</strong> If your character is magical, this is how much magic you have.');
         GameEngine.registerToolTip('div#text-energy.bar-shadow', '<strong>Energy:</strong> This is how much energy you have.');
         GameEngine.registerToolTip('div#text-exp.bar-shadow', '<strong>Experience:</strong> This is how much experience you need to level up.');
-        // request animation frame
-        var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-        window.requestAnimationFrame = requestAnimationFrame;
         // set up custom context menus
         $.contextMenu({
             selector: '.menuinv', 
