@@ -54,7 +54,7 @@ var World = function() {
             x: 0,
             y: 0,
             z: 0,
-            type: 'floors.dirt floors.grass 11110000'
+            type: 'floors.dirt floors.grass 0000'
         }, new_map);
         new_map.rooms.push(new_room);
         new_map.save();
@@ -205,7 +205,7 @@ var Map = function(config, fn) {
             x: x,
             y: y,
             z: z,
-            type: getargbyname(dirargs, 'terrain', 'floors.dirt floors.grass 00000000')
+            type: getargbyname(dirargs, 'terrain', 'floors.dirt floors.grass 0000')
         }, self);
         self.rooms.push(new_room);
         self.save();

@@ -29,6 +29,8 @@ var GameEngine = new function () {
     this.lineCount = 0;         // Number of lines parsed
     this.codeMirror = false;    // CodeMirror instance
     this.lastLibraryId = false; // Last Library ID (for script editor)
+    this.pingMs = 0;            // Ping Command
+    this.pingTimer = false;     // Pint Command Interval Timer
 
     this.init = function () {
         // set port
@@ -470,6 +472,11 @@ var GameEngine = new function () {
         this.socket.on('script', function(data) {
             GameEngine.openScriptEditor(data.id, data.value);
         });
+        this.socket.on('pong', function() {
+            clearInterval(GameEngine.pingTimer);
+            GameEngine.pingTimer = false;
+            GameEngine.parseInput('Your ping to the server is ' + GameEngine.pingMs + 'ms.');
+        });
     };
 
     this.parseLinks = function (text) {
@@ -563,6 +570,10 @@ var GameEngine = new function () {
             } else if (command.toLowerCase() === '/clearcache') {
                 GameEngine.toolTipCache = [];
                 this.parseInput('Your cache has been cleared.');
+            } else if (command.toLowerCase() === '/ping') {
+                this.pingMs = 0;
+                this.socket.emit('ping');
+                this.pingTimer = setInterval(function(){ GameEngine.pingMs += 1; },1);
             } else if (command.toLowerCase() === '/options' || command.toLowerCase() === '/opt') {
                 if(!$('#options-container').is(':visible')) {
                     $('#options-container').stop().fadeIn('fast');

@@ -327,9 +327,7 @@
               <strong>Base:</strong>&nbsp;<select id="room-terrain-base" onchange="GameEngine.editorSetTerrain()"></select><br />
               <strong>Primary:</strong>&nbsp;<select id="room-terrain-primary" onchange="GameEngine.editorSetTerrain()"></select><br />
               <strong>Sides:</strong><br />
-              &nbsp;&nbsp;Top: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-t" />&nbsp;&nbsp;Right: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-r" />&nbsp;&nbsp;Bottom: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-b" />&nbsp;&nbsp;Left: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-l" /><br />
-              <strong>Corners:</strong><br />
-              &nbsp;&nbsp;TL: <input type="checkbox" onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-tl" />&nbsp;&nbsp;TR: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-tr" />&nbsp;&nbsp;BR: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-br" />&nbsp;&nbsp;BL: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-bl" /><br />
+              &nbsp;&nbsp;Top: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-t" />&nbsp;&nbsp;Right: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-r" />&nbsp;&nbsp;Bottom: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-b" />&nbsp;&nbsp;Left: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-l" />
             </div>
             <div class="prop-set">
               <div class="prop-name">Environment</div>
