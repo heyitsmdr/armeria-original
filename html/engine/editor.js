@@ -6,6 +6,8 @@ self.editorcontainer = false;
 self.editormovement = false;
 self.editormovestartx = 0;
 self.editormovestarty = 0;
+self.containerx = 0;
+self.containery = 0;
 
 self.editorInit = function(height, width) {
     // convert to real sizes
@@ -23,6 +25,11 @@ self.editorInit = function(height, width) {
     self.editorcontainer = new PIXI.DisplayObjectContainer();
     // add to stage
     self.editorstage.addChild(self.editorcontainer);
+    // restore position?
+    if(self.containerx && self.containery) {
+        self.editorcontainer.position.x = self.containerx;
+        self.editorcontainer.position.y = self.containery;
+    }
     // setup stage callbacks
     self.editorstage.mousedown = self.editorStartPositionChange;
     self.editorstage.mouseup = self.editorEndPositionChange;
@@ -104,6 +111,9 @@ self.editorStartPositionChange = function(interactionData) {
 
         self.editorcontainer.position.x += diffx;
         self.editorcontainer.position.y += diffy;
+
+        self.containerx = self.editorcontainer.position.x;
+        self.containery = self.editorcontainer.position.y;
 
         self.editormovestartx = pos.x;
         self.editormovestarty = pos.y;
