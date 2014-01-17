@@ -8,6 +8,7 @@ self.editormovestartx = 0;
 self.editormovestarty = 0;
 self.containerx = 0;
 self.containery = 0;
+self.editorPauseUpdates = true;
 
 self.editorInit = function(height, width) {
     // convert to real sizes
@@ -142,6 +143,8 @@ self.toggleEditor = function (data) {
 };
 
 self.editorData = function (data) {
+    // pause updates
+    self.editorPauseUpdates = true;
     // area data
     $('#map-name').html(data.mapData.name);
     $('#map-author').html(data.mapData.author);
@@ -154,21 +157,18 @@ self.editorData = function (data) {
 
     $('#room-terrain').html(data.roomData.type);
     GameEngine.registerToolTip('#room-terrain', data.roomData.type);
-    $('#room-terrain-base').html('<option>null</option>');
-    $('#room-terrain-primary').html('<option>null</option>');
-    $('#builder-terrain-base').html('<option>null</option>');
-    $('#builder-terrain-primary').html('<option>null</option>');
-    GameEngine.tilesets.forEach(function (ts) {
-        Object.keys(GameEngine.mapts[ts]).forEach(function(tile) {
-            if(tile != 'baseTexture') {
-                var def = ts + '.' + tile;
-                $('#room-terrain-base').append('<option ' + ((def === data.roomData.type.split(' ')[0]) ? 'selected' : '') + '>' + def + '</option>');
-                $('#room-terrain-primary').append('<option ' + ((def === data.roomData.type.split(' ')[1]) ? 'selected' : '') + '>' + def + '</option>');
-                $('#builder-terrain-base').append('<option>' + def + '</option>');
-                $('#builder-terrain-primary').append('<option>' + def + '</option>');
-            }
-        });
-    });
+
+    var baseTile = data.roomData.type.split(' ')[0];
+    var primaryTile = data.roomData.type.split(' ')[1];
+
+    $('#room-terrain-base').tokenInput('clear');
+    $('#room-terrain-primary').tokenInput('clear');
+
+    if(baseTile)
+        $('#room-terrain-base').tokenInput('add', {id: baseTile, name: baseTile});
+    if(primaryTile)
+        $('#room-terrain-primary').tokenInput('add', {id: primaryTile, name: primaryTile});
+
     $('#room-terrain-corners-t').prop('checked', ((data.roomData.type.split(' ')[2].substr(0, 1) === '1') ? true : false));
     $('#room-terrain-corners-r').prop('checked', ((data.roomData.type.split(' ')[2].substr(1, 1) === '1') ? true : false));
     $('#room-terrain-corners-b').prop('checked', ((data.roomData.type.split(' ')[2].substr(2, 1) === '1') ? true : false));
@@ -177,6 +177,24 @@ self.editorData = function (data) {
     $('#room-environment').html(data.roomData.environment);
     // section title
     $('#section-roomprops').html('Current Room Properties (' + data.roomData.x + ',' + data.roomData.y + ',' + data.roomData.z + ')');
+    // resume updates
+    self.editorPauseUpdates = false;
+};
+
+self.getAllSets = function() {
+    var sets = [{id: 'null', name: 'null'}];
+    
+    GameEngine.tilesets.forEach(function (ts) {
+        Object.keys(GameEngine.mapts[ts]).forEach(function(tile) {
+            var def = ts + '.' + tile;
+            sets.push({
+                id: def,
+                name: def
+            });
+        });
+    });
+
+    return sets;
 };
 
 self.editorToggleExtra = function (toggleId) {
@@ -188,7 +206,23 @@ self.editorToggleExtra = function (toggleId) {
 };
 
 self.editorSetTerrain = function () {
-    var typeString = $('#room-terrain-base').val() + ' ' + $('#room-terrain-primary').val() + ' ';
+    if(self.editorPauseUpdates)
+        return;
+
+    var typeString = '';
+
+    if($('#room-terrain-base').tokenInput('get').length > 0) {
+        typeString += $('#room-terrain-base').tokenInput('get')[0].name + ' ';
+    } else {
+        return;
+    }
+
+    if($('#room-terrain-primary').tokenInput('get').length > 0) {
+        typeString += $('#room-terrain-primary').tokenInput('get')[0].name + ' ';
+    } else {
+        return;
+    }
+
     if ($('#room-terrain-corners-t').prop('checked')) { typeString += '1'; } else { typeString += '0'; }
     if ($('#room-terrain-corners-r').prop('checked')) { typeString += '1'; } else { typeString += '0'; }
     if ($('#room-terrain-corners-b').prop('checked')) { typeString += '1'; } else { typeString += '0'; }

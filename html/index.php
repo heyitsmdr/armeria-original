@@ -53,16 +53,23 @@
         <script src="engine/tileset.js?buildTime=<?=filemtime('./engine/tileset.js')?>"></script>
         <? endif; ?>
         <!-- Libraries -->
-        <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
-        <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
-        <script src="libraries/contextmenu/jquery.ui.position.js"></script>
-        <script src="libraries/contextmenu/jquery.contextMenu.js"></script>
-        <link rel="stylesheet" href="libraries/contextmenu/jquery.contextMenu.css" /> 
-        <script src="libraries/codemirror/lib/codemirror.js"></script>
-        <link rel="stylesheet" href="libraries/codemirror/lib/codemirror.css">
-        <script src="libraries/codemirror/mode/javascript/javascript.js"></script>
-        <link rel="stylesheet" href="libraries/codemirror/theme/monokai.css">
-        <script src="libraries/pixi/pixi.dev.js"></script>
+          <!-- SoundManager2 -->
+          <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
+          <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
+          <!-- jQuery Context Menu -->
+          <script src="libraries/contextmenu/jquery.ui.position.js"></script>
+          <script src="libraries/contextmenu/jquery.contextMenu.js"></script>
+          <link rel="stylesheet" href="libraries/contextmenu/jquery.contextMenu.css" />
+          <!-- CodeMirror -->
+          <script src="libraries/codemirror/lib/codemirror.js"></script>
+          <link rel="stylesheet" href="libraries/codemirror/lib/codemirror.css">
+          <script src="libraries/codemirror/mode/javascript/javascript.js"></script>
+          <link rel="stylesheet" href="libraries/codemirror/theme/monokai.css">
+          <!-- Pixi.js -->
+          <script src="libraries/pixi/pixi.dev.js"></script>
+          <!-- jQuery TokenInput -->
+          <script src="libraries/tokeninput/jquery.tokeninput.js"></script>
+          <link rel="stylesheet" type="text/css" href="libraries/tokeninput/token-input-facebook.css" />
 
         <script type="text/javascript">
           var serverHost = location.hostname + ":2772";
@@ -324,8 +331,8 @@
               <div class="prop-value"><a href="#" onclick="GameEngine.editorToggleExtra('terrain-extra')" id="room-terrain">..</a></div>
             </div>
             <div class="prop-extra" id="terrain-extra">
-              <strong>Base:</strong>&nbsp;<select id="room-terrain-base" onchange="GameEngine.editorSetTerrain()"></select><br />
-              <strong>Primary:</strong>&nbsp;<select id="room-terrain-primary" onchange="GameEngine.editorSetTerrain()"></select><br />
+              <strong>Base:</strong>&nbsp;<input id="room-terrain-base" type="text"><br />
+              <strong>Primary:</strong>&nbsp;<input id="room-terrain-primary" type="text"><br />
               <strong>Sides:</strong><br />
               &nbsp;&nbsp;Top: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-t" />&nbsp;&nbsp;Right: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-r" />&nbsp;&nbsp;Bottom: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-b" />&nbsp;&nbsp;Left: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-l" />
             </div>

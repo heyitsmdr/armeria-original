@@ -127,6 +127,9 @@ var GameEngine = new function () {
         GameEngine.registerToolTip('div#text-magic.bar-shadow', '<strong>Magic:</strong> If your character is magical, this is how much magic you have.');
         GameEngine.registerToolTip('div#text-energy.bar-shadow', '<strong>Energy:</strong> This is how much energy you have.');
         GameEngine.registerToolTip('div#text-exp.bar-shadow', '<strong>Experience:</strong> This is how much experience you need to level up.');
+        // set up token input
+        $('#room-terrain-base').tokenInput(GameEngine.getAllSets(), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', onAdd: GameEngine.editorSetTerrain, onDelete: GameEngine.editorSetTerrain});
+        $('#room-terrain-primary').tokenInput(GameEngine.getAllSets(), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', onAdd: GameEngine.editorSetTerrain, onDelete: GameEngine.editorSetTerrain});
         // set up custom context menus
         $.contextMenu({
             selector: '.menuinv', 
