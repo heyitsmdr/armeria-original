@@ -475,7 +475,14 @@ var Logic = function() {
     
     self.whisper = function(player, args) {
         var who = getarg(args, 0, false);
-        var what = self._removeHTML( getarg(args, 1, true) );
+        var what = getarg(args, 1, true);
+
+        if(who === false || what === false) {
+            player.msg('Usage: /whisper "[character]" [message]');
+            return;
+        }
+
+        what = self._removeHTML( what );
         
         var target = CHARACTERS.getCharacterByName(who, true, true);
         if(target) {

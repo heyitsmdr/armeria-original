@@ -177,8 +177,6 @@ self.editorToggleExtra = function (toggleId) {
     }
 };
 
-/* ============================ */
-
 self.editorSetTerrain = function () {
     var typeString = $('#room-terrain-base').val() + ' ' + $('#room-terrain-primary').val() + ' ';
     if ($('#room-terrain-corners-t').prop('checked')) { typeString += '1'; } else { typeString += '0'; }

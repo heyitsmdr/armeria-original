@@ -6,7 +6,7 @@ self.maptextures = [];		// Tile Textures / Images
 
 self.setupTileset = function () {
 	// Tilesets
-    self.tilesets = ['floors'];
+    self.tilesets = ['floors', 'shipFloor'];
     /* NOTE: Edges are automatically calculated since they will always be
              to the left of the tile (if edges = true). */
 
@@ -16,9 +16,13 @@ self.setupTileset = function () {
         "grass": {sx: 15, sy: 0, edges: true, anim: false},
         "dirt": {sx: 15, sy: 1, edges: true, anim: false}
     };
+    self.mapts.shipFloor = {
+        "basic": {sx: 15, sy: 1, edges: true, anim: false}
+    };
 
     // Texture Sources
     self.maptextures.floors = { src: "floors.png" };
+    self.maptextures.shipFloor = { src: "shipFloor.png" };
 
     // Calculate Real Sx and Sy
     self.calculateRealSxSy();
@@ -35,10 +39,10 @@ self.setupTileset = function () {
 
 self.calculateRealSxSy = function () {
 	self.tilesets.forEach(function(ts) {
-		Object.keys(self.mapts['floors']).forEach(function(tile) {
+		Object.keys(self.mapts[ts]).forEach(function(tile) {
 			this[tile].sx *= 32;
 			this[tile].sy *= 32;
-		}, self.mapts['floors']);
+		}, self.mapts[ts]);
 	});
 };
 
@@ -50,7 +54,7 @@ self.initTextures = function() {
 			self.mapts[ts][tile].texture = new PIXI.Texture(self.mapts[ts].baseTexture, new PIXI.Rectangle(self.mapts[ts][tile].sx, self.mapts[ts][tile].sy, 32, 32));
 
 			// set edges
-			var edges = ['t','r','tr','b','tb','rb','trb','l','tl','rl','dtrl','bl','tbl','rbl','trbl'];
+			var edges = ['t','r','tr','b','tb','rb','trb','l','tl','rl','trl','bl','tbl','rbl','trbl'];
 			var offset = 32;
 			if(self.mapts[ts][tile].edges) {
 				self.mapts[ts][tile].textureEdge = [];
