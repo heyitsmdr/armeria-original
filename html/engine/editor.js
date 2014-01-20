@@ -30,6 +30,9 @@ self.editorInit = function(height, width) {
     if(self.containerx && self.containery) {
         self.editorcontainer.position.x = self.containerx;
         self.editorcontainer.position.y = self.containery;
+    } else {
+        self.editorcontainer.position.x = (width / 2) - 32;
+        self.editorcontainer.position.y = (height / 2) - 32;
     }
     // setup stage callbacks
     self.editorstage.mousedown = self.editorStartPositionChange;

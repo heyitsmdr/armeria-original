@@ -209,12 +209,14 @@ var GameEngine = new function () {
             window.webkitNotifications.requestPermission(function(action){
                 if(action=='granted') {
                     GameEngine.useNotify = true;
+                    console.log('info: chrome notifications enabled');
                 } else {
                     GameEngine.useNotify = false;
                 }
             });
         } else {
             self.useNotify = true;
+            console.log('info: chrome notifications enabled');
         }
     };
 
