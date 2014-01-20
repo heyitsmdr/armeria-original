@@ -334,6 +334,7 @@ io.sockets.on('connection', function(socket){
                     player.msg('That command is not recognized. Try again.');
         }
     });
+    socket.on('ping', function(){ player.emit('pong'); });
     socket.on('itemtip', function(data){
         var obj = LIBRARY.getById(data.id);
         if(obj===false) {

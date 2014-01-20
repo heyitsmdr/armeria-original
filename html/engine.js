@@ -9,7 +9,8 @@
 
 var GameEngine = new function () {
     "use strict";
-    this.debug = {datainput: false};
+
+    this.debug = {datainput: false, pixi: false};
     this.funcvars = {};         // Various static variables for functions
     this.version = false;       // Version
     this.port = 2772;           // Port
@@ -22,14 +23,16 @@ var GameEngine = new function () {
     this.connected = false;     // Connected or not (boolean)
     this.connecting = false;    // Connection in process (to block certain functions)
     this.toolTipCache = [];     // Array of tool tip data used for cache
-    this.tilesets = [];         // Tilesets
     this.server = false;        // Server class
     this.serverOffline = false; // Set to True if Socket.IO is not found (server offline)
     this.sendHistory = [];      // Array of strings that you sent to the server (for up/down history)
     this.sendHistPtr = false;   // Pointer for navigating the history
     this.lineCount = 0;         // Number of lines parsed
     this.codeMirror = false;    // CodeMirror instance
-    this.lastLibraryId = false; // Last Library ID
+    this.lastLibraryId = false; // Last Library ID (for script editor)
+    this.pingMs = 0;            // Ping Command
+    this.pingTimer = false;     // Pint Command Interval Timer
+    this.useNotify = false;     // Enable Chrome Notifications?
 
     this.init = function () {
         // set port
@@ -91,15 +94,7 @@ var GameEngine = new function () {
         soundManager.setup({url: '/libraries/soundmanager2/swf/', ontimeout: function () { console.log('SoundManager timed out.'); }});
         soundManager.debugMode = false;
         // setup minimap
-        // GameEngine.initMinimap(); **** FOR PIXI ****
-        GameEngine.mapcv = document.getElementById('map-canvas');
-        GameEngine.mapctx = GameEngine.mapcv.getContext('2d');
-        GameEngine.mapctx.lineWidth = 3;
-        GameEngine.mapctx.lineJoin = 'round';
-        GameEngine.mapctx.strokeStyle = '#ffffff';
-        GameEngine.setupTileset();
-        GameEngine.mapmarker = new Image();
-        GameEngine.mapmarker.src = "images/tiles/playerMark.png";
+        GameEngine.initMinimap();
         // setup error reporting
         window.onerror = function (msg, url, linenumber) {
             if (msg === 'ReferenceError: io is not defined') {
@@ -134,9 +129,11 @@ var GameEngine = new function () {
         GameEngine.registerToolTip('div#text-magic.bar-shadow', '<strong>Magic:</strong> If your character is magical, this is how much magic you have.');
         GameEngine.registerToolTip('div#text-energy.bar-shadow', '<strong>Energy:</strong> This is how much energy you have.');
         GameEngine.registerToolTip('div#text-exp.bar-shadow', '<strong>Experience:</strong> This is how much experience you need to level up.');
-        // request animation frame
-        var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-        window.requestAnimationFrame = requestAnimationFrame;
+        // set up token input
+        $('#builder-terrain-base').tokenInput(GameEngine.getAllSets(), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetDefaultTerrain, onDelete: GameEngine.editorSetDefaultTerrain});
+        $('#builder-terrain-primary').tokenInput(GameEngine.getAllSets(), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetDefaultTerrain, onDelete: GameEngine.editorSetDefaultTerrain});
+        $('#room-terrain-base').tokenInput(GameEngine.getAllSets(), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetTerrain, onDelete: GameEngine.editorSetTerrain});
+        $('#room-terrain-primary').tokenInput(GameEngine.getAllSets(), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetTerrain, onDelete: GameEngine.editorSetTerrain});
         // set up custom context menus
         $.contextMenu({
             selector: '.menuinv', 
@@ -202,15 +199,50 @@ var GameEngine = new function () {
                 "spawn": {name: "Spawn", icon: "spawn"}
             }
         });
+        // init notifications
+        self.initNotifications();
         // focus input box
         $('#input').focus();
     };
 
+    this.initNotifications = function() {
+        var havePermission = window.webkitNotifications.checkPermission();
+        if(havePermission != 0) {
+            window.webkitNotifications.requestPermission(function(action){
+                if(action=='granted') {
+                    GameEngine.useNotify = true;
+                    console.log('info: chrome notifications enabled');
+                } else {
+                    GameEngine.useNotify = false;
+                }
+            });
+        } else {
+            self.useNotify = true;
+            console.log('info: chrome notifications enabled');
+        }
+    };
+
+    this.gameHidden = function() {
+        if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
+            hidden = "hidden";
+        } else if (typeof document.mozHidden !== "undefined") {
+            hidden = "mozHidden";
+        } else if (typeof document.msHidden !== "undefined") {
+            hidden = "msHidden";
+        } else if (typeof document.webkitHidden !== "undefined") {
+            hidden = "webkitHidden";
+        }
+        var isHidden = document[hidden];
+        return isHidden;
+    };
+
     this.loadOptions = function() {
+        $('#optNotificationRoom').prop('checked', ((localStorage['optNotificationRoom'])?JSON.parse(localStorage['optNotificationRoom']):false));
         $('#optMinimapAnimation').prop('checked', ((localStorage['optMinimapAnimation'])?JSON.parse(localStorage['optMinimapAnimation']):true));
     };
 
     this.saveOptions = function() {
+        localStorage['optNotificationRoom'] = JSON.stringify($('#optNotificationRoom').prop('checked'));
         localStorage['optMinimapAnimation'] = JSON.stringify($('#optMinimapAnimation').prop('checked'));
     };
 
@@ -226,46 +258,6 @@ var GameEngine = new function () {
         });
         $(document).on('mouseleave', selector, GameEngine.toolTipLeave);
         $(document).on('mousemove', selector, GameEngine.toolTipMove);
-    };
-
-    this.setupTileset = function () {
-        /* TILE DEFINITIONS */
-        GameEngine.tilesets = ['floors'];
-
-        /* NOTE: Edges are automatically calculated since they will always be
-                 to the right of the tile (if edges = true). */
-
-        //GameEngine.mapts['floors'] = [
-        GameEngine.mapts.floors = [
-            {def: 'grass', sx: 0, sy: 0, edges: true},
-            {def: 'dirt', sx: 0, sy: 1, edges: true}
-        ];
-
-        // Calculate Real sx and sy && Calculate edges (if needed) && Load images
-        GameEngine.tilesets.forEach(function (tset) {
-            GameEngine.tsSetReal(GameEngine.mapts[tset]);
-            GameEngine.mapts[tset].forEach(function (ts) { if (ts.edges) { GameEngine.tsSetEdges(ts); } });
-            GameEngine.maptileset[tset] = new Image();
-            GameEngine.maptileset[tset].src = "images/tiles/" + tset + ".png";
-        });
-    };
-
-    this.tsSetReal = function (ts) {
-        ts.forEach(function (tile) {
-            tile.sx *= 32;
-            tile.sy *= 32;
-        });
-    };
-
-    this.tsSetEdges = function (tile) {
-        tile.edgeTop = tile.sx + 32;
-        tile.edgeRight = tile.sx + 64;
-        tile.edgeBottom = tile.sx + 96;
-        tile.edgeLeft = tile.sx + 128;
-        tile.cornerTopLeft = tile.sx + 160;
-        tile.cornerTopRight = tile.sx + 192;
-        tile.cornerBottomRight = tile.sx + 224;
-        tile.cornerBottomLeft = tile.sx + 256;
     };
     /*jslint nomen: true*/
     this._doFBLogin = function () {
@@ -522,6 +514,22 @@ var GameEngine = new function () {
         this.socket.on('script', function(data) {
             GameEngine.openScriptEditor(data.id, data.value);
         });
+        this.socket.on('pong', function() {
+            clearInterval(GameEngine.pingTimer);
+            GameEngine.pingTimer = false;
+            GameEngine.parseInput('Your ping to the server is ' + GameEngine.pingMs + 'ms.');
+        });
+        this.socket.on('chromeNotify', function(data) {
+            if(GameEngine.useNotify && GameEngine.gameHidden()) {
+                var notification = false;
+                if(data.type == 'room' && localStorage['optNotificationRoom'] && localStorage['optNotificationRoom'] == 'true') {
+                    notification = window.webkitNotifications.createNotification('http://client.playarmeria.com/144.png', data.name, data.text);
+                }
+
+                if(notification)
+                    notification.show();
+            }
+        });
     };
 
     this.parseLinks = function (text) {
@@ -615,6 +623,10 @@ var GameEngine = new function () {
             } else if (command.toLowerCase() === '/clearcache') {
                 GameEngine.toolTipCache = [];
                 this.parseInput('Your cache has been cleared.');
+            } else if (command.toLowerCase() === '/ping') {
+                this.pingMs = 0;
+                this.socket.emit('ping');
+                this.pingTimer = setInterval(function(){ GameEngine.pingMs += 1; },1);
             } else if (command.toLowerCase() === '/options' || command.toLowerCase() === '/opt') {
                 if(!$('#options-container').is(':visible')) {
                     $('#options-container').stop().fadeIn('fast');

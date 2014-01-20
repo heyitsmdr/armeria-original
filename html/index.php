@@ -50,18 +50,26 @@
         <script src="engine.js?buildTime=<?=filemtime('./engine.js')?>"></script>
         <script src="engine/editor.js?buildTime=<?=filemtime('./engine/editor.js')?>"></script>
         <script src="engine/minimap.js?buildTime=<?=filemtime('./engine/minimap.js')?>"></script>
+        <script src="engine/tileset.js?buildTime=<?=filemtime('./engine/tileset.js')?>"></script>
         <? endif; ?>
         <!-- Libraries -->
-        <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
-        <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
-        <script src="libraries/contextmenu/jquery.ui.position.js"></script>
-        <script src="libraries/contextmenu/jquery.contextMenu.js"></script>
-        <link rel="stylesheet" href="libraries/contextmenu/jquery.contextMenu.css" /> 
-        <script src="libraries/codemirror/lib/codemirror.js"></script>
-        <link rel="stylesheet" href="libraries/codemirror/lib/codemirror.css">
-        <script src="libraries/codemirror/mode/javascript/javascript.js"></script>
-        <link rel="stylesheet" href="libraries/codemirror/theme/monokai.css">
-        <script src="libraries/pixi/pixi.dev.js"></script>
+          <!-- SoundManager2 -->
+          <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
+          <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
+          <!-- jQuery Context Menu -->
+          <script src="libraries/contextmenu/jquery.ui.position.js"></script>
+          <script src="libraries/contextmenu/jquery.contextMenu.js"></script>
+          <link rel="stylesheet" href="libraries/contextmenu/jquery.contextMenu.css" />
+          <!-- CodeMirror -->
+          <script src="libraries/codemirror/lib/codemirror.js"></script>
+          <link rel="stylesheet" href="libraries/codemirror/lib/codemirror.css">
+          <script src="libraries/codemirror/mode/javascript/javascript.js"></script>
+          <link rel="stylesheet" href="libraries/codemirror/theme/monokai.css">
+          <!-- Pixi.js -->
+          <script src="libraries/pixi/pixi.dev.js"></script>
+          <!-- jQuery TokenInput -->
+          <script src="libraries/tokeninput/jquery.tokeninput.js"></script>
+          <link rel="stylesheet" type="text/css" href="libraries/tokeninput/token-input-facebook.css" />
 
         <script type="text/javascript">
           var serverHost = location.hostname + ":2772";
@@ -209,8 +217,7 @@
         <div id="right-content">
             <div id="game"></div>
                 <div id="minimap">
-                    <div id="map-pixi" style="display:none;" width="256" height="256"></div>
-                    <canvas id="map-canvas" width="256" height="256"></canvas>
+                    <div id="map-canvas" width="256" height="256"></div>
                     <div id="player"></div>
                     <div id="mapshadow"></div>
                     <div id="playerMark"></div>
@@ -287,11 +294,11 @@
               <div class="prop-value"><a href="#" id="builder-terrain" onclick="GameEngine.editorToggleExtra('builder-terrain-extra')">null null</a></div>
             </div>
             <div class="prop-extra" id="builder-terrain-extra">
-              <strong>Base:</strong>&nbsp;<select id="builder-terrain-base" onchange="GameEngine.editorSetDefaultTerrain()"></select><br />
-              <strong>Primary:</strong>&nbsp;<select id="builder-terrain-primary" onchange="GameEngine.editorSetDefaultTerrain()"></select>
+              <strong>Base:</strong>&nbsp;<input id="builder-terrain-base" type="text"><br />
+              <strong>Primary:</strong>&nbsp;<input id="builder-terrain-primary" type="text"><br />
             </div>
             <div class="prop-set">
-              <div class="prop-name">Click Action</div>
+              <div class="prop-name">Shift+Click</div>
               <div class="prop-value"><a href="#" id="builder-clickaction" data-action="teleport" onclick="GameEngine.editorChangeClickAction()"><span style="color:#51d2fc">teleport</span></a></div>
             </div>
             <!-- Area Properties -->
@@ -324,12 +331,10 @@
               <div class="prop-value"><a href="#" onclick="GameEngine.editorToggleExtra('terrain-extra')" id="room-terrain">..</a></div>
             </div>
             <div class="prop-extra" id="terrain-extra">
-              <strong>Base:</strong>&nbsp;<select id="room-terrain-base" onchange="GameEngine.editorSetTerrain()"></select><br />
-              <strong>Primary:</strong>&nbsp;<select id="room-terrain-primary" onchange="GameEngine.editorSetTerrain()"></select><br />
+              <strong>Base:</strong>&nbsp;<input id="room-terrain-base" type="text"><br />
+              <strong>Primary:</strong>&nbsp;<input id="room-terrain-primary" type="text"><br />
               <strong>Sides:</strong><br />
-              &nbsp;&nbsp;Top: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-t" />&nbsp;&nbsp;Right: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-r" />&nbsp;&nbsp;Bottom: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-b" />&nbsp;&nbsp;Left: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-l" /><br />
-              <strong>Corners:</strong><br />
-              &nbsp;&nbsp;TL: <input type="checkbox" onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-tl" />&nbsp;&nbsp;TR: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-tr" />&nbsp;&nbsp;BR: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-br" />&nbsp;&nbsp;BL: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-bl" /><br />
+              &nbsp;&nbsp;Top: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-t" />&nbsp;&nbsp;Right: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-r" />&nbsp;&nbsp;Bottom: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-b" />&nbsp;&nbsp;Left: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-l" />
             </div>
             <div class="prop-set">
               <div class="prop-name">Environment</div>
@@ -339,6 +344,11 @@
         </div>
         <!-- Options -->
         <div id="options-container">
+          <div class="optionsHeading">Notification Options (Chrome Only)</div>
+          <div class="optionsSubheading">Receive notifications for certain events.</div>
+          <br/>
+          <input id="optNotificationRoom" type="checkbox">&nbsp;Room Chat
+          <br/><br/>
           <div class="optionsHeading">Minimap Options</div>
           <div class="optionsSubheading">Things you can set with the minimap.</div>
           <br/>
