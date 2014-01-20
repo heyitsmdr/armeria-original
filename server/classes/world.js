@@ -269,11 +269,11 @@ var Map = function(config, fn) {
         self.removeRoom(destroy_room);
         self.save();
         player.msg('The room has been destroyed.');
-        player.update({minimap: true});
+        player.update({minimap: true, maplocnoanim: true});
         player.emit("sound", {sfx: 'destroy_room.mp3', volume: 50});
         player.character.room.map.eachPlayerExcept(player, function(p){
             p.msg('Something about this area is different. Hmm..');
-            p.update({minimap: true});
+            p.update({minimap: true, maplocnoanim: true});
         });
     };
 

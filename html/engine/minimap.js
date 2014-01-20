@@ -69,10 +69,10 @@ self.mapRender = function(mapdata, z) {
     if(z === undefined) { z = 0; }
 
     // clear current stage
-    self.mapcontainer.children.forEach(function(child) {
-        self.mapcontainer.removeChild(child);
-    });
-
+   	for(var i = self.mapcontainer.children.length - 1; i >= 0; i--) {
+   		self.mapcontainer.removeChild(self.mapcontainer.children[i]);
+   	}
+   	
     mapdata.forEach(function(room) {
         var tileBase = room.terrain.split(' ')[0];
         var tilePrimary = room.terrain.split(' ')[1];

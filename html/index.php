@@ -298,7 +298,7 @@
               <strong>Primary:</strong>&nbsp;<input id="builder-terrain-primary" type="text"><br />
             </div>
             <div class="prop-set">
-              <div class="prop-name">Click Action</div>
+              <div class="prop-name">Shift+Click</div>
               <div class="prop-value"><a href="#" id="builder-clickaction" data-action="teleport" onclick="GameEngine.editorChangeClickAction()"><span style="color:#51d2fc">teleport</span></a></div>
             </div>
             <!-- Area Properties -->

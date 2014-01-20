@@ -1,5 +1,6 @@
 var self = GameEngine;
 
+self.initialized = false;
 self.editorstage = false;
 self.editorrenderer = false;
 self.editorcontainer = false;
@@ -11,6 +12,9 @@ self.containery = 0;
 self.editorPauseUpdates = true;
 
 self.editorInit = function(height, width) {
+    if(self.initialized)
+        return;
+
     // convert to real sizes
     height *= 32;
     width *= 32;
@@ -24,6 +28,9 @@ self.editorInit = function(height, width) {
     document.getElementById('editor-grids').appendChild(self.editorrenderer.view);
     // init container
     self.editorcontainer = new PIXI.DisplayObjectContainer();
+    self.editorcontainer.interactive = true;
+    self.editorcontainer.hitArea = new PIXI.Rectangle(-1000, -1000, 2000, 2000);
+    self.editorcontainer.mouseup = self.editorContainerClick;
     // add to stage
     self.editorstage.addChild(self.editorcontainer);
     // restore position?
@@ -33,11 +40,15 @@ self.editorInit = function(height, width) {
     } else {
         self.editorcontainer.position.x = (width / 2) - 32;
         self.editorcontainer.position.y = (height / 2) - 32;
+        self.containerx = self.editorcontainer.position.x;
+        self.containery = self.editorcontainer.position.y;
     }
     // setup stage callbacks
     self.editorstage.mousedown = self.editorStartPositionChange;
     self.editorstage.mouseup = self.editorEndPositionChange;
     self.editorstage.mouseout = self.editorEndPositionChange;
+    // initialized!
+    self.initialized = true;
 };
 
 self.editorPixiRender = function() {
@@ -56,9 +67,9 @@ self.editorRender = function(){
     }
 
     // clear current stage
-    self.editorcontainer.children.forEach(function(child) {
-        self.editorcontainer.removeChild(child);
-    });
+    for(var i = self.editorcontainer.children.length - 1; i >= 0; i--) {
+        self.editorcontainer.removeChild(self.editorcontainer.children[i]);
+    }
 
     self.mapdata.forEach(function(room) {
         var tileBase = room.terrain.split(' ')[0];
@@ -106,6 +117,9 @@ self.editorRender = function(){
 };
 
 self.editorStartPositionChange = function(interactionData) {
+    if(interactionData.originalEvent.shiftKey)
+        return;
+
     self.editormovestartx = interactionData.global.x;
     self.editormovestarty = interactionData.global.y;
     self.editormovement = setInterval(function(){
@@ -127,6 +141,7 @@ self.editorStartPositionChange = function(interactionData) {
 self.editorEndPositionChange = function(interactionData) {
     if(!self.editormovement)
         return;
+
     clearInterval(self.editormovement);
     self.editormovement = false;
 };
@@ -141,7 +156,7 @@ self.toggleEditor = function (data) {
         });
     } else {
         $('#editor-container').stop().fadeOut('fast');
-        self.editorEndPositionChange();
+        self.editorEndPositionChange(false);
     }
 };
 
@@ -280,6 +295,22 @@ self.editorEditProperty = function (prop) {
     }
 };
 
+self.editorContainerClick = function(evt) {
+    if(!evt.originalEvent.shiftKey)
+        return;
+
+    var local_x = Math.floor((evt.global.x - self.containerx) / 32);
+    var local_y = Math.floor((evt.global.y - self.containery) / 32);
+    
+    if ($('#builder-clickaction').data('action') == 'build') {
+        if ($('#builder-terrain').html() == 'null null') {
+            $.gritter.add({title: 'Build Error', text: 'Please set a Default Terrain before building.'});
+        } else {
+            GameEngine.socket.emit('cmd', {cmd: 'create room @' + local_x + ',' + local_y + ',' + GameEngine.maproom.z + ' -terrain "' + $('#builder-terrain').html() + ' 0000"'});
+        }
+    }
+};
+
 self.gridClick = function(evt) {
     if(!evt.originalEvent.shiftKey)
         return false;
@@ -288,33 +319,10 @@ self.gridClick = function(evt) {
     var y = evt.target.children[0].position.y / 32;
 
     if ($('#builder-clickaction').data('action') == 'teleport') {
-        GameEngine.socket.emit('cmd', {cmd: 'tp ' + x + ' ' + y});
-    }
-
-    GameEngine.socket.emit('cmd', {cmd: 'edit refresh'});
-}
-
-self.editorClick = function (evt) {
-    var sizew, sizeh, x, y;
-    // calculate relative x and y
-    sizew = (document.getElementById('editor-canvas').width / 32) - 1;
-    sizeh = (document.getElementById('editor-canvas').height / 32) - 1;
-    x = Math.floor((evt.x - $('#editor-canvas').offset().left) / 32) - (sizew / 2);
-    y = Math.floor((evt.y - $('#editor-canvas').offset().top) / 32) - (sizeh / 2);
-    // convert to absolute (based on current location)
-    x = parseInt(GameEngine.maproom.x, 10) + parseInt(x, 10);
-    y = parseInt(GameEngine.maproom.y, 10) + parseInt(y, 10);
-    // send to server
-    if ($('#builder-clickaction').data('action') == 'teleport') {
-        GameEngine.socket.emit('cmd', {cmd: 'tp ' + x + ' ' + y});
-    } else if ($('#builder-clickaction').data('action') == 'build') {
-        if ($('#builder-terrain').html() === 'null null') {
-            $.gritter.add({title: 'Build Error', text: 'Please set a Default Terrain before building.'});
-        } else {
-            GameEngine.socket.emit('cmd', {cmd: 'create room @' + x + ',' + y + ',' + GameEngine.maproom.z + ' -terrain "' + $('#builder-terrain').html() + ' 00000000"'});
-        }
+        GameEngine.socket.emit('cmd', {cmd: 'tp ' + x + ' ' + y + ' ' + GameEngine.maproom.z});
     } else if ($('#builder-clickaction').data('action') == 'destroy') {
         GameEngine.socket.emit('cmd', {cmd: 'destroy room @' + x + ',' + y + ',' + GameEngine.maproom.z});
     }
-    GameEngine.socket.emit('cmd', {cmd: 'edit refresh'});
-};
+
+    //GameEngine.socket.emit('cmd', {cmd: 'edit refresh'});
+}
