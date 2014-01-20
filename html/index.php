@@ -294,8 +294,8 @@
               <div class="prop-value"><a href="#" id="builder-terrain" onclick="GameEngine.editorToggleExtra('builder-terrain-extra')">null null</a></div>
             </div>
             <div class="prop-extra" id="builder-terrain-extra">
-              <strong>Base:</strong>&nbsp;<select id="builder-terrain-base" onchange="GameEngine.editorSetDefaultTerrain()"></select><br />
-              <strong>Primary:</strong>&nbsp;<select id="builder-terrain-primary" onchange="GameEngine.editorSetDefaultTerrain()"></select>
+              <strong>Base:</strong>&nbsp;<input id="builder-terrain-base" type="text"><br />
+              <strong>Primary:</strong>&nbsp;<input id="builder-terrain-primary" type="text"><br />
             </div>
             <div class="prop-set">
               <div class="prop-name">Click Action</div>

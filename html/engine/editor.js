@@ -238,7 +238,21 @@ self.editorSetTerrain = function () {
 };
 
 self.editorSetDefaultTerrain = function () {
-    $('#builder-terrain').html($('#builder-terrain-base').val() + ' ' + $('#builder-terrain-primary').val());
+    var typeString = '';
+
+    if($('#builder-terrain-base').tokenInput('get').length > 0) {
+        typeString += $('#builder-terrain-base').tokenInput('get')[0].name + ' ';
+    } else {
+        return;
+    }
+
+    if($('#builder-terrain-primary').tokenInput('get').length > 0) {
+        typeString += $('#builder-terrain-primary').tokenInput('get')[0].name;
+    } else {
+        return;
+    }
+
+    $('#builder-terrain').html(typeString);
 };
 
 self.editorChangeClickAction = function () {
