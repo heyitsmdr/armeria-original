@@ -9,6 +9,7 @@
 
 var GameEngine = new function () {
     "use strict";
+
     this.debug = {datainput: false, pixi: false};
     this.funcvars = {};         // Various static variables for functions
     this.version = false;       // Version
@@ -31,6 +32,7 @@ var GameEngine = new function () {
     this.lastLibraryId = false; // Last Library ID (for script editor)
     this.pingMs = 0;            // Ping Command
     this.pingTimer = false;     // Pint Command Interval Timer
+    this.useNotify = false;     // Enable Chrome Notifications?
 
     this.init = function () {
         // set port
@@ -195,15 +197,48 @@ var GameEngine = new function () {
                 "spawn": {name: "Spawn", icon: "spawn"}
             }
         });
+        // init notifications
+        self.initNotifications();
         // focus input box
         $('#input').focus();
     };
 
+    this.initNotifications = function() {
+        var havePermission = window.webkitNotifications.checkPermission();
+        if(havePermission != 0) {
+            window.webkitNotifications.requestPermission(function(action){
+                if(action=='granted') {
+                    GameEngine.useNotify = true;
+                } else {
+                    GameEngine.useNotify = false;
+                }
+            });
+        } else {
+            self.useNotify = true;
+        }
+    };
+
+    this.gameHidden = function() {
+        if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
+            hidden = "hidden";
+        } else if (typeof document.mozHidden !== "undefined") {
+            hidden = "mozHidden";
+        } else if (typeof document.msHidden !== "undefined") {
+            hidden = "msHidden";
+        } else if (typeof document.webkitHidden !== "undefined") {
+            hidden = "webkitHidden";
+        }
+        var isHidden = document[hidden];
+        return isHidden;
+    };
+
     this.loadOptions = function() {
+        $('#optNotificationRoom').prop('checked', ((localStorage['optNotificationRoom'])?JSON.parse(localStorage['optNotificationRoom']):false));
         $('#optMinimapAnimation').prop('checked', ((localStorage['optMinimapAnimation'])?JSON.parse(localStorage['optMinimapAnimation']):true));
     };
 
     this.saveOptions = function() {
+        localStorage['optNotificationRoom'] = JSON.stringify($('#optNotificationRoom').prop('checked'));
         localStorage['optMinimapAnimation'] = JSON.stringify($('#optMinimapAnimation').prop('checked'));
     };
 
@@ -479,6 +514,17 @@ var GameEngine = new function () {
             clearInterval(GameEngine.pingTimer);
             GameEngine.pingTimer = false;
             GameEngine.parseInput('Your ping to the server is ' + GameEngine.pingMs + 'ms.');
+        });
+        this.socket.on('chromeNotify', function(data) {
+            if(GameEngine.useNotify && GameEngine.gameHidden()) {
+                var notification = false;
+                if(data.type == 'room' && localStorage['optNotificationRoom'] && localStorage['optNotificationRoom'] == 'true') {
+                    notification = window.webkitNotifications.createNotification('http://client.playarmeria.com/144.png', data.name, data.text);
+                }
+
+                if(notification)
+                    notification.show();
+            }
         });
     };
 

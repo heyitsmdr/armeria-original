@@ -344,6 +344,11 @@
         </div>
         <!-- Options -->
         <div id="options-container">
+          <div class="optionsHeading">Notification Options (Chrome Only)</div>
+          <div class="optionsSubheading">Receive notifications for certain events.</div>
+          <br/>
+          <input id="optNotificationRoom" type="checkbox">&nbsp;Room Chat
+          <br/><br/>
           <div class="optionsHeading">Minimap Options</div>
           <div class="optionsSubheading">Things you can set with the minimap.</div>
           <br/>

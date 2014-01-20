@@ -185,6 +185,11 @@ var Logic = function() {
         }
         player.character.room.eachPlayerExcept(player, function(p){
             p.msg(player.character.htmlname + msgStart + what + "'");
+            p.emit('chromeNotify', {
+                type: 'room',
+                name: 'Room Chat: ' + player.character.name,
+                text: ((what.length>40)?what.substr(0,40)+'...':what)
+            });
         });
         player.character.room.updateSaveHistory(player.character.htmlname + msgStart + what + "'");
         player.msg(msgStart_self + what + "'");
