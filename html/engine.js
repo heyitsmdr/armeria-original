@@ -131,10 +131,11 @@ var GameEngine = new function () {
         GameEngine.registerToolTip('div#text-energy.bar-shadow', '<strong>Energy:</strong> This is how much energy you have.');
         GameEngine.registerToolTip('div#text-exp.bar-shadow', '<strong>Experience:</strong> This is how much experience you need to level up.');
         // set up token input
-        $('#builder-terrain-base').tokenInput(GameEngine.getAllSets(), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetDefaultTerrain, onDelete: GameEngine.editorSetDefaultTerrain});
-        $('#builder-terrain-primary').tokenInput(GameEngine.getAllSets(), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetDefaultTerrain, onDelete: GameEngine.editorSetDefaultTerrain});
-        $('#room-terrain-base').tokenInput(GameEngine.getAllSets(), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetTerrain, onDelete: GameEngine.editorSetTerrain});
-        $('#room-terrain-primary').tokenInput(GameEngine.getAllSets(), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetTerrain, onDelete: GameEngine.editorSetTerrain});
+        $('#builder-terrain-base').tokenInput(GameEngine.getAllSets(false), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetDefaultTerrain, onDelete: GameEngine.editorSetDefaultTerrain});
+        $('#builder-terrain-primary').tokenInput(GameEngine.getAllSets(false), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetDefaultTerrain, onDelete: GameEngine.editorSetDefaultTerrain});
+        $('#room-terrain-base').tokenInput(GameEngine.getAllSets(false), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetTerrain, onDelete: GameEngine.editorSetTerrain});
+        $('#room-terrain-primary').tokenInput(GameEngine.getAllSets(false), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetTerrain, onDelete: GameEngine.editorSetTerrain});
+        $('#room-objects-list').tokenInput(GameEngine.getAllSets(true), {tokenLimit: 5, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetObjects, onDelete: GameEngine.editorSetObjects});
         // set up custom context menus
         $.contextMenu({
             selector: '.menuinv', 

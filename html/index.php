@@ -337,6 +337,13 @@
               &nbsp;&nbsp;Top: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-t" />&nbsp;&nbsp;Right: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-r" />&nbsp;&nbsp;Bottom: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-b" />&nbsp;&nbsp;Left: <input type="checkbox"  onclick="GameEngine.editorSetTerrain()" id="room-terrain-corners-l" />
             </div>
             <div class="prop-set">
+              <div class="prop-name">Objects</div>
+              <div class="prop-value"><a href="#" onclick="GameEngine.editorToggleExtra('objects-extra')" id="room-objects">..</a></div>
+            </div>
+            <div class="prop-extra" id="objects-extra">
+              <input id="room-objects-list" type="text">
+            </div>
+            <div class="prop-set">
               <div class="prop-name">Environment</div>
               <div class="prop-value"><a href="#" id="room-environment" onclick="GameEngine.editorEditProperty(this)">..</a></div>
             </div>

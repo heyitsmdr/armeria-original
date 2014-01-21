@@ -56,7 +56,7 @@ self.pixiRender = function() {
     self.maprenderer.render(self.mapstage);
 }
 
-// mapdata = [{x, y, z, terrain, env}];
+// mapdata = [{x, y, z, terrain, env, objects}];
 self.mapRender = function(mapdata, z) {
     // load or restore map data
     if (mapdata === false) {
@@ -83,6 +83,8 @@ self.mapRender = function(mapdata, z) {
         var tilePrimarySheet = tilePrimary.split('.')[0];
         var tilePrimaryTile = tilePrimary.split('.')[1];
 
+        var roomObjects = room.objects.split(' ');
+
         if(room.z == z) {
             var spriteRoom = new PIXI.DisplayObjectContainer();
 
@@ -98,6 +100,19 @@ self.mapRender = function(mapdata, z) {
                 primary.position.x = room.x * 32;
                 primary.position.y = room.y * 32;
                 spriteRoom.addChild(primary);
+            }
+
+            if(roomObjects.length > 0) {
+                roomObjects.forEach(function(obj){
+                    if(obj.length >= 1 && obj != 'null') {
+                        var objSpriteSheet = obj.split('.')[0];
+                        var objSpriteEntry = obj.split('.')[1];
+                        var objSprite = new PIXI.Sprite(self.mapts[objSpriteSheet][objSpriteEntry].texture);
+                        objSprite.position.x = room.x * 32;
+                        objSprite.position.y = room.y * 32;
+                        spriteRoom.addChild(objSprite);
+                    }
+                });
             }
 
             self.mapcontainer.addChild(spriteRoom);

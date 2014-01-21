@@ -140,7 +140,7 @@ var Map = function(config, fn) {
     self.getMinimapData = function() {
         var roomdata = [];
          self.rooms.forEach(function(r){
-            roomdata.push({x: r.x, y: r.y, z: r.z, terrain: r.type, env: r.environment});
+            roomdata.push({x: r.x, y: r.y, z: r.z, terrain: r.type, env: r.environment, objects: r.objects});
          });
          return roomdata;
     };
@@ -321,6 +321,12 @@ var Map = function(config, fn) {
                 shouldAnnounce = true;
                 shouldSendMapToArea = true;
                 break;
+            case 'objects':
+                player.character.room.objects = value;
+                shouldSave = true;
+                shouldAnnounce = true;
+                shouldSendMapToArea = true;
+                break;
             case 'environment':
                 player.character.room.environment = value;
                 shouldSave = true;
@@ -464,6 +470,10 @@ var Map = function(config, fn) {
                     {
                         property: "Wall Type",
                         value: player.character.room.wall
+                    },
+                    {
+                        property: "Objects",
+                        value: player.character.room.objects
                     }
                 ]));
         }
@@ -559,6 +569,7 @@ var Room = function(config, mapobj) {
     self.up;            // string for linking
     self.down;          // string for linking
     self.wall;          // string for wall type
+    self.objects;       // string of objects to render on map
 
     self.init = function(config, mapobj) {
         self.map = mapobj;
@@ -576,6 +587,7 @@ var Room = function(config, mapobj) {
         self.up = config.up || false;
         self.down = config.down || false;
         self.wall = config.wall || 'grass';
+        self.objects = config.objects || 'null';
     }
     
     self.getSaveData = function() {
@@ -593,7 +605,8 @@ var Room = function(config, mapobj) {
             west: self.west,
             up: self.up,
             down: self.down,
-            wall: self.wall
+            wall: self.wall,
+            objects: self.objects
         };    
     }
     
