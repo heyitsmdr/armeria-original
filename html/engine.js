@@ -795,6 +795,9 @@ var GameEngine = new function () {
             height: 450,
             width: 640,
             buttons: {
+                "Save": function() {
+                    GameEngine.socket.emit('savescript', {id:GameEngine.lastLibraryId, value:JSON.stringify(GameEngine.codeMirror.getValue())});
+                },
                 "Save & Close": function() {
                     GameEngine.socket.emit('savescript', {id:GameEngine.lastLibraryId, value:JSON.stringify(GameEngine.codeMirror.getValue())});
                     $(this).dialog('close')
