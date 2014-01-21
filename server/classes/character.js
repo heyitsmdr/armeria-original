@@ -89,6 +89,7 @@ var Character = function (config) {
     self.equipment = {};  // equipment for each slot
     self.title = '';      // string
     self.privs = [];      // array of strings
+    self.scriptvars = []; // array of script variables
 
     // not saved
     self.online = false;    // boolean
@@ -97,6 +98,7 @@ var Character = function (config) {
     self.replyto = '';      // string
     self.nickname = '';     // string
     self.regen = false;     // function (self.handleRegen())
+    self.blockMovement = false; // boolean -- block movement (mostly used by scripts)
 
     self.init = function (config) {
         self.id = config.id || 0;
@@ -118,6 +120,7 @@ var Character = function (config) {
         self.equipment = config.equipment || {weapon: '', body: '', feet: ''};
         self.title = config.title || '';
         self.privs = config.privs || [];
+        self.scriptvars = config.scriptvars || [];
 
         console.log('[init] character loaded: ' + self.name);
     };
@@ -142,7 +145,8 @@ var Character = function (config) {
             inventory: self.inventory,
             equipment: self.equipment,
             title: self.title,
-            privs: self.privs
+            privs: self.privs,
+            scriptvars: self.scriptvars
         };
         
         DB.characters.update({id: self.id}, data, {upsert: true});
