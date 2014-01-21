@@ -91,7 +91,7 @@ var GameEngine = new function () {
             }
         });
         // setup soundmanager2
-        soundManager.setup({url: '/libraries/soundmanager2/swf/', ontimeout: function () { console.log('SoundManager timed out.'); }});
+        soundManager.setup({url: '/libraries/soundmanager2/swf/', onready: function() { console.log('sm2: sound ready'); }, ontimeout: function () { console.log('SoundManager timed out.'); }});
         soundManager.debugMode = false;
         // setup minimap
         GameEngine.initMinimap();
