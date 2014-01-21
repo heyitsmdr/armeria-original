@@ -208,6 +208,10 @@ var GameEngine = new function () {
     };
 
     this.initNotifications = function() {
+        if(!window.webkitNotifications) {
+            GameEngine.useNotify = false;
+            return;
+        }
         var havePermission = window.webkitNotifications.checkPermission();
         if(havePermission != 0) {
             window.webkitNotifications.requestPermission(function(action){
@@ -225,6 +229,7 @@ var GameEngine = new function () {
     };
 
     this.gameHidden = function() {
+        var hidden = 'hidden';
         if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
             hidden = "hidden";
         } else if (typeof document.mozHidden !== "undefined") {

@@ -207,6 +207,11 @@ var Character = function (config) {
         if (self.privs.length >= 1) {
             self.player.msg("<div style='padding:10px;width:50%;margin-top:10px;border:2px solid #540303;background-color:#2b0505;color:#BA3C3C;box-sizing:border-box'>You are using a priviledged character. You have abilities that other characters do not possess. Do NOT use any of these abilities to help other characters in the game in ANY WAY.<br><br>Your character has been granted the following permissions: " + self.privs.join(', ') + ".</div>");
         }
+        // Emit to Mobs
+        self.room.eachMob(function(mob){
+            mob.obj.emit('onRoomEnter', self.player);
+            mob.obj.emit('onLogin', self.player);
+        });
         // look around
         LOGIC.look(self.player);
         // set up timers
