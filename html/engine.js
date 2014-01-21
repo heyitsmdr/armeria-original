@@ -23,6 +23,7 @@ var GameEngine = new function () {
     this.connected = false;     // Connected or not (boolean)
     this.connecting = false;    // Connection in process (to block certain functions)
     this.toolTipCache = [];     // Array of tool tip data used for cache
+    this.audioCache = [];       // Array of SoundManager2 Audio objects (loaded as needed)
     this.server = false;        // Server class
     this.serverOffline = false; // Set to True if Socket.IO is not found (server offline)
     this.sendHistory = [];      // Array of strings that you sent to the server (for up/down history)
@@ -91,7 +92,7 @@ var GameEngine = new function () {
             }
         });
         // setup soundmanager2
-        soundManager.setup({url: '/libraries/soundmanager2/swf/', ontimeout: function () { console.log('SoundManager timed out.'); }});
+        soundManager.setup({url: '/libraries/soundmanager2/swf/', onready: function() { console.log('sm2: sound ready'); }, ontimeout: function () { console.log('SoundManager timed out.'); }});
         soundManager.debugMode = false;
         // setup minimap
         GameEngine.initMinimap();
@@ -130,10 +131,11 @@ var GameEngine = new function () {
         GameEngine.registerToolTip('div#text-energy.bar-shadow', '<strong>Energy:</strong> This is how much energy you have.');
         GameEngine.registerToolTip('div#text-exp.bar-shadow', '<strong>Experience:</strong> This is how much experience you need to level up.');
         // set up token input
-        $('#builder-terrain-base').tokenInput(GameEngine.getAllSets(), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetDefaultTerrain, onDelete: GameEngine.editorSetDefaultTerrain});
-        $('#builder-terrain-primary').tokenInput(GameEngine.getAllSets(), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetDefaultTerrain, onDelete: GameEngine.editorSetDefaultTerrain});
-        $('#room-terrain-base').tokenInput(GameEngine.getAllSets(), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetTerrain, onDelete: GameEngine.editorSetTerrain});
-        $('#room-terrain-primary').tokenInput(GameEngine.getAllSets(), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetTerrain, onDelete: GameEngine.editorSetTerrain});
+        $('#builder-terrain-base').tokenInput(GameEngine.getAllSets(false), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetDefaultTerrain, onDelete: GameEngine.editorSetDefaultTerrain});
+        $('#builder-terrain-primary').tokenInput(GameEngine.getAllSets(false), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetDefaultTerrain, onDelete: GameEngine.editorSetDefaultTerrain});
+        $('#room-terrain-base').tokenInput(GameEngine.getAllSets(false), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetTerrain, onDelete: GameEngine.editorSetTerrain});
+        $('#room-terrain-primary').tokenInput(GameEngine.getAllSets(false), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetTerrain, onDelete: GameEngine.editorSetTerrain});
+        $('#room-objects-list').tokenInput(GameEngine.getAllSets(true), {tokenLimit: 5, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetObjects, onDelete: GameEngine.editorSetObjects});
         // set up custom context menus
         $.contextMenu({
             selector: '.menuinv', 
@@ -206,6 +208,10 @@ var GameEngine = new function () {
     };
 
     this.initNotifications = function() {
+        if(!window.webkitNotifications) {
+            GameEngine.useNotify = false;
+            return;
+        }
         var havePermission = window.webkitNotifications.checkPermission();
         if(havePermission != 0) {
             window.webkitNotifications.requestPermission(function(action){
@@ -223,6 +229,7 @@ var GameEngine = new function () {
     };
 
     this.gameHidden = function() {
+        var hidden = 'hidden';
         if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
             hidden = "hidden";
         } else if (typeof document.mozHidden !== "undefined") {
@@ -452,12 +459,16 @@ var GameEngine = new function () {
             $('#gameMapCanvas').effect("shake", { times: 3, distance: 1}, 250);
         });
         this.socket.on('sound', function (data) {
-            if (!soundManager.play(data.sfx, {volume: data.volume})) {
-                // load sound
-                soundManager.createSound({id: data.sfx, url: 'sfx/' + data.sfx});
-                // now play it
-                soundManager.play(data.sfx, {volume: data.volume});
+            if(GameEngine.audioCache[data.sfx] === undefined) {
+                // load
+                GameEngine.audioCache[data.sfx] = soundManager.createSound({
+                    id: data.sfx,
+                    url: 'sfx/' + data.sfx
+                });
+                console.log('sm2: loaded ' + data.sfx + ' into audio cache');
             }
+            // play
+            GameEngine.audioCache[data.sfx].play({volume: data.volume});
         });
         this.socket.on('notify', function (data) {
             $.gritter.add({
@@ -789,6 +800,9 @@ var GameEngine = new function () {
             height: 450,
             width: 640,
             buttons: {
+                "Save": function() {
+                    GameEngine.socket.emit('savescript', {id:GameEngine.lastLibraryId, value:JSON.stringify(GameEngine.codeMirror.getValue())});
+                },
                 "Save & Close": function() {
                     GameEngine.socket.emit('savescript', {id:GameEngine.lastLibraryId, value:JSON.stringify(GameEngine.codeMirror.getValue())});
                     $(this).dialog('close')

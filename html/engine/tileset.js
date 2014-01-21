@@ -6,7 +6,7 @@ self.maptextures = [];		// Tile Textures / Images
 
 self.setupTileset = function () {
 	// Tilesets
-    self.tilesets = ['floors', 'shipFloor'];
+    self.tilesets = ['floors', 'shipFloor', 'shipObjects'];
     /* NOTE: Edges are automatically calculated since they will always be
              to the left of the tile (if edges = true). */
 
@@ -19,10 +19,17 @@ self.setupTileset = function () {
     self.mapts.shipFloor = {
         "basic": {sx: 15, sy: 1, edges: true, anim: false}
     };
+    self.mapts.shipObjects = {
+        "computerTop": {sx: 0, sy: 0, edges: false, anim: false},
+        "computerRight": {sx: 1, sy: 0, edges: false, anim: false},
+        "computerBottom": {sx: 2, sy: 0, edges: false, anim: false},
+        "computerLeft": {sx: 3, sy: 0, edges: false, anim: false}
+    };
 
     // Texture Sources
     self.maptextures.floors = { src: "floors.png" };
     self.maptextures.shipFloor = { src: "shipFloor.png" };
+    self.maptextures.shipObjects = { src: "shipObjects.png" };
 
     // Calculate Real Sx and Sy
     self.calculateRealSxSy();

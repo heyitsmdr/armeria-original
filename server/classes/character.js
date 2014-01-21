@@ -89,6 +89,7 @@ var Character = function (config) {
     self.equipment = {};  // equipment for each slot
     self.title = '';      // string
     self.privs = [];      // array of strings
+    self.scriptvars = []; // array of script variables
 
     // not saved
     self.online = false;    // boolean
@@ -97,6 +98,7 @@ var Character = function (config) {
     self.replyto = '';      // string
     self.nickname = '';     // string
     self.regen = false;     // function (self.handleRegen())
+    self.blockMovement = false; // boolean -- block movement (mostly used by scripts)
 
     self.init = function (config) {
         self.id = config.id || 0;
@@ -118,6 +120,7 @@ var Character = function (config) {
         self.equipment = config.equipment || {weapon: '', body: '', feet: ''};
         self.title = config.title || '';
         self.privs = config.privs || [];
+        self.scriptvars = config.scriptvars || [];
 
         console.log('[init] character loaded: ' + self.name);
     };
@@ -142,7 +145,8 @@ var Character = function (config) {
             inventory: self.inventory,
             equipment: self.equipment,
             title: self.title,
-            privs: self.privs
+            privs: self.privs,
+            scriptvars: self.scriptvars
         };
         
         DB.characters.update({id: self.id}, data, {upsert: true});
@@ -203,6 +207,11 @@ var Character = function (config) {
         if (self.privs.length >= 1) {
             self.player.msg("<div style='padding:10px;width:50%;margin-top:10px;border:2px solid #540303;background-color:#2b0505;color:#BA3C3C;box-sizing:border-box'>You are using a priviledged character. You have abilities that other characters do not possess. Do NOT use any of these abilities to help other characters in the game in ANY WAY.<br><br>Your character has been granted the following permissions: " + self.privs.join(', ') + ".</div>");
         }
+        // Emit to Mobs
+        self.room.eachMob(function(mob){
+            mob.obj.emit('onRoomEnter', self.player);
+            mob.obj.emit('onLogin', self.player);
+        });
         // look around
         LOGIC.look(self.player);
         // set up timers

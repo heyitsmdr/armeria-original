@@ -337,7 +337,8 @@ var LibraryEntry = function(config) {
         	}
         }
         try {
-            eval("self.gameScript." + func)(args);
+            if(self.gameScript[func] !== undefined)
+                eval("self.gameScript." + func)(args);
         } catch(err) {
             // error in game script
             if(LIVE) {
@@ -357,6 +358,20 @@ var LibraryEntry = function(config) {
         room.eachPlayer(function(p){
             p.msg(self.get('htmlname') + " says, '" + text + "'");
         });
+    };
+    self.setScriptVar = function(player, stat, data) {
+        if(player.character.scriptvars[self.id] === undefined)
+            player.character.scriptvars[self.id] = [];
+
+        player.character.scriptvars[self.id][stat] = data;
+    };
+    self.getScriptVar = function(player, stat) {
+        if(player.character.scriptvars[self.id] === undefined) {
+            return false;
+        } else if(player.character.scriptvars[self.id][stat] === undefined)
+            return false;
+        else
+            return player.character.scriptvars[self.id][stat];
     };
     /* END: SCRIPT FUNCTIONS */
 

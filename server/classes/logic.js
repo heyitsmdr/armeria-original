@@ -275,6 +275,11 @@ var Logic = function() {
         var msg_new = '%n arrived from the %d.';
         var msg_self = 'You walked %d.';
 
+        if(player.character.blockMovement) {
+            player.msg('You cannot do that right now.');
+            return;
+        }
+
         // calculate new x,y,z
         switch(dir.toLowerCase()) {
             case 'n':
