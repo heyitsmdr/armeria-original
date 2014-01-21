@@ -23,6 +23,7 @@ var GameEngine = new function () {
     this.connected = false;     // Connected or not (boolean)
     this.connecting = false;    // Connection in process (to block certain functions)
     this.toolTipCache = [];     // Array of tool tip data used for cache
+    this.audioCache = [];       // Array of SoundManager2 Audio objects (loaded as needed)
     this.server = false;        // Server class
     this.serverOffline = false; // Set to True if Socket.IO is not found (server offline)
     this.sendHistory = [];      // Array of strings that you sent to the server (for up/down history)
@@ -452,12 +453,16 @@ var GameEngine = new function () {
             $('#gameMapCanvas').effect("shake", { times: 3, distance: 1}, 250);
         });
         this.socket.on('sound', function (data) {
-            if (!soundManager.play(data.sfx, {volume: data.volume})) {
-                // load sound
-                soundManager.createSound({id: data.sfx, url: 'sfx/' + data.sfx});
-                // now play it
-                soundManager.play(data.sfx, {volume: data.volume});
+            if(GameEngine.audioCache[data.sfx] === undefined) {
+                // load
+                GameEngine.audioCache[data.sfx] = soundManager.createSound({
+                    id: data.sfx,
+                    url: 'sfx/' + data.sfx
+                });
+                console.log('sm2: loaded ' + data.sfx + ' into audio cache');
             }
+            // play
+            GameEngine.audioCache[data.sfx].play({volume: data.volume});
         });
         this.socket.on('notify', function (data) {
             $.gritter.add({
