@@ -337,7 +337,8 @@ var LibraryEntry = function(config) {
         	}
         }
         try {
-            eval("self.gameScript." + func)(args);
+            if(self.gameScript[func] !== undefined)
+                eval("self.gameScript." + func)(args);
         } catch(err) {
             // error in game script
             if(LIVE) {
