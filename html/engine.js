@@ -29,7 +29,6 @@ var GameEngine = new function () {
     this.sendHistory = [];      // Array of strings that you sent to the server (for up/down history)
     this.sendHistPtr = false;   // Pointer for navigating the history
     this.lineCount = 0;         // Number of lines parsed
-    this.codeMirror = false;    // CodeMirror instance
     this.lastLibraryId = false; // Last Library ID (for script editor)
     this.pingMs = 0;            // Ping Command
     this.pingTimer = false;     // Pint Command Interval Timer
@@ -796,29 +795,14 @@ var GameEngine = new function () {
     this.openScriptEditor = function(libraryId, scriptContents) {
         GameEngine.lastLibraryId = libraryId;
 
-        $('#script-container').dialog({
-            height: 450,
-            width: 640,
-            buttons: {
-                "Save": function() {
-                    GameEngine.socket.emit('savescript', {id:GameEngine.lastLibraryId, value:JSON.stringify(GameEngine.codeMirror.getValue())});
-                },
-                "Save & Close": function() {
-                    GameEngine.socket.emit('savescript', {id:GameEngine.lastLibraryId, value:JSON.stringify(GameEngine.codeMirror.getValue())});
-                    $(this).dialog('close')
-                },
-                "Close": function() { $(this).dialog('close') }
-            }
-        });
-        if(!GameEngine.codeMirror) {
-            GameEngine.codeMirror = CodeMirror(document.getElementById('script-editor'), {
-                value: ((scriptContents)?JSON.parse(scriptContents):''),
-                mode:  "javascript",
-                theme: "monokai",
-                lineNumbers: true
-            });
-        } else {
-            GameEngine.codeMirror.setValue(((scriptContents)?JSON.parse(scriptContents):''));
+        var popup = window.open('script.html', 'ArmeriaScriptEditor', 'width=700,height=500');
+
+        popup.onload = function() {
+            popup.setScriptContent( ((scriptContents)?JSON.parse(scriptContents):'') );
         }
+
+        popup.onsave = function(content) {
+            GameEngine.socket.emit('savescript', {id:GameEngine.lastLibraryId, value:content});
+        };
     };
 }();

@@ -612,6 +612,10 @@ var Logic = function() {
 
         player.character.room.announceExcept(player, player.character.htmlname + ' dropped a ' + found.get('htmlname') + '.');
         player.msg('You dropped a ' + found.get('htmlname') + '.');
+
+        player.character.room.eachPlayer(function(p){
+            p.emit("sound", {sfx: 'drop_object.mp3', volume: 75});
+        });
     }
 
     self.get = function(player, args) {

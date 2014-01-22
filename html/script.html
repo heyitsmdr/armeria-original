@@ -1,0 +1,51 @@
+<html>
+	<head>
+		<title>Script Editor</title>
+		<!-- CodeMirror -->
+		<script src="libraries/codemirror/lib/codemirror.js"></script>
+		<link rel="stylesheet" href="libraries/codemirror/lib/codemirror.css">
+		<script src="libraries/codemirror/mode/javascript/javascript.js"></script>
+		<link rel="stylesheet" href="libraries/codemirror/theme/monokai.css">
+		<style type="text/css">
+			body { margin: 0; padding: 0; }
+			#buttons { color: #fff; position: absolute; top: 0; right: 0; margin: 26px 10px; }
+			.button { background-color: rgba(0,0,0,0.3); padding: 12px; margin-right: 15px; border: 1px solid #222; }
+			a, .button { color: #fff; font-family: 'Open Sans'; font-size: 13px; text-decoration: none; }
+			.button:hover { text-decoration: underline; border: 1px solid #333; }
+		</style>
+		<!-- jQuery (Latest) -->
+		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script type="text/javascript">
+			var CM = false;
+			window.setScriptContent = function(text) {
+				CM.setValue(text);
+				return true;
+			}
+		</script>
+	</head>
+
+	<body>
+		<div id="script-editor"></div>
+		<div id="buttons">
+			<a href="#" onclick="doSave();"><span id="saveLink" class="button">Save</span></a>
+			<a href="#" onclick="window.close();"><span class="button">Close</span></a>
+		</div>
+		<script type="text/javascript">
+			CM = CodeMirror(document.getElementById('script-editor'), {
+                value: '',
+                mode:  "javascript",
+                theme: "monokai",
+                lineNumbers: true
+            });
+
+            function doSave() {
+            	$('#saveLink').html('Saved!');
+            	setTimeout(function(){
+            		$('#saveLink').html('Save');
+            	}, 1000);
+            	window.onsave( JSON.stringify(CM.getValue()) );
+            	return false;
+            }
+		</script>
+	</body>
+</html>
