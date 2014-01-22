@@ -60,11 +60,6 @@
           <script src="libraries/contextmenu/jquery.ui.position.js"></script>
           <script src="libraries/contextmenu/jquery.contextMenu.js"></script>
           <link rel="stylesheet" href="libraries/contextmenu/jquery.contextMenu.css" />
-          <!-- CodeMirror -->
-          <script src="libraries/codemirror/lib/codemirror.js"></script>
-          <link rel="stylesheet" href="libraries/codemirror/lib/codemirror.css">
-          <script src="libraries/codemirror/mode/javascript/javascript.js"></script>
-          <link rel="stylesheet" href="libraries/codemirror/theme/monokai.css">
           <!-- Pixi.js -->
           <script src="libraries/pixi/pixi.dev.js"></script>
           <!-- jQuery TokenInput -->
