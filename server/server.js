@@ -82,7 +82,8 @@ var server = http.createServer(function(req, res) {
 
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.end('Success.');
-}).listen(8888, '127.0.0.1');
+}).listen(8888);
+console.log('api listening on 8888');
 
 // socket.io logging (options: 0 = error, 1 = warn, 2 = info, 3 = debug [default])
 io.set('log level', 1);

@@ -10,6 +10,7 @@ Vagrant.configure("2") do |config|
   config.vm.network :forwarded_port, host: 8080, guest: 80
   config.vm.network :forwarded_port, host: 2772, guest: 2772
   config.vm.network :forwarded_port, host: 8088, guest: 8088
+  config.vm.network :forwarded_port, host: 8888, guest: 8888
 
   config.vm.provider :virtualbox do |vb|
     vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
