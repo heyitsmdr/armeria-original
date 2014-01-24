@@ -15,6 +15,7 @@ var Combat        = require('./classes/combat').Combat;
 var Items         = require('./classes/item').Items;
 var Mobs          = require('./classes/mob').Mobs;
 var Library       = require('./classes/library').Library;
+var API           = require('./classes/api').API;
 
 LIVE  = ((process.argv.indexOf('--live')>-1) ? true : false);
 
@@ -34,6 +35,7 @@ if(!DB) {
 }
 
 // globals
+APILib     = new API();
 PLAYERS    = new Players();
 CHARACTERS = new Characters();
 LOGIC      = new Logic();
@@ -64,8 +66,26 @@ var io = require('socket.io').listen(port);
 
 // listen for remote commands
 var server = http.createServer(function(req, res) {
+    /* handle cross browser
+    var origin = (req.headers.origin || "*");
+    console.log(req.method.toUpperCase());
+    if (req.method.toUpperCase() === "OPTIONS"){
+        res.writeHead(
+            "204",
+            "No Content",
+            {
+                "access-control-allow-origin": origin,
+                "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+                "access-control-allow-headers": "content-type, accept",
+                "access-control-max-age": 10, // Seconds.
+                "content-length": 0
+            }
+        );
+        return( res.end() );
+    }*/
     var url_parts = url.parse(req.url, true);
     var query = url_parts.query;
+    var sendData = false;
 
     if(url_parts.pathname == '/api') {
         if(query.key && query.key == 'l3tm3in') {
@@ -77,11 +97,17 @@ var server = http.createServer(function(req, res) {
                     break;
             }
             console.log('[api] ' + url_parts.path);
+        } else {
+            switch(query.action) {
+                case 'charinfo':
+                    sendData = APILib.charinfo(query.id);
+                    break;
+            }
         }
     }
 
     res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('Success.');
+    res.end(((sendData)?sendData:'Success.'));
 }).listen(8888);
 console.log('api listening on 8888');
 

@@ -499,7 +499,7 @@ var Logic = function() {
             player.msg("<span class='purple'>You whisper to " + target.htmlname + ", '" + what + "'</span>");
             target.player.msg("<span class='purple'>" + player.character.htmlname + " whispers, '" + what + "'</span>");
             target.player.emit("sound", {sfx: 'whisper.wav', volume: 25});
-            target.player.character.replyto = player.character.name.replace(' ', '.');
+            target.player.character.replyto = player.character.name;
         } else {
             player.msg("No character found with that name.");
         }
