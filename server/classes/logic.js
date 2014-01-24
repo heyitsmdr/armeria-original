@@ -190,6 +190,7 @@ var Logic = function() {
                 name: 'Room Chat: ' + player.character.name,
                 text: ((what.length>40)?what.substr(0,40)+'...':what)
             });
+            p.emit("sound", {sfx: 'room_msg.wav', volume: 75});
         });
         player.character.room.updateSaveHistory(player.character.htmlname + msgStart + what + "'");
         player.msg(msgStart_self + what + "'");
