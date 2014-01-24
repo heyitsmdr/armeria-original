@@ -24,7 +24,7 @@ DB = false;
 if(LIVE) {
     DB = mongojs('gameserver', ['characters', 'items', 'library', 'mobs', 'maps', 'libraryInstances']);
 } else {
-    DB = mongojs('armeriaserv:p0pc0rn@playarmeria.com/gameserver', ['characters', 'items', 'library', 'mobs', 'maps', 'libraryInstances']);
+    DB = mongojs('armeriaserv:p0pc0rn@client.playarmeria.com/gameserver', ['characters', 'items', 'library', 'mobs', 'maps', 'libraryInstances']);
 }
 
 if(!DB) {
