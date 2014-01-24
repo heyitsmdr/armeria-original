@@ -797,6 +797,11 @@ var GameEngine = new function () {
 
         var popup = window.open('script.html', 'ArmeriaScriptEditor', 'width=700,height=500');
 
+        if(!popup) {
+            GameEngine.parseInput('Script editor popup was blocked!');
+            return;
+        }
+
         popup.onload = function() {
             popup.document.title = 'Script Editor: ' + libraryId;
             popup.setScriptContent( ((scriptContents)?JSON.parse(scriptContents):'') );
