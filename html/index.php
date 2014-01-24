@@ -53,8 +53,9 @@
         <script src="engine/tileset.js?buildTime=<?=filemtime('./engine/tileset.js')?>"></script>
         <? endif; ?>
         <!-- Libraries -->
-          <!-- SoundManager2 -->
-          <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
+          <!-- SoundJS (0.5.2) -->
+          <script src="http://code.createjs.com/soundjs-0.5.2.min.js"></script>
+          <!-- jQuery Gritter Notifications -->
           <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
           <!-- jQuery Context Menu -->
           <script src="libraries/contextmenu/jquery.ui.position.js"></script>

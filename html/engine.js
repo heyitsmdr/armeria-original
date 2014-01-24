@@ -23,7 +23,6 @@ var GameEngine = new function () {
     this.connected = false;     // Connected or not (boolean)
     this.connecting = false;    // Connection in process (to block certain functions)
     this.toolTipCache = [];     // Array of tool tip data used for cache
-    this.audioCache = [];       // Array of SoundManager2 Audio objects (loaded as needed)
     this.server = false;        // Server class
     this.serverOffline = false; // Set to True if Socket.IO is not found (server offline)
     this.sendHistory = [];      // Array of strings that you sent to the server (for up/down history)
@@ -90,9 +89,25 @@ var GameEngine = new function () {
                 return 'You are currently connected to the game, and this action will cause you to be disconnected.';
             }
         });
-        // setup soundmanager2
-        soundManager.setup({url: '/libraries/soundmanager2/swf/', onready: function() { console.log('sm2: sound ready'); }, ontimeout: function () { console.log('SoundManager timed out.'); }});
-        soundManager.debugMode = false;
+        // setup soundjs
+        if (!createjs.Sound.initializeDefaultPlugins()) {
+            console.log('soundjs: unable to play sounds');
+        } else {
+            var audioManifest = [
+                {id: 'create_room.wav', src: 'create_room.wav'},
+                {id: 'destroy_room.mp3', src: 'destroy_room.mp3'},
+                {id: 'drop_object.mp3', src: 'drop_object.mp3'},
+                {id: 'room_msg_self.wav', src: 'room_msg_self.wav'},
+                {id: 'room_msg.wav', src: 'room_msg.wav'},
+                {id: 'teleport.wav', src: 'teleport.wav'},
+                {id: 'walk_grass_1.mp3', src: 'walk_grass_1.mp3'},
+                {id: 'whisper.wav', src: 'whisper.wav'}
+            ];
+            createjs.Sound.addEventListener("fileload", function(e){
+                console.log('soundjs: loaded /' + e.src + ' from manifest');
+            });
+            createjs.Sound.registerManifest(audioManifest, 'sfx/');
+        }
         // setup minimap
         GameEngine.initMinimap();
         // setup error reporting
@@ -458,16 +473,8 @@ var GameEngine = new function () {
             $('#gameMapCanvas').effect("shake", { times: 3, distance: 1}, 250);
         });
         this.socket.on('sound', function (data) {
-            if(GameEngine.audioCache[data.sfx] === undefined) {
-                // load
-                GameEngine.audioCache[data.sfx] = soundManager.createSound({
-                    id: data.sfx,
-                    url: 'sfx/' + data.sfx
-                });
-                console.log('sm2: loaded ' + data.sfx + ' into audio cache');
-            }
-            // play
-            GameEngine.audioCache[data.sfx].play({volume: data.volume});
+            var instance = createjs.Sound.play(data.sfx);
+            instance.volume = data.volume * 0.01;
         });
         this.socket.on('notify', function (data) {
             $.gritter.add({
