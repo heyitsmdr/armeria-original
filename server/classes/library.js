@@ -166,6 +166,15 @@ var Library = function(){
                         value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"rarity\")'>" + (obj.get('rarity') || 'No rarity set.') + "</a>"
                     },
                     {
+                        property: "Equip Slot",
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"equipslot\")'>" + (obj.get('equipslot') || 'No equip slot set.') + "</a>"
+                    },
+                    {
+                        property: "Weapon Type",
+                        subtext: "(If Equip Slot is Weapon)",
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"weapontype\")'>" + (obj.get('weapontype') || 'No weapon type set.') + "</a>"
+                    },
+                    {
                         property: "Script",
                         value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"script\")'>" + ((obj.get('script'))?'Script set.':'No script set.') + "</a>"
                     }

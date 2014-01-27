@@ -38,6 +38,7 @@ var Item = function(config) {
     self.picture;
     self.rarity;
     self.equipslot;
+    self.weapontype;
 
     self.init = function(config) {
         self.id = config.id;
@@ -47,6 +48,7 @@ var Item = function(config) {
         self.picture = config.picture;
         self.rarity = config.rarity || 0;
         self.equipslot = config.equipslot || '';
+        self.weapontype = config.weapontype || '';
 
         console.log('[init] item template loaded: ' + self.id);
     };
@@ -59,7 +61,8 @@ var Item = function(config) {
             level: self.level,
             picture: self.picture,
             rarity: self.rarity,
-            equipslot: self.equipslot
+            equipslot: self.equipslot,
+            weapontype: self.weapontype
         };
         
         DB.items.update({id: self.id}, data, {upsert: true});

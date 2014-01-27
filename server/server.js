@@ -213,6 +213,11 @@ if(LIVE) {
     });
 }
 
+// add method to Strings
+String.prototype.toProperCase = function () {
+    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+};
+
 io.sockets.on('connection', function(socket){
     var player = new Player(socket);
     PLAYERS.addPlayer(player);
@@ -382,9 +387,11 @@ io.sockets.on('connection', function(socket){
             tooltip += "<br><span style='color:#666666'>" + obj.id + "</span>";
         // type and level
         var equipslot = obj.get('equipslot');
+        var weapontype = '';
         switch(equipslot) {
             case 'weapon':
                 equipslot = ' Weapon';
+                weapontype = ((obj.get('weapontype'))?'<br>'+obj.get('weapontype').toProperCase():'');
                 break;
             case 'body':
                 equipslot = ' Body Piece';
@@ -392,7 +399,7 @@ io.sockets.on('connection', function(socket){
             default:
                 equipslot = '';
         }
-        tooltip += "<br>Level " + obj.get('level') + equipslot;
+        tooltip += "<br>Level " + obj.get('level') + equipslot + weapontype;
         // rare, unique, etc
         var rarity = String(obj.get('rarity'));
         switch(rarity) {
