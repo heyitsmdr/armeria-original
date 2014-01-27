@@ -53,8 +53,9 @@
         <script src="engine/tileset.js?buildTime=<?=filemtime('./engine/tileset.js')?>"></script>
         <? endif; ?>
         <!-- Libraries -->
-          <!-- SoundManager2 -->
-          <script src="libraries/soundmanager2/js/soundmanager2.js"></script>
+          <!-- SoundJS (0.5.2) -->
+          <script src="http://code.createjs.com/soundjs-0.5.2.min.js"></script>
+          <!-- jQuery Gritter Notifications -->
           <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
           <!-- jQuery Context Menu -->
           <script src="libraries/contextmenu/jquery.ui.position.js"></script>
@@ -168,37 +169,6 @@
         <div id="left-content">
             <div id="roomlist-container">
                 <ul id="roomlist"></ul>
-            </div>
-            <div id="score">
-              <table id="score-table" border="1" width="100%" cellpadding="3" cellspacing="3">
-                <tr>
-                  <td id="raceclass" colspan="4">Level 1 Human Novice</td>
-                </tr>
-                <tr>
-                    <td class="score-property">Armor:</td>
-                    <td id="armor" class="score-value">0</td>
-                    <td class="score-property">Power:</td>
-                    <td id="strength" class="score-value">0</td>
-                </tr>
-                <tr>
-                    <td class="score-property">Swiftness:</td>
-                    <td id="strength" class="score-value">0</td>
-                    <td class="score-property">Perception:</td>
-                    <td id="intelligence" class="score-value">0</td>
-                </tr>
-                <tr>
-                    <td class="score-property">P Damage:</td>
-                    <td id="physicaldamage" class="score-value">0</td>
-                    <td class="score-property">M Damage:</td>
-                    <td id="magicaldamage" class="score-value">0</td>
-                </tr>
-                <tr>
-                    <td class="score-property">P Res:</td>
-                    <td id="resistance" class="score-value">0</td>
-                    <td class="score-property">M Res:</td>
-                    <td id="resistance" class="score-value">0</td>
-                </tr>
-              </table>
             </div>
             <div id="items-container">
                 <ul id="carrying"></ul>
@@ -355,10 +325,6 @@
           <div class="optionsSubheading">Things you can set with the minimap.</div>
           <br/>
           <input id="optMinimapAnimation" type="checkbox">&nbsp;Minimap Animation
-        </div>
-        <!-- Script Editor -->
-        <div id="script-container" title="Script Editor">
-          <div id="script-editor"></div>
         </div>
     </body>
 </html>

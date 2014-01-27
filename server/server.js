@@ -5,6 +5,7 @@ var http          = require('http');
 var url           = require('url');
 var hipchatter    = require('hipchatter');
 var mongojs       = require('mongojs');
+var memwatch      = require('memwatch');
 // require custom
 var Players       = require('./classes/player').Players;
 var Player        = require('./classes/player').Player;
@@ -15,6 +16,7 @@ var Combat        = require('./classes/combat').Combat;
 var Items         = require('./classes/item').Items;
 var Mobs          = require('./classes/mob').Mobs;
 var Library       = require('./classes/library').Library;
+var API           = require('./classes/api').API;
 
 LIVE  = ((process.argv.indexOf('--live')>-1) ? true : false);
 
@@ -23,7 +25,7 @@ DB = false;
 if(LIVE) {
     DB = mongojs('gameserver', ['characters', 'items', 'library', 'mobs', 'maps', 'libraryInstances']);
 } else {
-    DB = mongojs('armeriaserv:p0pc0rn@playarmeria.com/gameserver', ['characters', 'items', 'library', 'mobs', 'maps', 'libraryInstances']);
+    DB = mongojs('armeriaserv:p0pc0rn@client.playarmeria.com/gameserver', ['characters', 'items', 'library', 'mobs', 'maps', 'libraryInstances']);
 }
 
 if(!DB) {
@@ -34,6 +36,7 @@ if(!DB) {
 }
 
 // globals
+APILib     = new API();
 PLAYERS    = new Players();
 CHARACTERS = new Characters();
 LOGIC      = new Logic();
@@ -53,6 +56,18 @@ if(LIVE) {
     require('newrelic');
 }
 
+// memwatch
+memwatch.on('leak', function(info) {
+    console.log('[memwatch][leak!] ' + JSON.stringify(info));
+    if(LIVE) {
+        hipchatmsg('Memory Leak: ' + JSON.stringify(info), 'red');
+    }
+});
+
+memwatch.on('stats', function(info) {
+    console.log('[memwatch] ' + JSON.stringify(info));
+});
+
 // hip chat association
 HIPCHAT = new hipchatter('G9AuMaMlZQxzPaE1mo3sMsNoOpPt9GiutxRfP4ZW');
 
@@ -64,8 +79,26 @@ var io = require('socket.io').listen(port);
 
 // listen for remote commands
 var server = http.createServer(function(req, res) {
+    /* handle cross browser
+    var origin = (req.headers.origin || "*");
+    console.log(req.method.toUpperCase());
+    if (req.method.toUpperCase() === "OPTIONS"){
+        res.writeHead(
+            "204",
+            "No Content",
+            {
+                "access-control-allow-origin": origin,
+                "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+                "access-control-allow-headers": "content-type, accept",
+                "access-control-max-age": 10, // Seconds.
+                "content-length": 0
+            }
+        );
+        return( res.end() );
+    }*/
     var url_parts = url.parse(req.url, true);
     var query = url_parts.query;
+    var sendData = false;
 
     if(url_parts.pathname == '/api') {
         if(query.key && query.key == 'l3tm3in') {
@@ -77,12 +110,19 @@ var server = http.createServer(function(req, res) {
                     break;
             }
             console.log('[api] ' + url_parts.path);
+        } else {
+            switch(query.action) {
+                case 'charinfo':
+                    sendData = APILib.charinfo(query.id);
+                    break;
+            }
         }
     }
 
     res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('Success.');
-}).listen(8888, '127.0.0.1');
+    res.end(((sendData)?sendData:'Success.'));
+}).listen(8888);
+console.log('api listening on 8888');
 
 // socket.io logging (options: 0 = error, 1 = warn, 2 = info, 3 = debug [default])
 io.set('log level', 1);
@@ -232,8 +272,8 @@ io.sockets.on('connection', function(socket){
         // get base command
         var sections = data.cmd.split(' ');
         var cmd = matchcmd(sections[0], new Array('say', 'score', 'move', ['look', 'examine'], 'me',
-            'whisper', 'reply', 'attack', 'create', 'destroy', ['room', 'rm'], 'drop', 'get',
-            'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp'],
+            'whisper', 'reply', 'create', 'destroy', ['room', 'rm'], 'drop', 'get',
+            'channels', 'builder', 'gossip', 'library', ['teleport', 'tp'],
             'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit', 'refresh', 'hurt', 'equip', 'remove'));
         sections.shift();
         var cmd_args = sections.join(' ');
@@ -260,9 +300,6 @@ io.sockets.on('connection', function(socket){
             case 'reply':
                 LOGIC.reply(player, cmd_args);
                 break;
-            case 'attack':
-                LOGIC.attack(player, cmd_args);
-                break;
             case 'create':
                 LOGIC.create(player, cmd_args);
                 break;
@@ -286,9 +323,6 @@ io.sockets.on('connection', function(socket){
                 break;
             case 'gossip':
                 LOGIC.channel(player, 'gossip', cmd_args);
-                break;
-            case 'cast':
-                LOGIC.cast(player, cmd_args);
                 break;
             case 'library':
                 LOGIC.library(player, cmd_args);

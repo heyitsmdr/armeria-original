@@ -190,9 +190,11 @@ var Logic = function() {
                 name: 'Room Chat: ' + player.character.name,
                 text: ((what.length>40)?what.substr(0,40)+'...':what)
             });
+            p.emit("sound", {sfx: 'room_msg.wav', volume: 100});
         });
         player.character.room.updateSaveHistory(player.character.htmlname + msgStart + what + "'");
         player.msg(msgStart_self + what + "'");
+        player.emit("sound", {sfx: 'room_msg_self.wav', volume: 100});
         // Emit to Mobs
         player.character.room.eachMob(function(mob){
             mob.obj.emit('onSay', player, what);
@@ -499,7 +501,7 @@ var Logic = function() {
             player.msg("<span class='purple'>You whisper to " + target.htmlname + ", '" + what + "'</span>");
             target.player.msg("<span class='purple'>" + player.character.htmlname + " whispers, '" + what + "'</span>");
             target.player.emit("sound", {sfx: 'whisper.wav', volume: 25});
-            target.player.character.replyto = player.character.name.replace(' ', '.');
+            target.player.character.replyto = player.character.name;
         } else {
             player.msg("No character found with that name.");
         }
@@ -512,23 +514,6 @@ var Logic = function() {
         } 
         
         self.whisper(player, '"' + player.character.replyto + '" ' + what);
-    }
-
-    self.attack = function(player, args) {
-        var who = args.split(' ')[0];
-        who = who.replace('.', ' ');
-        var target = CHARACTERS.getCharacterByName(who, true);
-
-        //TODO Check player and target location's match.
-        if (target)
-        {
-            if (target.player.character.name == player.character.name) { player.msg("You cannot attack yourself!"); return; }
-            if (target.player.character.stats.health > 0)
-            {
-                COMBAT.normalAttack(player, target);
-            } else { player.msg("Your target is dead!"); }
-        }
-        else { player.msg("You do not have a target."); }
     }
 
     self.create = function(player, args) {
@@ -710,29 +695,6 @@ var Logic = function() {
             player.msg("<span class='" + chan_color + "'>(" + channel_proper + ") You say, '" + args + "'</span>");
         }
     }
-
-    self.cast = function(player, args) {
-        var what = args.split(' ')[0];
-        var who = args.split(' ').splice(1).join(' ');
-        who = who.replace('.', ' ');
-        var target = CHARACTERS.getCharacterByName(who, true);
-
-        //TODO Check player and target location's match.
-        if (target)
-        {
-            switch(what) {
-                case 'heal':
-                    COMBAT.heal(player, target);
-                    break;
-                case 'kamehameha':
-                    COMBAT.kamehameha(player, target);
-                    break;
-                default:
-                    player.msg("Invalid spell.");
-            }
-        }
-        else { player.msg("You do not have a target."); }
-    };
 
     self.library = function(player, args) {
         if(!player.character.hasPriv('libraryManagement')) { return self._invalidcmd(player); }

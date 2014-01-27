@@ -79,10 +79,8 @@ var Character = function (config) {
     self.channels = [];   // array of strings
     self.roomdesc = '';   // string
     self.gender = '';     // string
-    self.race = '';       // string
     self.characterClass = '';     // string
-    self.stats = {};      // array (health maxhealth magic maxmagic energy maxenergy str int cha armor resistance)
-    self.statmods = {};   // array (strmod intmod chamod pdmgmod mdmgmod resistancemod)
+    self.stats = {};      // array (health maxhealth magic maxmagic energy maxenergy exp)
     self.level = 1;       // int
     self.age = 0;         // int
     self.inventory = [];  // array of strings
@@ -110,10 +108,8 @@ var Character = function (config) {
         self.channels = config.channels || [];
         self.roomdesc = config.roomdesc || 'is here.';
         self.gender = config.gender || 'male';
-        self.race = config.race || 'Human';
         self.characterClass = config.characterClass || 'Novice';
-        self.stats = config.stats || {health: 100, maxhealth: 100, magic: 100, maxmagic: 100, energy: 100, maxenergy: 100, exp: 0, exptl: 200, str: 10, int: 10, cha: 10, pdmg: 10, mdmg: 10, armor: 10, resistance: 10};
-        self.statmods = config.statmods || {strmod: 0, intmod: 0, chamod: 0, pdmgmod: 0, mdmgmod: 0, resistancemod: 0};
+        self.stats = config.stats || {health: 100, maxhealth: 100, magic: 100, maxmagic: 100, energy: 100, maxenergy: 100, exp: 0};
         self.level = config.level || 1;
         self.age = config.age || 18;
         self.inventory = config.inventory || [];
@@ -136,10 +132,8 @@ var Character = function (config) {
             channels: self.channels,
             roomdesc: self.roomdesc,
             gender: self.gender,
-            race: self.race,
             characterClass: self.characterClass,
             stats: self.stats,
-            statmods: self.statmods,
             level: self.level,
             age: self.age,
             inventory: self.inventory,
