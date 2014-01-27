@@ -516,23 +516,6 @@ var Logic = function() {
         self.whisper(player, '"' + player.character.replyto + '" ' + what);
     }
 
-    self.attack = function(player, args) {
-        var who = args.split(' ')[0];
-        who = who.replace('.', ' ');
-        var target = CHARACTERS.getCharacterByName(who, true);
-
-        //TODO Check player and target location's match.
-        if (target)
-        {
-            if (target.player.character.name == player.character.name) { player.msg("You cannot attack yourself!"); return; }
-            if (target.player.character.stats.health > 0)
-            {
-                COMBAT.normalAttack(player, target);
-            } else { player.msg("Your target is dead!"); }
-        }
-        else { player.msg("You do not have a target."); }
-    }
-
     self.create = function(player, args) {
         if(!player.character.hasPriv('libraryManagement')) { return self._invalidcmd(player); }
         var creation = args.split(' ')[0];
@@ -712,29 +695,6 @@ var Logic = function() {
             player.msg("<span class='" + chan_color + "'>(" + channel_proper + ") You say, '" + args + "'</span>");
         }
     }
-
-    self.cast = function(player, args) {
-        var what = args.split(' ')[0];
-        var who = args.split(' ').splice(1).join(' ');
-        who = who.replace('.', ' ');
-        var target = CHARACTERS.getCharacterByName(who, true);
-
-        //TODO Check player and target location's match.
-        if (target)
-        {
-            switch(what) {
-                case 'heal':
-                    COMBAT.heal(player, target);
-                    break;
-                case 'kamehameha':
-                    COMBAT.kamehameha(player, target);
-                    break;
-                default:
-                    player.msg("Invalid spell.");
-            }
-        }
-        else { player.msg("You do not have a target."); }
-    };
 
     self.library = function(player, args) {
         if(!player.character.hasPriv('libraryManagement')) { return self._invalidcmd(player); }

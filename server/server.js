@@ -259,8 +259,8 @@ io.sockets.on('connection', function(socket){
         // get base command
         var sections = data.cmd.split(' ');
         var cmd = matchcmd(sections[0], new Array('say', 'score', 'move', ['look', 'examine'], 'me',
-            'whisper', 'reply', 'attack', 'create', 'destroy', ['room', 'rm'], 'drop', 'get',
-            'channels', 'builder', 'gossip', 'cast', 'library', ['teleport', 'tp'],
+            'whisper', 'reply', 'create', 'destroy', ['room', 'rm'], 'drop', 'get',
+            'channels', 'builder', 'gossip', 'library', ['teleport', 'tp'],
             'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit', 'refresh', 'hurt', 'equip', 'remove'));
         sections.shift();
         var cmd_args = sections.join(' ');
@@ -287,9 +287,6 @@ io.sockets.on('connection', function(socket){
             case 'reply':
                 LOGIC.reply(player, cmd_args);
                 break;
-            case 'attack':
-                LOGIC.attack(player, cmd_args);
-                break;
             case 'create':
                 LOGIC.create(player, cmd_args);
                 break;
@@ -313,9 +310,6 @@ io.sockets.on('connection', function(socket){
                 break;
             case 'gossip':
                 LOGIC.channel(player, 'gossip', cmd_args);
-                break;
-            case 'cast':
-                LOGIC.cast(player, cmd_args);
                 break;
             case 'library':
                 LOGIC.library(player, cmd_args);
