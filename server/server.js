@@ -5,6 +5,7 @@ var http          = require('http');
 var url           = require('url');
 var hipchatter    = require('hipchatter');
 var mongojs       = require('mongojs');
+var memwatch      = require('memwatch');
 // require custom
 var Players       = require('./classes/player').Players;
 var Player        = require('./classes/player').Player;
@@ -54,6 +55,18 @@ console.log('live server: ' + JSON.stringify(LIVE));
 if(LIVE) {
     require('newrelic');
 }
+
+// memwatch
+memwatch.on('leak', function(info) {
+    console.log('[memwatch][leak!] ' + JSON.stringify(info));
+    if(LIVE) {
+        hipchatmsg('Memory Leak: ' + JSON.stringify(info), 'red');
+    }
+});
+
+memwatch.on('stats', function(info) {
+    console.log('[memwatch] ' + JSON.stringify(info));
+});
 
 // hip chat association
 HIPCHAT = new hipchatter('G9AuMaMlZQxzPaE1mo3sMsNoOpPt9GiutxRfP4ZW');
