@@ -37,7 +37,7 @@ var GameEngine = new function () {
         // set port
         GameEngine.port = 2772;
         // intro
-        GameEngine.parseInput("Welcome to the Armeria universe!<br><br>Please <a href='#' onclick='GameEngine.FBLogin(event)'>Login</a> with Facebook or visit our <a target='_new' href='http://www.playarmeria.com'>Website</a> or <a href='http://www.playarmeria.com/forums' target='_new'>Community Forums</a>.<br>");
+        GameEngine.parseInput("Welcome to the Armeria universe!<br><br>Please <a href='#' onclick='GameEngine.FBLogin(event)'>Login</a> with Facebook or visit our <a target='_new' href='http://www.playarmeria.com'>Website</a>, <a href='http://www.playarmeria.com/blog' target='_new'>Blog</a> or <a href='http://www.facebook.com/ArmeriaMUD' target='_new'>Facebook Page</a>.<br>");
         // bind ENTER to input box
         $('#input').keypress(function (e) {
             if (e.which === 13) { GameEngine.parseCommand(); }
