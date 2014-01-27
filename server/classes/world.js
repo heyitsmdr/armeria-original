@@ -93,7 +93,7 @@ var Map = function(config, fn) {
 
         self.spawnTimer = setInterval(self.handleSpawns, 30000);
 
-        console.log('[init] map loaded: ' + self.name + " (" + self.spawnTimer + ")");
+        console.log('[init] map loaded: ' + self.name);
     }
     
     self.getSaveData = function() {
