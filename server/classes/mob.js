@@ -37,6 +37,7 @@ var Mob = function(config) {
     self.level;
     self.script;
     self.title;
+    self.maxhealth;
 
     self.init = function(config) {
         self.id = config.id;
@@ -45,6 +46,8 @@ var Mob = function(config) {
         self.level = config.level;
         self.script = config.script;
         self.title = config.title;
+        self.maxhealth = config.maxhealth || 100;
+
         console.log('[init] mob template loaded: ' + self.id);
     };
 
@@ -55,7 +58,8 @@ var Mob = function(config) {
             htmlname: self.htmlname,
             level: self.level,
             script: self.script,
-            title: self.title
+            title: self.title,
+            maxhealth: self.maxhealth
         };
         
         DB.mobs.update({id: self.id}, data, {upsert: true});

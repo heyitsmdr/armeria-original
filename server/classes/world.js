@@ -617,10 +617,14 @@ var Room = function(config, mapobj) {
     };
 
     self.addMob = function(mob, inst) {
+        // add mob
         self.mobs.push({
             obj: mob,
             instance: inst
         });
+        // set health
+        mob.set('health', mob.get('maxhealth'), inst);
+        // announce
         self.announceUpdate();
     };
     
@@ -722,6 +726,7 @@ var Room = function(config, mapobj) {
                 textname: mob.obj.get('name'),
                 picture: '',
                 type: 'mob',
+                health: ((mob.obj.get('health', mob.instance) < mob.obj.get('maxhealth'))?(100 - Math.round((mob.obj.get('health', mob.instance) * 100) / mob.obj.get('maxhealth'))):'0'),
                 instanceId: mob.instance
             });
         });
@@ -734,6 +739,12 @@ var Room = function(config, mapobj) {
             plist.push({
                 id: player.character.id,
                 health: ((player.character.stats.health < player.character.stats.maxhealth)?(100 - Math.round((player.character.stats.health * 100) / player.character.stats.maxhealth)):'0')
+            });
+        });
+        self.eachMob(function(mob){
+            plist.push({
+                id: mob.obj.id,
+                health: ((mob.obj.get('health', mob.instance) < mob.obj.get('maxhealth'))?(100 - Math.round((mob.obj.get('health', mob.instance) * 100) / mob.obj.get('maxhealth'))):'0')
             });
         });
         return plist;

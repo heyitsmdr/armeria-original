@@ -203,6 +203,10 @@ var Library = function(){
                     {
                         property: "Script",
                         value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"script\")'>" + ((obj.get('script'))?'Script set.':'No script set.') + "</a>"
+                    },
+                    {
+                        property: "Max Health",
+                        value: "<a href='#' onclick='GameEngine.editProperty(\"" + obj.id + "\", \"maxhealth\")'>" + (obj.get('maxhealth') || '100') + "</a>"
                     }
                 ]));
                 break;
@@ -292,17 +296,17 @@ var LibraryEntry = function(config) {
 
     self.get = function(stat, instanceId) {
         if(instanceId)
-            if(eval("self.instanceData." + instanceId + "." + stat) != undefined)
-                return eval("self.instanceData." + instanceId + "." + stat)
-            else if(eval("self.overrides." + stat) != undefined)
-                return eval("self.overrides." + stat);
+            if(self.instanceData[instanceId][stat] != undefined)
+                return self.instanceData[instanceId][stat];
+            else if(self.overrides[stat] != undefined)
+                return self.overrides[stat];
             else
-                return eval("self.parent." + stat);
+                return self.parent[stat];
         else {
-            if(eval("self.overrides." + stat) != undefined)
-                return eval("self.overrides." + stat);
+            if(self.overrides[stat] != undefined)
+                return self.overrides[stat];
             else
-                return eval("self.parent." + stat);
+                return self.parent[stat];
             
         }
     }

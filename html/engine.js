@@ -425,13 +425,13 @@ var GameEngine = new function () {
                 switch(listdata.type.toLowerCase()) {
                     case 'player':
                         _HTML = _HTML.replace('{HEALTHBAR}', "<div id='healthbar-" + listdata.id + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div>");
-                        _HTML = _HTML.replace('{DBLCLICK}', "");
+                        _HTML = _HTML.replace('{DBLCLICK}', "ondblclick='GameEngine.socket.emit(\"cmd\",{cmd:\"attack " + listdata.textname + "\"})'");
                         _HTML = _HTML.replace('{INSTANCEDATA}', "");
                         _HTML = _HTML.replace('{PICTURE}', "<div id='roomborder-" + listdata.id + "' class='pictureBorder'><div class='pictureSrc' style='background-image:url(" + listdata.picture + ")'></div></div>");
                         break;
                     case 'mob':
                         _HTML = _HTML.replace('{HEALTHBAR}', "<div id='healthbar-" + listdata.uid + "' style='width:" + ((listdata.health)?listdata.health:'0') + "%' class='targethealthbar'></div>");
-                        _HTML = _HTML.replace('{DBLCLICK}', "");
+                        _HTML = _HTML.replace('{DBLCLICK}', "ondblclick='GameEngine.socket.emit(\"cmd\",{cmd:\"attack " + listdata.textname + "\"})'");
                         _HTML = _HTML.replace('{INSTANCEDATA}', "data-instance='" + listdata.instanceId + "'");
                         _HTML = _HTML.replace('{PICTURE}', "<div id='roomborder-" + listdata.uid + "' class='pictureBorder'><div class='pictureSrc' style='background-image:url(" + listdata.picture + ")'></div></div>");
                         break;
