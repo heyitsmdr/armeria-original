@@ -209,7 +209,7 @@ var Character = function (config) {
         // look around
         LOGIC.look(self.player);
         // set up timers
-        self.regen = setInterval(self.handleRegen, 30000);
+        self.regen = setInterval(self.handleRegen, 10000);
     };
     
     self.logout = function () {
@@ -433,6 +433,39 @@ var Character = function (config) {
         self.player.update({equipment: 1});
 
         return true;
+    };
+
+    /**
+        Check whether this character is at a certain location
+
+        Arguments:
+          Location : Character Object
+
+        Optional Arguments:
+          Map : String
+          X : Int
+          Y : Int
+          Z : Int
+
+          Returns: Boolean
+    **/
+    self.isAt = function() {
+        if(typeof(arguments[0]) == 'object') {
+            var other = arguments[0];
+            if(self.location == other.location)
+                return true;
+            else
+                return false;
+        } else {
+            var map = arguments[0];
+            var x = arguments[1];
+            var y = arguments[2];
+            var z = arguments[3];
+            if(self.location.map == map && self.location.x == x && self.location.y == y && self.location.z == z)
+                return true;
+            else
+                return false;
+        }
     };
 
     self.getBarData = function(data) {

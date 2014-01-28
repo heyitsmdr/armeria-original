@@ -279,7 +279,8 @@ io.sockets.on('connection', function(socket){
         var cmd = matchcmd(sections[0], new Array('say', 'score', 'move', ['look', 'examine'], 'me',
             'whisper', 'reply', 'create', 'destroy', ['room', 'rm'], 'drop', 'get',
             'channels', 'builder', 'gossip', 'library', ['teleport', 'tp'],
-            'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit', 'refresh', 'hurt', 'equip', 'remove'));
+            'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit', 'refresh', 'hurt', 'equip', 'remove',
+            'attack'));
         sections.shift();
         var cmd_args = sections.join(' ');
 
@@ -367,6 +368,9 @@ io.sockets.on('connection', function(socket){
                 break;
             case 'remove':
                 LOGIC.remove(player, cmd_args);
+                break;
+            case 'attack':
+                COMBAT.attack(player, cmd_args);
                 break;
             default:
                 if(!LOGIC.emote(player, cmd.toLowerCase()))
