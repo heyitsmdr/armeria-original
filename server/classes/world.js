@@ -526,6 +526,10 @@ var Map = function(config, fn) {
                         if(self.checkRoomMobRestrictions(spawn.id, roomStart, spawn.startroom.x, spawn.startroom.y, spawn.startroom.z)) {
                             // SPAWN
                             roomStart.addMob(mobObj, mobObj.newInstance());
+                            // emit
+                            roomStart.eachPlayer(function(p){
+                                mobObj.emit('onRoomEnter', p);
+                            });
                         }
                     }
                 }
