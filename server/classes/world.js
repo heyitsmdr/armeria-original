@@ -62,6 +62,25 @@ var World = function() {
         player.msg('Ok.');
     };
 
+    self.createMapFromSaveData = function(saveData) {
+        var _map = new Map(saveData);
+
+        // add to memory
+        self.maps.push(_map);
+
+        // add to db (and update _id in memory)
+        DB.maps.insert(saveData, function(err, resp) {
+            if(!err) {
+                var _map = WORLD.getMap(resp[0].name);
+                if(_map) {
+                    _map._id = resp._id;
+                }
+            }
+        });
+
+        return _map;
+    };
+
     self.init();
 };
 
@@ -69,7 +88,6 @@ var Map = function(config, fn) {
     var self = this;
     
     // no-save
-    self.filename;          // string
     self.spawnTimer;        // timer
 
     // save
@@ -80,9 +98,8 @@ var Map = function(config, fn) {
     self.spawns = [];       // array of strings
     self.restrictions = []; // array of strings
 
-    self.init = function(config, fn) {
+    self.init = function(config) {
         self._id = config._id;
-        self.filename = fn;
         self.name = config.name || 'Unknown Area';
         self.author = config.author || '';
         config.rooms.forEach(function(r){
@@ -541,7 +558,7 @@ var Map = function(config, fn) {
         return true;
     };
 
-    self.init(config, fn);
+    self.init(config);
 };
 
 var Room = function(config, mapobj) {

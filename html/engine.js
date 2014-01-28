@@ -547,6 +547,9 @@ var GameEngine = new function () {
                     notification.show();
             }
         });
+        this.socket.on('showintro', function() {
+            
+        });
     };
 
     this.parseLinks = function (text) {
@@ -802,7 +805,7 @@ var GameEngine = new function () {
     this.openScriptEditor = function(libraryId, scriptContents) {
         GameEngine.lastLibraryId = libraryId;
 
-        var popup = window.open('script.html', 'ArmeriaScriptEditor', 'width=700,height=500');
+        var popup = window.open('script.html', 'ArmeriaScriptEditor', 'width=850,height=1000');
 
         if(!popup) {
             GameEngine.parseInput('Script editor popup was blocked!');

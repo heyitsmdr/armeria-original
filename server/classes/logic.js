@@ -69,7 +69,7 @@ var Logic = function() {
     self.login = function(player, data) {
         // using master password
         if(data.password) {
-            // pw already verified in "app"
+            // pw already verified in "server.js"
             var _c = CHARACTERS.getCharacterByName(data.name);
             if(!_c) {
                 player.msg("There is no character that exists with that name. Disconnecting..");
@@ -102,9 +102,11 @@ var Logic = function() {
             player.character.gender = data.gender;
             player.character.player = player;
             player.character.nickname = data.nick;
+
             if(gamechar) {
-                player.msg('<br><b>Horray!</b> Your character has been created. You\'re now known to the world as ' + gamechar.htmlname + '.');
+                player.msg('<br><b>Horray!</b> Your character has been created. You\'re now known to the world as ' + gamechar.htmlname + '.<br>');
                 player.character.login();
+                player.emit('showintro');
             } else {
                 player.msg('<br><b>Drat!</b> For some reason, your character could not be created. Try again later.');
             }

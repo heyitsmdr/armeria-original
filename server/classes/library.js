@@ -72,7 +72,7 @@ var Library = function(){
                         player.msg('Could not add item to database.');
                         return;
                     } else {
-                        self.objects.push(new LibraryEntry(resp));
+                        self.objects.push(new LibraryEntry(resp[0]));
                     }
                 });
                 player.msg('Entry added to database: ' + 'item' + parentString + '-' + uid);
@@ -93,7 +93,7 @@ var Library = function(){
                         player.msg('Could not add mob to database.');
                         return;
                     } else {
-                        self.objects.push(new LibraryEntry(resp));
+                        self.objects.push(new LibraryEntry(resp[0]));
                     }
                 });
                 player.msg('Entry added to database: ' + 'mob' + parentString + '-' + uid);
@@ -251,7 +251,7 @@ var LibraryEntry = function(config) {
         self.id = config.id;
         self.uid = LIBRARY.createUid();
         self.type = config.type;
-        self.overrides = config.overrides;
+        self.overrides = config.overrides || {};
         self.parentText = config.parent;
         switch(self.type) {
             case 'item':
@@ -301,12 +301,12 @@ var LibraryEntry = function(config) {
             else if(self.overrides[stat] != undefined)
                 return self.overrides[stat];
             else
-                return self.parent[stat];
+                return eval('self.parent.' + stat);
         else {
             if(self.overrides[stat] != undefined)
                 return self.overrides[stat];
             else
-                return self.parent[stat];
+                return eval('self.parent.' + stat);
             
         }
     }
