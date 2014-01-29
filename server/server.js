@@ -279,12 +279,12 @@ io.sockets.on('connection', function(socket){
         var cmd = matchcmd(sections[0], new Array('say', 'score', 'move', ['look', 'examine'], 'me',
             'whisper', 'reply', 'create', 'destroy', ['room', 'rm'], 'drop', 'get',
             'channels', 'builder', 'gossip', 'library', ['teleport', 'tp'],
-            'inventory', 'who', 'spawn', 'areas', 'title', 'quit', 'edit', 'refresh', 'hurt', 'equip', 'remove',
-            'attack'));
+            'inventory', 'who', 'spawn', 'save', 'areas', 'title', 'quit', 'edit', 'refresh', 'hurt',
+            'equip', 'remove', 'attack'));
         sections.shift();
         var cmd_args = sections.join(' ');
 
-        // player online and in a room? if so, emit to mobs
+        // player online and in a room? (if so, emit to mobs)
         if(player.character && player.character.online && player.character.room) {
             player.character.room.eachMob(function(m){
                 m.obj.emit('onUserCommand', player, cmd.toLowerCase(), cmd_args);
@@ -378,6 +378,9 @@ io.sockets.on('connection', function(socket){
                 break;
             case 'attack':
                 COMBAT.attack(player, cmd_args);
+                break;
+            case 'save':
+                LOGIC.save(player);
                 break;
             default:
                 if(!LOGIC.emote(player, cmd.toLowerCase()))

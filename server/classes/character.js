@@ -267,6 +267,11 @@ var Character = function (config) {
             p.update({plist: 1});
         });
         
+        // emit onRoomEnter() to mobs
+        room.eachMob(function(m){
+            m.obj.emit('onRoomEnter', self.player);
+        });
+        
         // update local player
         if (map === old_room.map && old_room.z !== z) {
             self.player.update({maplocnoanim: 1});
