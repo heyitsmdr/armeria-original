@@ -373,18 +373,32 @@ var LibraryEntry = function(config) {
         });
     };
     self.setScriptVar = function(player, stat, data) {
-        if(player.character.scriptvars[self.id] === undefined)
-            player.character.scriptvars[self.id] = [];
+        var _id = self.id + '-' + stat;
 
-        player.character.scriptvars[self.id][stat] = data;
+        for(var x = 0; x < player.character.scriptvars.length; x++) {
+            if(player.character.scriptvars[x].id == _id) {
+                player.character.scriptvars[x].data = data;
+                return 1;
+            }
+        }
+
+        player.character.scriptvars.push({
+            id: _id,
+            data: data
+        });
+
+        return 0;
     };
     self.getScriptVar = function(player, stat) {
-        if(player.character.scriptvars[self.id] === undefined) {
-            return false;
-        } else if(player.character.scriptvars[self.id][stat] === undefined)
-            return false;
-        else
-            return player.character.scriptvars[self.id][stat];
+        var _id = self.id + '-' + stat;
+
+        for(var x = 0; x < player.character.scriptvars.length; x++) {
+            if(player.character.scriptvars[x].id == _id) {
+                return player.character.scriptvars[x].data;
+            }
+        }
+        
+        return false;
     };
     /* END: SCRIPT FUNCTIONS */
 
