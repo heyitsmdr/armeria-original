@@ -284,7 +284,7 @@ io.sockets.on('connection', function(socket){
         sections.shift();
         var cmd_args = sections.join(' ');
 
-        // player online and in a room? if so, emit to mobs
+        // player online and in a room? (if so, emit to mobs)
         if(player.character && player.character.online && player.character.room) {
             player.character.room.eachMob(function(m){
                 m.obj.emit('onUserCommand', player, cmd.toLowerCase(), cmd_args);
