@@ -20,37 +20,24 @@ so that others can test your local repo, we use [ngrok](https://ngrok.com).
 
 ### Setting Up Repo
 
-The first thing you want to do is fork the `armeria-live` repo, and then clone it locally on
-your computer.
+The first thing you want to do is clone the `armeria` repo. You can do this by running:
 
-You then want to set up the `upstream` to pull changes down from `armeria-live`. To do this,
-run the following command:
-
-    git remote add upstream git@bitbucket.org:ethryx/armeria-live.git
+    git clone git@github.com:ethryx/armeria.git
     
-This will give you two remotes: `origin` and `upstream`. Origin is your own repository and
-upstream is the live version of the game.
+You then want to create a new branch for your own work. You can do this by running:
 
-### Pulling Down Updates From Live (Upstream) 
+    git branch <new branch name>
+
+You should never work within the `master` branch as anything pushed to the `master` branch will be pushed
+to the live website (and should only be done by Mike Du Russel).
+
+### Pulling Updates From Master
 
 Before you start adding features (and each time you sit down to work on the game), you will
-want to pull down anything new added to the live version of the game. To do so, run the command:
+want to pull in anything new added to the live version of the game. To do so, run the command:
 
-    git pull upstream master
-    
-Furthermore, if many changes were made on live, you can first create a new branch:
-
-    git branch testing
-    
-And then pull in the changes from upstream:
-
-    git pull upstream master
-    
-And if all goes well, you can switch back to the `master` branch and merge in everything from
-`testing`:
-
-    git checkout master
-    git merge testing
+    git pull
+    git merge master
 
 ### Working
 
@@ -114,13 +101,13 @@ You don't have to add anything to your HOSTS (or equivalent) file since the DNS 
 
 ## Adding Changes
 
-Once you've added and committed a few changes, the first thing you want to do is push them to BitBucket.
+Once you've added and committed a few changes, the first thing you want to do is push them to GitHub.
 You can do this by running the command:
 
-    git push origin master
+    git push origin <your branch name>
     
-You can then open up a pull request on the `armeria-live` repo and let [Mike Du Russel](https://bitbucket.org/ethryx) know. If
-everything looks good, we'll go ahead and pull it into `live`.
+You can then let [Mike Du Russel](https://bitbucket.org/ethryx) know. If everything looks good, we'll go ahead
+and pull it into `master`.
 
 When pull requests are merged, Jenkins will automatically shut down the live server, add your changes and start
 the server back up. We'll be sure to warn everyone on the game before this takes place.
