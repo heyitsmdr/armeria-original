@@ -881,6 +881,11 @@ var Logic = function() {
         player.msg('You removed a ' + equippedItem.get('htmlname') + ' from yourself.');
     };
 
+    self.save = function(player) {
+        player.character.save();
+        player.msg('Your character has been saved.');
+    };
+
     /*  ## END: ITEM MANAGEMENT ## */
 
     /*  ## EMOTES ## */

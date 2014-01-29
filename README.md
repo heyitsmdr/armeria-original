@@ -24,7 +24,13 @@ The first thing you want to do is clone the `armeria` repo. You can do this by r
 
     git clone git@github.com:ethryx/armeria.git
     
-You then want to create a new branch for your own work. You can do this by running:
+You then want to either create a new branch for your own work, or use our `sprint` branch.
+
+To switch to the `sprint` branch, you can use:
+
+    git checkout sprint
+
+And to create a new branch, you can use:
 
     git branch <new branch name>
 
@@ -38,8 +44,15 @@ want to pull in anything new added to the live version of the game. To do so, ru
 
     git checkout master
     git pull
-    git checkout <your branch>
+    git checkout <your branch> (or sprint)
     git merge master
+    
+## Pulling Updates From Sprint
+
+When updates were made to the `sprint` branch, you can pull those in by running:
+
+    git checkout sprint
+    git pull
 
 ### Working
 
