@@ -36,7 +36,9 @@ to the live website (and should only be done by Mike Du Russel).
 Before you start adding features (and each time you sit down to work on the game), you will
 want to pull in anything new added to the live version of the game. To do so, run the command:
 
+    git checkout master
     git pull
+    git checkout <your branch>
     git merge master
 
 ### Working
