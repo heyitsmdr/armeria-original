@@ -104,7 +104,7 @@ var Logic = function() {
             player.character.nickname = data.nick;
 
             if(gamechar) {
-                player.msg('<br><b>Horray!</b> Your character has been created. You\'re now known to the world as ' + gamechar.htmlname + '.<br>');
+                player.msg('<br><b>Horray!</b> Your character has been created. You\'re now known to the world as ' + gamechar.htmlname + '.<br><br>');
                 player.character.login(true);
                 player.emit('showintro');
             } else {
