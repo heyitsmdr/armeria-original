@@ -105,7 +105,7 @@ var Logic = function() {
 
             if(gamechar) {
                 player.msg('<br><b>Horray!</b> Your character has been created. You\'re now known to the world as ' + gamechar.htmlname + '.<br>');
-                player.character.login();
+                player.character.login(true);
                 player.emit('showintro');
             } else {
                 player.msg('<br><b>Drat!</b> For some reason, your character could not be created. Try again later.');
@@ -115,7 +115,7 @@ var Logic = function() {
             player.character.player = player;
             player.character.nickname = data.nick;
             player.msg("<br>Welcome back to Armeria, " + player.character.htmlname + "!");
-            player.character.login();
+            player.character.login(false);
         }
     }
     /* ## END: LOGIN AUTHORIZATION ## */

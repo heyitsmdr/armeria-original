@@ -173,7 +173,7 @@ var Character = function (config) {
         }
     };
 
-    self.login = function () {
+    self.login = function (newCharacter) {
         // set online
         self.online = true;
         // store room
@@ -186,6 +186,11 @@ var Character = function (config) {
         }
         // add player to room
         self.room.addPlayer(self.player);
+        // spawn mobShipPilot if you're a new player
+        if(newCharacter) {
+            var mobShipPilot = LIBRARY.getById('mobShipPilot');
+            self.room.addMob(mobShipPilot, mobShipPilot.newInstance());
+        }
         // update players (including yourself)
         self.room.eachPlayer(function (p) {
             p.update({plist: 1});
@@ -213,8 +218,10 @@ var Character = function (config) {
             mob.obj.emit('onRoomEnter', self.player);
             mob.obj.emit('onLogin', self.player);
         });
-        // look around
-        LOGIC.look(self.player);
+        // look around if not a new character
+        if(!newCharacter) {
+            LOGIC.look(self.player);
+        }
         // set up timers
         self.regen = setInterval(self.handleRegen, 10000);
     };
