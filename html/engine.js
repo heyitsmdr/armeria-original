@@ -647,6 +647,8 @@ var GameEngine = new function () {
                 this.pingMs = 0;
                 this.socket.emit('ping');
                 this.pingTimer = setInterval(function(){ GameEngine.pingMs += 1; },1);
+            } else if (command.toLowerCase().indexOf(0, 8) === '/script ') {
+                this.socket.emit('getscript', {id: command.indexOf(8)});
             } else if (command.toLowerCase() === '/options' || command.toLowerCase() === '/opt') {
                 if(!$('#options-container').is(':visible')) {
                     $('#options-container').stop().fadeIn('fast');

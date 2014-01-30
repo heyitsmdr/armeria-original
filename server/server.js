@@ -468,6 +468,8 @@ io.sockets.on('connection', function(socket){
         var obj = LIBRARY.getById(data.id);
         if(obj) {
             player.emit('script', {id: obj.id, value:obj.get('script')});
+        } else {
+            player.msg('Library object not found.');
         }
     });
     socket.on('savescript', function(data){
