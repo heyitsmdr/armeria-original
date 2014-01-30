@@ -370,6 +370,7 @@ var LibraryEntry = function(config) {
         if(!room) return;
         room.eachPlayer(function(p){
             p.msg(self.get('htmlname') + " says, '" + text + "'");
+            p.emit("sound", {sfx: 'room_msg.wav', volume: 100});
         });
     };
     self.setScriptVar = function(player, stat, data) {
