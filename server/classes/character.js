@@ -51,10 +51,10 @@ var Characters = function () {
         return false;
     };
     
-    self.getCharacterByName = function (name, isonline, checknicks) {
+    self.getCharacterByName = function (name, isonline) {
         var i;
         for (i = 0; i < self.objects.length; i++) {
-            if ((self.objects[i].name.toLowerCase() === name.toLowerCase()) || (checknicks === true && self.objects[i].nickname.toLowerCase() === name.toLowerCase())) {
+            if ((self.objects[i].name.toLowerCase() === name.toLowerCase())) {
                 if (isonline) {
                     if (self.objects[i].online) {
                         return self.objects[i];
