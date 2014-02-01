@@ -355,11 +355,12 @@ var LibraryEntry = function(config) {
         } catch(err) {
             // error in game script
             if(LIVE) {
-                hipchatmsg('<b>Exception in Script for:</b> ' + self.id, 'red');
-                hipchatmsg(JSON.stringify(err), 'red');
+                hipchatmsg('<b>Exception caused in library script:</b> ' + self.id, 'red');
+                hipchatmsg('<b>When emitting:</b> ' + func, 'red');
+                hipchatmsg(err.message, 'red');
             } else {
-                console.log('SCRIPT ERROR: ' + self.id);
-                console.log(err);
+                console.log('SCRIPT ERROR: ' + self.id + ' (' + func + ')');
+                console.log(err.message);
             }
         }
     };
