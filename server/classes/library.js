@@ -351,15 +351,16 @@ var LibraryEntry = function(config) {
         }
         try {
             if(self.gameScript[func] !== undefined)
-                eval("self.gameScript." + func)(args);
+                return eval("self.gameScript." + func)(args);
         } catch(err) {
             // error in game script
             if(LIVE) {
-                hipchatmsg('<b>Exception in Script for:</b> ' + self.id, 'red');
-                hipchatmsg(JSON.stringify(err), 'red');
+                hipchatmsg('<b>Exception caused in library script:</b> ' + self.id, 'red');
+                hipchatmsg('<b>When emitting:</b> ' + func, 'red');
+                hipchatmsg(err.message, 'red');
             } else {
-                console.log('SCRIPT ERROR: ' + self.id);
-                console.log(err);
+                console.log('SCRIPT ERROR: ' + self.id + ' (' + func + ')');
+                console.log(err.message);
             }
         }
     };
@@ -370,6 +371,7 @@ var LibraryEntry = function(config) {
         if(!room) return;
         room.eachPlayer(function(p){
             p.msg(self.get('htmlname') + " says, '" + text + "'");
+            p.emit("sound", {sfx: 'room_msg.wav', volume: 100});
         });
     };
     self.setScriptVar = function(player, stat, data) {

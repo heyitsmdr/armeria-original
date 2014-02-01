@@ -104,8 +104,8 @@ var Logic = function() {
             player.character.nickname = data.nick;
 
             if(gamechar) {
-                player.msg('<br><b>Horray!</b> Your character has been created. You\'re now known to the world as ' + gamechar.htmlname + '.<br>');
-                player.character.login();
+                player.msg('<br><b>Horray!</b> Your character has been created. You\'re now known to the world as ' + gamechar.htmlname + '.<br><br>');
+                player.character.login(true);
                 player.emit('showintro');
             } else {
                 player.msg('<br><b>Drat!</b> For some reason, your character could not be created. Try again later.');
@@ -115,7 +115,7 @@ var Logic = function() {
             player.character.player = player;
             player.character.nickname = data.nick;
             player.msg("<br>Welcome back to Armeria, " + player.character.htmlname + "!");
-            player.character.login();
+            player.character.login(false);
         }
     }
     /* ## END: LOGIN AUTHORIZATION ## */
@@ -618,6 +618,12 @@ var Logic = function() {
 
         player.character.room.announceExcept(player, player.character.htmlname + ' picked up a ' + found.get('htmlname') + '.');
         player.msg('You picked up a ' + found.get('htmlname') + '.');
+    }
+
+    self.map = function(player, args) {
+        if(!player.character.builder) { return self._invalidcmd(player); }
+        
+        player.character.room.map.modifyMap(player, args);
     }
 
     self.room = function(player, args) {

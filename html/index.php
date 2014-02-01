@@ -193,25 +193,25 @@
                   <div class="bar">
                     <div class="bar-border">
                       <div id="bar-health" class="bar-color"></div>
-                      <div id="text-health" class="bar-shadow">100 / 100</div>
+                      <div id="text-health" class="bar-shadow">Health: 100 / 100</div>
                     </div>
                   </div>
                   <div class="bar">
                     <div class="bar-border">
                       <div id="bar-magic" class="bar-color"></div>
-                      <div id="text-magic" class="bar-shadow">100 / 100</div>
+                      <div id="text-magic" class="bar-shadow">Magic: 100 / 100</div>
                     </div>
                   </div>
                   <div class="bar">
                     <div class="bar-border">
                       <div id="bar-energy" class="bar-color"></div>
-                      <div id="text-energy" class="bar-shadow">100 / 100</div>
+                      <div id="text-energy" class="bar-shadow">Energy: 100 / 100</div>
                     </div>
                   </div>
                   <div class="bar">
                     <div class="bar-border">
                       <div id="bar-exp" class="bar-color"></div>
-                      <div id="text-exp" class="bar-shadow">100 / 100</div>
+                      <div id="text-exp" class="bar-shadow">Experience: 500 (to go)</div>
                     </div>
                   </div>
             </div>
@@ -278,7 +278,13 @@
               <div class="prop-name">Creator</div>
               <div class="prop-value" id="map-author">..</div>
             </div>
-
+            <div class="prop-set">
+              <div class="prop-name">Background</div>
+              <div class="prop-value"><a id="map-background" href="#" onclick="GameEngine.editorToggleExtra('map-background-extra')">..</a></div>
+            </div>
+            <div class="prop-extra" id="map-background-extra">
+              <input id="map-background-list" type="text">
+            </div>
             <!-- Selected Room Properties -->
             <div class="prop-cat" id="section-roomprops">
               Current Room Properties

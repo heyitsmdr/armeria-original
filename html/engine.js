@@ -145,6 +145,9 @@ var GameEngine = new function () {
         GameEngine.registerToolTip('div#text-energy.bar-shadow', '<strong>Energy:</strong> This is how much energy you have.');
         GameEngine.registerToolTip('div#text-exp.bar-shadow', '<strong>Experience:</strong> This is how much experience you need to level up.');
         // set up token input
+        $('#map-background-list').tokenInput([
+            {id: 'space.png', name: 'space.png'}
+        ], {tokenLimit: 1, hintText: 'Search for a background..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetMapBackground, onDelete: GameEngine.editorSetMapBackground});
         $('#builder-terrain-base').tokenInput(GameEngine.getAllSets(false), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetDefaultTerrain, onDelete: GameEngine.editorSetDefaultTerrain});
         $('#builder-terrain-primary').tokenInput(GameEngine.getAllSets(false), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetDefaultTerrain, onDelete: GameEngine.editorSetDefaultTerrain});
         $('#room-terrain-base').tokenInput(GameEngine.getAllSets(false), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetTerrain, onDelete: GameEngine.editorSetTerrain});
@@ -520,9 +523,9 @@ var GameEngine = new function () {
         });
         this.socket.on('bars', function(data) {
             // set bar labels
-            $('#text-health').html(data.health.current + ' / ' + data.health.max);
-            $('#text-magic').html(data.magic.current + ' / ' + data.magic.max);
-            $('#text-energy').html(data.energy.current + ' / ' + data.energy.max);
+            $('#text-health').html('Health: ' + data.health.current + ' / ' + data.health.max);
+            $('#text-magic').html('Magic: ' + data.magic.current + ' / ' + data.magic.max);
+            $('#text-energy').html('Energy: ' + data.energy.current + ' / ' + data.energy.max);
             // animate bars
             var perc = Math.round((data.health.current * 100) / data.health.max); $('#bar-health').animate({width: perc + "%"});
             var perc = Math.round((data.magic.current * 100) / data.magic.max); $('#bar-magic').animate({width: perc + "%"});
@@ -647,6 +650,8 @@ var GameEngine = new function () {
                 this.pingMs = 0;
                 this.socket.emit('ping');
                 this.pingTimer = setInterval(function(){ GameEngine.pingMs += 1; },1);
+            } else if (command.toLowerCase().indexOf(0, 8) === '/script ') {
+                this.socket.emit('getscript', {id: command.indexOf(8)});
             } else if (command.toLowerCase() === '/options' || command.toLowerCase() === '/opt') {
                 if(!$('#options-container').is(':visible')) {
                     $('#options-container').stop().fadeIn('fast');

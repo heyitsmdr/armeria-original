@@ -97,6 +97,7 @@ var Map = function(config, fn) {
     self.rooms = [];        // array of objects (Room)
     self.spawns = [];       // array of strings
     self.restrictions = []; // array of strings
+    self.background = '';   // string
 
     self.init = function(config) {
         self._id = config._id;
@@ -107,6 +108,7 @@ var Map = function(config, fn) {
         });
         self.spawns = config.spawns || [];
         self.restrictions = config.restrictions || [];
+        self.background = config.background || '';
 
         self.spawnTimer = setInterval(self.handleSpawns, 30000);
 
@@ -119,7 +121,8 @@ var Map = function(config, fn) {
             author: self.author,
             rooms: self.roomStringify(),
             spawns: self.spawns,
-            restrictions: self.restrictions
+            restrictions: self.restrictions,
+            background: self.background
         };
     };
     
@@ -306,6 +309,34 @@ var Map = function(config, fn) {
             p.character.room.type = ter;
         }
     }
+
+    self.modifyMap = function(player, modargs) {
+        var mapKey = getarg(modargs, 0, false);
+        var mapValue = getarg(modargs, 1, true);
+
+        if(mapKey === false || mapValue === false) {
+            player.msg('Usage: /map [key] [value]');
+            return;
+        }
+
+        // boolean fix
+        if(mapValue == 'true')
+            mapValue = true;
+        if(mapValue == 'false')
+            mapValue = false;
+
+        switch(mapKey.toLowerCase()) {
+            case 'background':
+                player.character.room.map.background = mapValue;
+                player.msg('Map background set.');
+                break;
+            default:
+                player.msg('Invalid key.');
+                return;
+        }
+
+        player.character.room.map.save();
+    };
 
     self.modifyRoom = function(player, modargs) {
         var id = modargs.split(' ')[0];

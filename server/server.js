@@ -280,17 +280,21 @@ io.sockets.on('connection', function(socket){
             'whisper', 'reply', 'create', 'destroy', ['room', 'rm'], 'drop', 'get',
             'channels', 'builder', 'gossip', 'library', ['teleport', 'tp'],
             'inventory', 'who', 'spawn', 'save', 'areas', 'title', 'quit', 'edit', 'refresh', 'hurt',
-            'equip', 'remove', 'attack'));
+            'equip', 'remove', 'attack', 'map'));
         sections.shift();
         var cmd_args = sections.join(' ');
 
         // player online and in a room? (if so, emit to mobs)
+        var cont = true;
         if(player.character && player.character.online && player.character.room) {
             player.character.room.eachMob(function(m){
-                m.obj.emit('onUserCommand', player, cmd.toLowerCase(), cmd_args);
+                cont = m.obj.emit('onUserCommand', player, cmd.toLowerCase(), cmd_args);
             });
         }
 
+        if(cont === false)
+            return;
+        
         switch(cmd.toLowerCase()) {
             case 'say':
                 LOGIC.say(player, cmd_args);
@@ -318,6 +322,9 @@ io.sockets.on('connection', function(socket){
                 break;
             case 'destroy':
                 LOGIC.destroy(player, cmd_args);
+                break;
+            case 'map':
+                LOGIC.map(player, cmd_args);
                 break;
             case 'room':
                 LOGIC.room(player, cmd_args);
@@ -464,6 +471,8 @@ io.sockets.on('connection', function(socket){
         var obj = LIBRARY.getById(data.id);
         if(obj) {
             player.emit('script', {id: obj.id, value:obj.get('script')});
+        } else {
+            player.msg('Library object not found.');
         }
     });
     socket.on('savescript', function(data){
