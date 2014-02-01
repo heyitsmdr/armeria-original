@@ -280,7 +280,7 @@ io.sockets.on('connection', function(socket){
             'whisper', 'reply', 'create', 'destroy', ['room', 'rm'], 'drop', 'get',
             'channels', 'builder', 'gossip', 'library', ['teleport', 'tp'],
             'inventory', 'who', 'spawn', 'save', 'areas', 'title', 'quit', 'edit', 'refresh', 'hurt',
-            'equip', 'remove', 'attack'));
+            'equip', 'remove', 'attack', 'map'));
         sections.shift();
         var cmd_args = sections.join(' ');
 
@@ -322,6 +322,9 @@ io.sockets.on('connection', function(socket){
                 break;
             case 'destroy':
                 LOGIC.destroy(player, cmd_args);
+                break;
+            case 'map':
+                LOGIC.map(player, cmd_args);
                 break;
             case 'room':
                 LOGIC.room(player, cmd_args);

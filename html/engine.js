@@ -145,6 +145,9 @@ var GameEngine = new function () {
         GameEngine.registerToolTip('div#text-energy.bar-shadow', '<strong>Energy:</strong> This is how much energy you have.');
         GameEngine.registerToolTip('div#text-exp.bar-shadow', '<strong>Experience:</strong> This is how much experience you need to level up.');
         // set up token input
+        $('#map-background-list').tokenInput([
+            {id: 'space.png', name: 'space.png'}
+        ], {tokenLimit: 1, hintText: 'Search for a background..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetMapBackground, onDelete: GameEngine.editorSetMapBackground});
         $('#builder-terrain-base').tokenInput(GameEngine.getAllSets(false), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetDefaultTerrain, onDelete: GameEngine.editorSetDefaultTerrain});
         $('#builder-terrain-primary').tokenInput(GameEngine.getAllSets(false), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetDefaultTerrain, onDelete: GameEngine.editorSetDefaultTerrain});
         $('#room-terrain-base').tokenInput(GameEngine.getAllSets(false), {tokenLimit: 1, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetTerrain, onDelete: GameEngine.editorSetTerrain});

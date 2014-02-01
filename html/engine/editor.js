@@ -181,6 +181,7 @@ self.editorData = function (data) {
     // area data
     $('#map-name').html(data.mapData.name);
     $('#map-author').html(data.mapData.author);
+    $('#map-background').html(data.mapData.background || 'No background set.');
 
     // room data
     $('#room-name').html(data.roomData.name);
@@ -277,6 +278,19 @@ self.editorSetObjects = function() {
 
     // send to server
     GameEngine.parseCommand('/room objects ' + objectString);
+};
+
+self.editorSetMapBackground = function () {
+    if(self.editorPauseUpdates)
+        return;
+
+    if($('#map-background-list').tokenInput('get').length == 0)
+        return;
+
+    // set within editor
+    $('#map-background').html($('#map-background-list').tokenInput('get')[0].name);
+
+    GameEngine.parseCommand('/map background ' + $('#map-background-list').tokenInput('get')[0].name);
 };
 
 self.editorSetTerrain = function () {

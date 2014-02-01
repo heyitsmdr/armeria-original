@@ -620,6 +620,12 @@ var Logic = function() {
         player.msg('You picked up a ' + found.get('htmlname') + '.');
     }
 
+    self.map = function(player, args) {
+        if(!player.character.builder) { return self._invalidcmd(player); }
+        
+        player.character.room.map.modifyMap(player, args);
+    }
+
     self.room = function(player, args) {
         if(!player.character.builder) { return self._invalidcmd(player); }
         

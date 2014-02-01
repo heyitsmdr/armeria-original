@@ -278,7 +278,13 @@
               <div class="prop-name">Creator</div>
               <div class="prop-value" id="map-author">..</div>
             </div>
-
+            <div class="prop-set">
+              <div class="prop-name">Background</div>
+              <div class="prop-value"><a id="map-background" href="#" onclick="GameEngine.editorToggleExtra('map-background-extra')">..</a></div>
+            </div>
+            <div class="prop-extra" id="map-background-extra">
+              <input id="map-background-list" type="text">
+            </div>
             <!-- Selected Room Properties -->
             <div class="prop-cat" id="section-roomprops">
               Current Room Properties
