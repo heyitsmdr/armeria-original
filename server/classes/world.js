@@ -332,7 +332,10 @@ var Map = function(config, fn) {
                 break;
             default:
                 player.msg('Invalid key.');
+                return;
         }
+
+        player.character.room.map.save();
     };
 
     self.modifyRoom = function(player, modargs) {
