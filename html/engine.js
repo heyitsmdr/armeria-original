@@ -520,9 +520,9 @@ var GameEngine = new function () {
         });
         this.socket.on('bars', function(data) {
             // set bar labels
-            $('#text-health').html(data.health.current + ' / ' + data.health.max);
-            $('#text-magic').html(data.magic.current + ' / ' + data.magic.max);
-            $('#text-energy').html(data.energy.current + ' / ' + data.energy.max);
+            $('#text-health').html('Health: ' + data.health.current + ' / ' + data.health.max);
+            $('#text-magic').html('Magic: ' + data.magic.current + ' / ' + data.magic.max);
+            $('#text-energy').html('Energy: ' + data.energy.current + ' / ' + data.energy.max);
             // animate bars
             var perc = Math.round((data.health.current * 100) / data.health.max); $('#bar-health').animate({width: perc + "%"});
             var perc = Math.round((data.magic.current * 100) / data.magic.max); $('#bar-magic').animate({width: perc + "%"});
