@@ -32,6 +32,7 @@ var GameEngine = new function () {
     this.pingMs = 0;            // Ping Command
     this.pingTimer = false;     // Pint Command Interval Timer
     this.useNotify = false;     // Enable Chrome Notifications?
+    this.popupWindow = false;   // Script Editor Popup Window
 
     this.init = function () {
         // set port
@@ -810,20 +811,25 @@ var GameEngine = new function () {
     this.openScriptEditor = function(libraryId, scriptContents) {
         GameEngine.lastLibraryId = libraryId;
 
-        var popup = window.open('script.html', 'ArmeriaScriptEditor', 'width=850,height=1000');
+        if(GameEngine.popupWindow && !GameEngine.popupWindow.closed) {
+            GameEngine.parseInput('You can only have one instance of the script editor open at a time.');
+            return;
+        }
 
-        if(!popup) {
+        GameEngine.popupWindow = window.open('script.html', 'ArmeriaScriptEditor', 'width=850,height=1000');
+
+        if(!GameEngine.popupWindow) {
             GameEngine.parseInput('Script editor popup was blocked!');
             return;
         }
 
-        popup.onload = function() {
-            popup.document.title = 'Script Editor: ' + libraryId;
-            popup.setScriptContent( ((scriptContents)?JSON.parse(scriptContents):'') );
+        GameEngine.popupWindow.onload = function() {
+            GameEngine.popupWindow.document.title = 'Script Editor: ' + libraryId;
+            GameEngine.popupWindow.setScriptContent( ((scriptContents)?JSON.parse(scriptContents):'') );
         }
 
-        popup.onsave = function(content) {
+        GameEngine.popupWindow.onsave = function(content) {
             GameEngine.socket.emit('savescript', {id:GameEngine.lastLibraryId, value:content});
-        };
+        }
     };
 }();
