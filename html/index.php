@@ -51,6 +51,7 @@
         <script src="engine/editor.js?buildTime=<?=filemtime('./engine/editor.js')?>"></script>
         <script src="engine/minimap.js?buildTime=<?=filemtime('./engine/minimap.js')?>"></script>
         <script src="engine/tileset.js?buildTime=<?=filemtime('./engine/tileset.js')?>"></script>
+        <script src="engine/space.js?buildTime=<?=filemtime('./engine/space.js')?>"></script>
         <? endif; ?>
         <!-- Libraries -->
           <!-- SoundJS (0.5.2) -->

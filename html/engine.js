@@ -647,6 +647,9 @@ var GameEngine = new function () {
             } else if (command.toLowerCase() === '/clearcache') {
                 GameEngine.toolTipCache = [];
                 this.parseInput('Your cache has been cleared.');
+            } else if (command.toLowerCase() === '/space') {
+                GameEngine.Space.toggleSpace();
+                this.parseInput('Space has been toggled.');
             } else if (command.toLowerCase() === '/ping') {
                 this.pingMs = 0;
                 this.socket.emit('ping');
