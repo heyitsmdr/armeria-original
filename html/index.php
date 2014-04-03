@@ -181,6 +181,7 @@
         <div id="minimap-hide"></div>
         <div id="minimap-show"><p>Show Minimap</p></div>
         <div id="right-content">
+            <div class="space-container"><div id="space"></div></div>
             <div id="game"></div>
                 <div id="minimap">
                     <div id="map-canvas" width="256" height="256"></div>

@@ -41,7 +41,7 @@ self.pixiRender = function() {
 
     // editor rendering
     self.editorPixiRender();
-    
+
     // animate moving?
     if(self.destinationX > self.mapcontainer.position.x)
         self.mapcontainer.position.x += 4;
