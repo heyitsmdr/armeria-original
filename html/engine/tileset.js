@@ -6,7 +6,7 @@ self.maptextures = [];		// Tile Textures / Images
 
 self.setupTileset = function () {
 	// Tilesets
-    self.tilesets = ['floors', 'shipFloor', 'shipObjects', 'space'];
+    self.tilesets = ['floors', 'shipFloor', 'shipObjects', 'space', 'spacebg', 'planet', 'stars', 'fog'];
     /* NOTE: Edges are automatically calculated since they will always be
              to the left of the tile (if edges = true). */
 
@@ -26,7 +26,19 @@ self.setupTileset = function () {
         "computerLeft": {sx: 3, sy: 0, edges: false, anim: false}
     };
     self.mapts.space = {
-    	"ship": {sx: 0, sy: 0, size: 80, edges: false, anim: false}
+    	"ship": {sx: 0, sy: 0, sizex: 80, sizey: 80, edges: false, anim: false}
+    };
+    self.mapts.spacebg = {
+    	"bg": {sx: 0, sy: 0, sizex: 600, sizey: 451, edges: false, anim: false}
+    };
+    self.mapts.planet = {
+    	"planet": {sx: 0, sy: 0, sizex: 699, sizey: 700, edges: false, anim: false}
+    };
+    self.mapts.stars = {
+    	"stars": {sx: 0, sy: 0, sizex: 400, sizey: 400, edges: false, anim: false}
+    };
+    self.mapts.fog = {
+    	"fog": {sx: 0, sy: 0, sizex: 400, sizey: 267, edges: false, anim: false}
     };
 
     // Texture Sources
@@ -34,6 +46,11 @@ self.setupTileset = function () {
     self.maptextures.shipFloor = { src: "shipFloor.png" };
     self.maptextures.shipObjects = { src: "shipObjects.png" };
     self.maptextures.space = { src: "space.png" };
+    self.maptextures.spacebg = { src: "spacebg.png" };
+    self.maptextures.planet = { src: "planet.png" };
+    self.maptextures.stars = { src: "stars.png" };
+    self.maptextures.fog = { src: "fog.png" };
+
 
     // Calculate Real Sx and Sy
     self.calculateRealSxSy();
@@ -62,17 +79,17 @@ self.initTextures = function() {
 		self.mapts[ts].baseTexture = PIXI.BaseTexture.fromImage('images/tiles/' + self.maptextures[ts].src);
 		Object.keys(self.mapts[ts]).forEach(function(tile) {
 			// set main (loading from cache since these were loaded with AssetLoader)
-			self.mapts[ts][tile].texture = new PIXI.Texture(self.mapts[ts].baseTexture, new PIXI.Rectangle(self.mapts[ts][tile].sx, self.mapts[ts][tile].sy, 32, 32));
+			self.mapts[ts][tile].texture = new PIXI.Texture(self.mapts[ts].baseTexture, new PIXI.Rectangle(self.mapts[ts][tile].sx, self.mapts[ts][tile].sy, self.mapts[ts][tile].sizex || 32, self.mapts[ts][tile].sizey || 32));
 
 			// set edges
 			var edges = ['t','r','tr','b','tb','rb','trb','l','tl','rl','trl','bl','tbl','rbl','trbl'];
-			var offset = self.mapts[ts][tile].size || 32;
+			var offset = self.mapts[ts][tile].sizex || 32;
 			if(self.mapts[ts][tile].edges) {
 				self.mapts[ts][tile].textureEdge = [];
 				edges.forEach(function(e) {
 					self.mapts[ts][tile].textureEdge[e] = [];
-					self.mapts[ts][tile].textureEdge[e].texture = new PIXI.Texture(self.mapts[ts].baseTexture, new PIXI.Rectangle(self.mapts[ts][tile].sx - offset, self.mapts[ts][tile].sy, self.mapts[ts][tile].size || 32, self.mapts[ts][tile].size || 32));
-					offset += self.mapts[ts][tile].size || 32;
+					self.mapts[ts][tile].textureEdge[e].texture = new PIXI.Texture(self.mapts[ts].baseTexture, new PIXI.Rectangle(self.mapts[ts][tile].sx - offset, self.mapts[ts][tile].sy, self.mapts[ts][tile].sizex || 32, self.mapts[ts][tile].sizey || 32));
+					offset += self.mapts[ts][tile].sizex || 32;
 				});
 			}
 		});

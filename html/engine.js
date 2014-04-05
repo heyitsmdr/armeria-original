@@ -52,22 +52,50 @@ var GameEngine = new function () {
         $(document).keydown(function (e) {
             switch (e.which) {
             case 104:
-                $('#input').val('n');
+                if($('#game').data('inspace') === 'true')
+                    GameEngine.Space.travelGo('n');
+                else
+                    $('#input').val('n');
                 break;
             case 102:
-                $('#input').val('e');
+                if($('#game').data('inspace') === 'true')
+                    GameEngine.Space.travelGo('e');
+                else
+                    $('#input').val('e');
                 break;
             case 98:
-                $('#input').val('s');
+                if($('#game').data('inspace') === 'true')
+                    GameEngine.Space.travelGo('s');
+                else
+                    $('#input').val('s');
                 break;
             case 100:
-                $('#input').val('w');
+                if($('#game').data('inspace') === 'true')
+                    GameEngine.Space.travelGo('w');
+                else
+                    $('#input').val('w');
                 break;
             case 105:
                 $('#input').val('u');
                 break;
             case 99:
                 $('#input').val('d');
+                break;
+            case 37:
+                if($('#game').data('inspace') === 'true')
+                    GameEngine.Space.travelGo('w', 5);
+                break;
+            case 38:
+                if($('#game').data('inspace') === 'true')
+                    GameEngine.Space.travelGo('n', 5);
+                break;
+            case 39:
+                if($('#game').data('inspace') === 'true')
+                    GameEngine.Space.travelGo('e', 5);
+                break;
+            case 40:
+                if($('#game').data('inspace') === 'true')
+                    GameEngine.Space.travelGo('s', 5);
                 break;
             case 27:
                 if($('#options-container').is(':visible')) {
