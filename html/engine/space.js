@@ -83,6 +83,7 @@ self.Space.engineInit = function() {
 self.Space.toggleSpace = function() {
 	if($('#game').data('inspace') === 'true') {
 		// reposition text area
+		$('#game').removeClass('spacebg');
 		$('#game').css('top', '5px');
 		$('#game').css('right', '5px');
 		$('#game').css('height', 'auto');
@@ -93,6 +94,7 @@ self.Space.toggleSpace = function() {
 		self.Space.continueRendering = false;
 	} else {
 		// reposition text area
+		$('#game').addClass('spacebg');
 		$('#game').css('top', 'auto');
 		$('#game').css('right', 'auto');
 		$('#game').css('height', '20%');
