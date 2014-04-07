@@ -570,8 +570,11 @@ var GameEngine = new function () {
             } else if(d.view == 'land') {
                 // toggle space
                 GameEngine.Space.toggleSpace();
-                GameEngine.parseInput('You have docked your ship.');
+                GameEngine.parseInput('The ship has been docked.');
             }
+        });
+        this.socket.on('spacemv', function(d) {
+            GameEngine.Space.moveTo(d.x, d.y);
         });
     };
 

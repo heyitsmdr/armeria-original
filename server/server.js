@@ -489,7 +489,15 @@ io.sockets.on('connection', function(socket){
         }
     });
     socket.on('spaceupdt', function(data){
+        // update vars
         player.character.location.spacex = data.x;
         player.character.location.spacey = data.y;
+        // update everyone in the map
+        player.character.room.map.eachPlayerExcept(player, function(p){
+            p.emit('spacemv', {
+                x: data.x,
+                y: data.y
+            });
+        });
     });
 });

@@ -403,15 +403,31 @@ var LibraryEntry = function(config) {
         return false;
     };
     self.launchSpace = function(player) {
+        if(player.character.room.map.inSpace)
+            return false;
+
         // set map to in space
         player.character.room.map.inSpace = true;
+
+        // set everyones space location to your own
+        player.character.room.map.eachPlayerExcept(player, function(p){
+            p.character.location.sectorx = player.character.location.sectorx;
+            p.character.location.sectory = player.character.location.sectory;
+            p.character.location.spacex = player.character.location.spacex;
+            p.character.location.spacey = player.character.location.spacey;
+        });
 
         // update everyone on this map
         player.character.room.map.eachPlayer(function(p){
             p.update({sector: true});
         });
+
+        return true;
     };
     self.dockFromSpace = function(player) {
+        if(!player.character.room.map.inSpace)
+            return false;
+
         // set map to not in space
         player.character.room.map.inSpace = false;
 
@@ -419,6 +435,8 @@ var LibraryEntry = function(config) {
         player.character.room.map.eachPlayer(function(p){
             p.update({sector: true});
         });
+
+        return true;
     };
     /* END: SCRIPT FUNCTIONS */
 

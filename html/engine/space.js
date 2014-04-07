@@ -206,6 +206,10 @@ self.Space.spaceRender = function() {
 	self.Space.spacerenderer.render(self.Space.spacestage);
 };
 
+self.Space.moveTo = function(x, y) {
+	self.Space.setSpacePosition(x, y);
+};
+
 self.Space.setSpacePosition = function(x, y) {
 	// delta
 	var dx = Math.abs(x - self.Space.location.x);
@@ -242,6 +246,7 @@ self.Space.travelStop = function() {
 
 		// done?
 		if(self.Space.movingSpeed == 0) {
+			self.Space.updateServerLocation();
 			clearInterval(self.Space.movingTimer);
 			clearInterval(self.Space.updateTimer);
 		}
@@ -303,13 +308,15 @@ self.Space.travelGo = function(dir) {
 			}
 		}, 20);
 
-		self.Space.updateTimer = setInterval(function(){
-			GameEngine.socket.emit('spaceupdt', {
-				x: GameEngine.Space.location.x,
-				y: GameEngine.Space.location.y
-			});
-		}, 1000);
+		self.Space.updateTimer = setInterval(self.Space.updateServerLocation, 1000);
 	}
+};
+
+self.Space.updateServerLocation = function() {
+	GameEngine.socket.emit('spaceupdt', {
+		x: GameEngine.Space.location.x,
+		y: GameEngine.Space.location.y
+	});
 };
 
 self.Space.postMoveCheck = function() {
