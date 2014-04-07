@@ -49,6 +49,23 @@ var GameEngine = new function () {
             if (e.which === 40) { GameEngine.navigateHistory('forward'); }
         });
         // numpad macros
+        $(document).keyup(function (e) {
+            if($('#game').data('inspace') !== 'true')
+                return;
+
+            switch (e.which) {
+                case 104:
+                case 102:
+                case 98:
+                case 100:
+                case 37:
+                case 38:
+                case 39:
+                case 40:
+                    GameEngine.Space.travelStop();
+                    break;
+            }
+        });
         $(document).keydown(function (e) {
             switch (e.which) {
             case 104:

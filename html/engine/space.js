@@ -1,12 +1,19 @@
 var self = GameEngine;
 self.Space = {};
 
+self.Space.moving = false;			// Boolean
+self.Space.movingDir = 'n';			// String
+self.Space.movingAccel = 0.225;	// Integer
+self.Space.movingTimer = false;		// Timer
+self.Space.movingSpeed = 0;			// Interval
+self.Space.maxSpeed = 5;			// Interval
 self.Space.spacestage = false;		// Pixi Stage
 self.Space.spacerenderer = false;	// Pixi Renderer
 self.Space.spacebackdrop = false;	// Pixi Container
 self.Space.coordinates = false; 	// Pixi Text
 self.Space.ship = false;			// Pixi Sprite
 self.Space.continueRendering = true;// Boolean
+self.Space.inDockRange = false;		// Boolean
 self.Space.layers = {
 	backgroundOne: false,			// Pixi DisplayObjectContainer (Slowest)
 	backgroundTwo: false,			// Pixi DisplayObjectContainer (Slow)
@@ -19,7 +26,8 @@ self.Space.properties = {
 		ts: 'planet',
 		tile: 'planet',
 		x: 0,
-		y: 0
+		y: 0,
+		name: 'Planet Armeria'
 	}]
 };
 self.Space.location = { x: 0, y: 0 };
@@ -125,10 +133,21 @@ self.Space.initSector = function() {
    	}
 
 	self.Space.properties.slowest.forEach(function(prop){
+		// add sprite
 		var _sprite = new PIXI.Sprite(self.mapts[prop.ts][prop.tile].texture);
-		_sprite.position.x = prop.x;
-		_sprite.position.y = prop.y;
+		_sprite.position.x = prop.x + (self.Space.spacerenderer.width / 2);
+		_sprite.position.y = prop.y + (self.Space.spacerenderer.height / 2);
 		self.Space.layers.backgroundOne.addChild(_sprite);
+		// set height and width
+		prop.height = _sprite.texture.height;
+		prop.width = _sprite.texture.width;
+		// name?
+		if(prop.name) {
+			prop.text = new PIXI.Text(prop.name, {font: '16px Tahoma', fill: 'white'});
+			prop.text.position.x = _sprite.position.x + (self.mapts[prop.ts][prop.tile].texture.width / 2) - (prop.text.width / 2);
+			prop.text.position.y = _sprite.position.y + (self.mapts[prop.ts][prop.tile].texture.height / 2) - (prop.text.height / 2);
+			self.Space.layers.backgroundOne.addChild(prop.text);
+		}
 	});
 };
 
@@ -153,36 +172,95 @@ self.Space.setSpacePosition = function(x, y) {
 	self.Space.location.y = y;
 
 	// move layers
-	self.Space.layers.backgroundOne.position.x = self.Space.location.x * 0.25;
-	self.Space.layers.backgroundOne.position.y = self.Space.location.y * 0.25;
-	self.Space.layers.backgroundTwo.position.x = self.Space.location.x * 0.50;
-	self.Space.layers.backgroundTwo.position.y = self.Space.location.y * 0.50;
-	self.Space.layers.fogLayer.position.x = self.Space.location.x * 0.75;
-	self.Space.layers.fogLayer.position.y = self.Space.location.y * 0.75;
-	self.Space.layers.starsLayer.position.x = self.Space.location.x * 1;
-	self.Space.layers.starsLayer.position.y = self.Space.location.y * 1;
+	self.Space.layers.backgroundOne.position.x = -self.Space.location.x * 0.25;
+	self.Space.layers.backgroundOne.position.y = -self.Space.location.y * 0.25;
+	self.Space.layers.backgroundTwo.position.x = -self.Space.location.x * 0.50;
+	self.Space.layers.backgroundTwo.position.y = -self.Space.location.y * 0.50;
+	self.Space.layers.fogLayer.position.x = -self.Space.location.x * 0.75;
+	self.Space.layers.fogLayer.position.y = -self.Space.location.y * 0.75;
+	self.Space.layers.starsLayer.position.x = -self.Space.location.x * 1;
+	self.Space.layers.starsLayer.position.y = -self.Space.location.y * 1;
+
+	// post-move check
+	self.Space.postMoveCheck();
 };
 
-self.Space.travelGo = function(dir, speed) {
-	if(speed === undefined)
-		speed = 1;
+self.Space.travelStop = function() {
+	self.Space.moving = false;
+	clearInterval(self.Space.movingTimer);
 
-	switch(dir) {
-		case 'n':
-			self.Space.ship.rotation = 0;
-			self.Space.setSpacePosition( self.Space.location.x , self.Space.location.y + speed );
-			break;
-		case 's':
-			self.Space.ship.rotation = (180 * Math.PI / 180);
-			self.Space.setSpacePosition( self.Space.location.x , self.Space.location.y - speed );
-			break;
-		case 'e':
-			self.Space.ship.rotation = (90 * Math.PI / 180);
-			self.Space.setSpacePosition( self.Space.location.x - speed, self.Space.location.y );
-			break;
-		case 'w':
-			self.Space.ship.rotation = (270 * Math.PI / 180);
-			self.Space.setSpacePosition( self.Space.location.x + speed , self.Space.location.y );
-			break;
-	}	
+	self.Space.movingTimer = setInterval(function(){
+		// decelerate
+		if(self.Space.movingSpeed > 0)
+			self.Space.movingSpeed -= self.Space.movingAccel;
+		if(self.Space.movingSpeed < 0)
+			self.Space.movingSpeed = 0;
+
+		// move
+		switch(self.Space.movingDir) {
+			case 'n':
+				self.Space.ship.rotation = 0;
+				self.Space.setSpacePosition( self.Space.location.x , self.Space.location.y - self.Space.movingSpeed );
+				break;
+			case 's':
+				self.Space.ship.rotation = (180 * Math.PI / 180);
+				self.Space.setSpacePosition( self.Space.location.x , self.Space.location.y + self.Space.movingSpeed );
+				break;
+			case 'e':
+				self.Space.ship.rotation = (90 * Math.PI / 180);
+				self.Space.setSpacePosition( self.Space.location.x + self.Space.movingSpeed, self.Space.location.y );
+				break;
+			case 'w':
+				self.Space.ship.rotation = (270 * Math.PI / 180);
+				self.Space.setSpacePosition( self.Space.location.x - self.Space.movingSpeed , self.Space.location.y );
+				break;
+		}
+	}, 20);
+};
+
+self.Space.travelGo = function(dir) {
+	if(!self.Space.moving) {
+		self.Space.moving = true;
+		self.Space.movingDir = dir;
+
+		clearInterval(self.Space.movingTimer);
+		self.Space.movingTimer = setInterval(function(){
+			// accelerate?
+			if(self.Space.movingSpeed < self.Space.maxSpeed)
+				self.Space.movingSpeed += self.Space.movingAccel;
+			if(self.Space.movingSpeed > self.Space.maxSpeed)
+				self.Space.movingSpeed = self.Space.maxSpeed;
+
+			// move
+			switch(self.Space.movingDir) {
+				case 'n':
+					self.Space.ship.rotation = 0;
+					self.Space.setSpacePosition( self.Space.location.x , self.Space.location.y - self.Space.movingSpeed );
+					break;
+				case 's':
+					self.Space.ship.rotation = (180 * Math.PI / 180);
+					self.Space.setSpacePosition( self.Space.location.x , self.Space.location.y + self.Space.movingSpeed );
+					break;
+				case 'e':
+					self.Space.ship.rotation = (90 * Math.PI / 180);
+					self.Space.setSpacePosition( self.Space.location.x + self.Space.movingSpeed, self.Space.location.y );
+					break;
+				case 'w':
+					self.Space.ship.rotation = (270 * Math.PI / 180);
+					self.Space.setSpacePosition( self.Space.location.x - self.Space.movingSpeed , self.Space.location.y );
+					break;
+			}
+		}, 20);
+	}
+};
+
+self.Space.postMoveCheck = function() {
+	// within a planets landing area?
+	/*self.Space.properties.slowest.forEach(function(prop){
+		if(self.Space.location.x > prop.x && self.Space.location.x < (prop.x + prop.width) && self.Space.location.y > prop.y && self.Space.location.y < (prop.y + prop.height) && !self.Space.inDockRange) {
+			prop.text.setText(prop.name + '\n(Ready to Dock)');
+		} else {
+			prop.text.setText(prop.name);
+		}
+	});*/
 };
