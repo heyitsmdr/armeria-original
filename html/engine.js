@@ -49,70 +49,25 @@ var GameEngine = new function () {
             if (e.which === 40) { GameEngine.navigateHistory('forward'); }
         });
         // numpad macros
-        $(document).keyup(function (e) {
-            if($('#game').data('inspace') !== 'true')
-                return;
-
-            switch (e.which) {
-                case 104:
-                case 102:
-                case 98:
-                case 100:
-                case 37:
-                case 38:
-                case 39:
-                case 40:
-                    GameEngine.Space.travelStop();
-                    break;
-            }
-        });
         $(document).keydown(function (e) {
             switch (e.which) {
             case 104:
-                if($('#game').data('inspace') === 'true')
-                    GameEngine.Space.travelGo('n');
-                else
-                    $('#input').val('n');
+                $('#input').val('n');
                 break;
             case 102:
-                if($('#game').data('inspace') === 'true')
-                    GameEngine.Space.travelGo('e');
-                else
-                    $('#input').val('e');
+                $('#input').val('e');
                 break;
             case 98:
-                if($('#game').data('inspace') === 'true')
-                    GameEngine.Space.travelGo('s');
-                else
-                    $('#input').val('s');
+                $('#input').val('s');
                 break;
             case 100:
-                if($('#game').data('inspace') === 'true')
-                    GameEngine.Space.travelGo('w');
-                else
-                    $('#input').val('w');
+                $('#input').val('w');
                 break;
             case 105:
                 $('#input').val('u');
                 break;
             case 99:
                 $('#input').val('d');
-                break;
-            case 37:
-                if($('#game').data('inspace') === 'true')
-                    GameEngine.Space.travelGo('w', 5);
-                break;
-            case 38:
-                if($('#game').data('inspace') === 'true')
-                    GameEngine.Space.travelGo('n', 5);
-                break;
-            case 39:
-                if($('#game').data('inspace') === 'true')
-                    GameEngine.Space.travelGo('e', 5);
-                break;
-            case 40:
-                if($('#game').data('inspace') === 'true')
-                    GameEngine.Space.travelGo('s', 5);
                 break;
             case 27:
                 if($('#options-container').is(':visible')) {

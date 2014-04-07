@@ -6,7 +6,7 @@ self.maptextures = [];		// Tile Textures / Images
 
 self.setupTileset = function () {
 	// Tilesets
-    self.tilesets = ['floors', 'shipFloor', 'shipObjects', 'space', 'spacebg', 'planet', 'stars', 'fog'];
+    self.tilesets = ['floors', 'shipFloor', 'shipObjects', 'space', 'spacebg', 'planet', 'stars'];
     /* NOTE: Edges are automatically calculated since they will always be
              to the left of the tile (if edges = true). */
 
@@ -37,9 +37,6 @@ self.setupTileset = function () {
     self.mapts.stars = {
     	"stars": {sx: 0, sy: 0, sizex: 400, sizey: 400, edges: false, anim: false}
     };
-    self.mapts.fog = {
-    	"fog": {sx: 0, sy: 0, sizex: 400, sizey: 267, edges: false, anim: false}
-    };
 
     // Texture Sources
     self.maptextures.floors = { src: "floors.png" };
@@ -49,7 +46,6 @@ self.setupTileset = function () {
     self.maptextures.spacebg = { src: "spacebg.png" };
     self.maptextures.planet = { src: "planet.png" };
     self.maptextures.stars = { src: "stars.png" };
-    self.maptextures.fog = { src: "fog.png" };
 
 
     // Calculate Real Sx and Sy

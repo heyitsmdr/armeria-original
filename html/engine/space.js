@@ -33,6 +33,7 @@ self.Space.properties = {
 self.Space.location = { x: 0, y: 0 };
 
 self.Space.engineInit = function() {
+	// bind to window
 	$( window ).resize(function() {
 		if($('#game').data('inspace') !== 'true')
 			return;
@@ -44,6 +45,39 @@ self.Space.engineInit = function() {
 		// re-init sector
 		self.Space.initSector();
 	});
+	// bind to keys
+	$( document ).keyup(function (e) {
+        if($('#game').data('inspace') !== 'true')
+            return;
+
+        switch (e.which) {
+            case 37:
+            case 38:
+            case 39:
+            case 40:
+                GameEngine.Space.travelStop();
+                break;
+        }
+    });
+	$( document ).keydown(function (e) {
+        if($('#game').data('inspace') !== 'true')
+            return;
+
+        switch (e.which) {
+            case 37:
+            	GameEngine.Space.travelGo('w');
+            	break;
+            case 38:
+            	GameEngine.Space.travelGo('n');
+            	break;
+            case 39:
+            	GameEngine.Space.travelGo('e');
+            	break;
+            case 40:
+            	GameEngine.Space.travelGo('s');
+            	break;
+        }
+    });
 };
 
 self.Space.toggleSpace = function() {
@@ -57,10 +91,6 @@ self.Space.toggleSpace = function() {
 		$('#space').hide();
 
 		self.Space.continueRendering = false;
-
-		// show minimap
-		$('div.showhide,#minimap-show').hide();
-      	$('div.showhide,#minimap').show(200, function(){$('div.showhide,#minimap-hide').fadeIn(300);});
 	} else {
 		// reposition text area
 		$('#game').css('top', 'auto');
@@ -69,10 +99,6 @@ self.Space.toggleSpace = function() {
 		$('#game').css('width', '50%');
 		$('#game').data('inspace', 'true');
 		$('#space').show();
-
-		// hide minimap
-		$('div.showhide,#minimap-hide').hide();
-		$('div.showhide,#minimap').hide(200, function(){$('div.showhide,#minimap-show').fadeIn(300);});
 
 		// init and start rendering
 		if($('#space').data('initialized') != 'true') {
