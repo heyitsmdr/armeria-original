@@ -402,6 +402,24 @@ var LibraryEntry = function(config) {
         
         return false;
     };
+    self.launchSpace = function(player) {
+        // set map to in space
+        player.character.room.map.inSpace = true;
+
+        // update everyone on this map
+        player.character.room.map.eachPlayer(function(p){
+            p.update({sector: true});
+        });
+    };
+    self.dockFromSpace = function(player) {
+        // set map to not in space
+        player.character.room.map.inSpace = false;
+
+        // update everyone on this map
+        player.character.room.map.eachPlayer(function(p){
+            p.update({sector: true});
+        });
+    };
     /* END: SCRIPT FUNCTIONS */
 
     self.save = function() {

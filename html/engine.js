@@ -411,6 +411,9 @@ var GameEngine = new function () {
         this.socket.on('disconnect', function () {
             GameEngine.connected = false;
             GameEngine.connecting = false;
+            // in space?
+            if($('#game').data('inspace') === 'true')
+                GameEngine.Space.toggleSpace();
             GameEngine.parseInput("The connection has been lost!");
         });
         this.socket.on('reconnect_failed', function () {
@@ -553,6 +556,22 @@ var GameEngine = new function () {
         });
         this.socket.on('showintro', function() {
             
+        });
+        this.socket.on('sector', function(d) {
+            if(d.view == 'space') {
+                // set props
+                GameEngine.Space.properties = d.sector;
+                // toggle space (and init sector)
+                GameEngine.Space.toggleSpace();
+                // set location
+                GameEngine.Space.setSpacePosition(d.x, d.y);
+                // text
+                GameEngine.parseInput('You are now in space (at Sector ' + d.sector.sector + ').');
+            } else if(d.view == 'land') {
+                // toggle space
+                GameEngine.Space.toggleSpace();
+                GameEngine.parseInput('You have docked your ship.');
+            }
         });
     };
 

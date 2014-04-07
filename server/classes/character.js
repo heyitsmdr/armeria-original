@@ -80,7 +80,7 @@ var Character = function (config) {
     self.id = 0;          // int
     self.name = '';       // string
     self.htmlname = '';   // string
-    self.location = {};   // array (map, x, y, z)
+    self.location = {};   // array (map, x, y, z, sectorx, sectory, spacex, spacey)
     self.picture = '';    // string
     self.builder = true;  // boolean
     self.channels = [];   // array of strings
@@ -109,7 +109,7 @@ var Character = function (config) {
         self.id = config.id || 0;
         self.name = config.name || 'Someone';
         self.htmlname = config.htmlname || "<span class='yellow'>" + self.name + "</span>";
-        self.location = config.location || {map: 'Test Area', x: 1, y: 0, z: 0};
+        self.location = config.location || {map: 'Test Area', x: 1, y: 0, z: 0, sectorx: 0, sectory: 0, spacex: 0, spacey: 0};
         self.picture = config.picture || '';
         self.builder = config.builder || false;
         self.channels = config.channels || [];
@@ -514,6 +514,26 @@ var Character = function (config) {
         self.player.character.room.eachPlayer(function(p) {
             p.update({plisthealth: 1});
         });
+    };
+
+    self.updateSector = function() {
+        var temp = {
+            sector: '0,0',
+            slowest: [{
+                ts: 'planet',
+                tile: 'planet',
+                x: 0,
+                y: 0,
+                name: 'Planet Armeria'
+            }]
+        };
+
+        return {
+            view: ((self.room.map.inSpace) ? 'space' : 'land'),
+            x: self.location.spacex,
+            y: self.location.spacey,
+            sector: temp
+        };
     };
 
     self.init(config);

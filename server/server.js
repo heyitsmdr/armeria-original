@@ -488,4 +488,8 @@ io.sockets.on('connection', function(socket){
             player.msg('Script saved and reloaded.');
         }
     });
+    socket.on('spaceupdt', function(data){
+        player.character.location.spacex = data.x;
+        player.character.location.spacey = data.y;
+    });
 });

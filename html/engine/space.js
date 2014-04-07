@@ -3,9 +3,10 @@ self.Space = {};
 
 self.Space.moving = false;			// Boolean
 self.Space.movingDir = 'n';			// String
-self.Space.movingAccel = 0.225;	// Integer
+self.Space.movingAccel = 0.225;		// Integer
 self.Space.movingTimer = false;		// Timer
 self.Space.movingSpeed = 0;			// Interval
+self.Space.updateTimer = false;		// Timer
 self.Space.maxSpeed = 5;			// Interval
 self.Space.spacestage = false;		// Pixi Stage
 self.Space.spacerenderer = false;	// Pixi Renderer
@@ -109,6 +110,7 @@ self.Space.toggleSpace = function() {
 		}
       	else{
       		self.Space.continueRendering = true;
+      		self.Space.initSector();
       		requestAnimFrame(self.Space.spaceRender);
       	}
 	}
@@ -238,6 +240,12 @@ self.Space.travelStop = function() {
 		if(self.Space.movingSpeed < 0)
 			self.Space.movingSpeed = 0;
 
+		// done?
+		if(self.Space.movingSpeed == 0) {
+			clearInterval(self.Space.movingTimer);
+			clearInterval(self.Space.updateTimer);
+		}
+
 		// move
 		switch(self.Space.movingDir) {
 			case 'n':
@@ -266,6 +274,7 @@ self.Space.travelGo = function(dir) {
 		self.Space.movingDir = dir;
 
 		clearInterval(self.Space.movingTimer);
+		clearInterval(self.Space.updateTimer);
 		self.Space.movingTimer = setInterval(function(){
 			// accelerate?
 			if(self.Space.movingSpeed < self.Space.maxSpeed)
@@ -293,6 +302,13 @@ self.Space.travelGo = function(dir) {
 					break;
 			}
 		}, 20);
+
+		self.Space.updateTimer = setInterval(function(){
+			GameEngine.socket.emit('spaceupdt', {
+				x: GameEngine.Space.location.x,
+				y: GameEngine.Space.location.y
+			});
+		}, 1000);
 	}
 };
 
