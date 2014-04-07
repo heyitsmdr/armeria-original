@@ -32,6 +32,20 @@ self.Space.properties = {
 };
 self.Space.location = { x: 0, y: 0 };
 
+self.Space.engineInit = function() {
+	$( window ).resize(function() {
+		if($('#game').data('inspace') !== 'true')
+			return;
+		// resize
+		self.Space.spacerenderer.resize($("#space").width(), $("#space").height());
+		// move ship
+		self.Space.ship.position.x = (self.Space.spacerenderer.width / 2) - (self.Space.ship.width / 2);
+		self.Space.ship.position.y = (self.Space.spacerenderer.height / 2) - (self.Space.ship.height / 2);
+		// re-init sector
+		self.Space.initSector();
+	});
+};
+
 self.Space.toggleSpace = function() {
 	if($('#game').data('inspace') === 'true') {
 		// reposition text area
@@ -73,7 +87,7 @@ self.Space.toggleSpace = function() {
 	
 };
 
-self.Space.initStage = function() {
+self.Space.initStage = function(skip) {
 	self.Space.spacestage = new PIXI.Stage(0x000000);
 	self.Space.spacerenderer = PIXI.autoDetectRenderer($("#space").width(), $("#space").height());
 
@@ -264,3 +278,6 @@ self.Space.postMoveCheck = function() {
 		}
 	});*/
 };
+
+
+self.Space.engineInit();
