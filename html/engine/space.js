@@ -207,6 +207,11 @@ self.Space.spaceRender = function() {
 };
 
 self.Space.moveTo = function(x, y) {
+	// orientation
+	var dx = (x - self.Space.location.x);
+	var dy = -(y - self.Space.location.y);
+	self.Space.ship.rotation = Math.atan2(dx, dy);
+
 	self.Space.setSpacePosition(x, y);
 };
 
