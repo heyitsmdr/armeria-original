@@ -402,7 +402,7 @@ var LibraryEntry = function(config) {
         
         return false;
     };
-    self.launchSpace = function(player) {
+    self.launchSpace = function(player, launchMessage) {
         if(player.character.room.map.inSpace)
             return false;
 
@@ -420,11 +420,12 @@ var LibraryEntry = function(config) {
         // update everyone on this map
         player.character.room.map.eachPlayer(function(p){
             p.update({sector: true});
+            p.msg(launchMessage || 'This ship has been launched in to space.');
         });
 
         return true;
     };
-    self.dockFromSpace = function(player) {
+    self.dockFromSpace = function(player, dockMessage) {
         if(!player.character.room.map.inSpace)
             return false;
 
@@ -434,6 +435,7 @@ var LibraryEntry = function(config) {
         // update everyone on this map
         player.character.room.map.eachPlayer(function(p){
             p.update({sector: true});
+            p.msg(dockMessage || 'This ship has been docked.');
         });
 
         return true;

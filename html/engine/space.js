@@ -5,9 +5,11 @@ self.Space.moving = false;			// Boolean
 self.Space.movingDir = 'n';			// String
 self.Space.movingAccel = 0.225;		// Integer
 self.Space.movingTimer = false;		// Timer
-self.Space.movingSpeed = 0;			// Interval
+self.Space.movingSpeed = 0;			// Integer
+self.Space.moveToX = 0;				// Integer
+self.Space.moveToY = 0;				// Integer
 self.Space.updateTimer = false;		// Timer
-self.Space.maxSpeed = 5;			// Interval
+self.Space.maxSpeed = 5;			// Integer
 self.Space.spacestage = false;		// Pixi Stage
 self.Space.spacerenderer = false;	// Pixi Renderer
 self.Space.spacebackdrop = false;	// Pixi Container
@@ -211,6 +213,28 @@ self.Space.moveTo = function(x, y) {
 	var dx = (x - self.Space.location.x);
 	var dy = -(y - self.Space.location.y);
 	self.Space.ship.rotation = Math.atan2(dx, dy);
+
+	// begin move
+	self.Space.moveToX = x;
+	self.Space.moveToY = y;
+	clearInterval(self.Space.movingTimer);
+	self.Space.movingTimer = setInterval(function(){
+		// accelerate?
+		if(self.Space.movingSpeed < self.Space.maxSpeed)
+			self.Space.movingSpeed += self.Space.movingAccel;
+		if(self.Space.movingSpeed > self.Space.maxSpeed)
+			self.Space.movingSpeed = self.Space.maxSpeed;
+
+		// reached destination?
+		if(self.Space.location.x == self.Space.moveToX && self.Space.location.y == self.Space.moveToY) {
+			self.Space.movingSpeed = 0;
+			clearInterval(self.Space.movingTimer);
+			return;
+		}
+
+		// move
+		
+	}, 20);
 
 	self.Space.setSpacePosition(x, y);
 };

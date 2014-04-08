@@ -204,7 +204,7 @@ var Character = function (config) {
             });
         });
         // update local player
-        self.player.update({minimap: 1, maplocnoanim: 1, inventory: 1, equipment: 1, bars: 1});
+        self.player.update({minimap: 1, maplocnoanim: 1, inventory: 1, equipment: 1, bars: 1, sector: 1});
         // announce to room
         self.room.announceExcept(self.player, self.htmlname + " has just logged in to Armeria!");
         // announce to hipchat (on live server)

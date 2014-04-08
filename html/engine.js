@@ -558,19 +558,16 @@ var GameEngine = new function () {
             
         });
         this.socket.on('sector', function(d) {
-            if(d.view == 'space') {
+            if(d.view == 'space' && $('#game').data('inspace') !== 'true') {
                 // set props
                 GameEngine.Space.properties = d.sector;
                 // toggle space (and init sector)
                 GameEngine.Space.toggleSpace();
                 // set location
                 GameEngine.Space.setSpacePosition(d.x, d.y);
-                // text
-                GameEngine.parseInput('You are now in space (at Sector ' + d.sector.sector + ').');
-            } else if(d.view == 'land') {
+            } else if(d.view == 'land' && $('#game').data('inspace') === 'true') {
                 // toggle space
                 GameEngine.Space.toggleSpace();
-                GameEngine.parseInput('The ship has been docked.');
             }
         });
         this.socket.on('spacemv', function(d) {
