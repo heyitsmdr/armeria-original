@@ -369,16 +369,5 @@ self.Space.updateServerLocation = function() {
 	});
 };
 
-self.Space.postMoveCheck = function() {
-	// within a planets landing area?
-	/*self.Space.properties.slowest.forEach(function(prop){
-		if(self.Space.location.x > prop.x && self.Space.location.x < (prop.x + prop.width) && self.Space.location.y > prop.y && self.Space.location.y < (prop.y + prop.height) && !self.Space.inDockRange) {
-			prop.text.setText(prop.name + '\n(Ready to Dock)');
-		} else {
-			prop.text.setText(prop.name);
-		}
-	});*/
-};
-
 
 self.Space.engineInit();
