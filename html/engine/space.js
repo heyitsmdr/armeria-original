@@ -232,11 +232,29 @@ self.Space.moveTo = function(x, y) {
 			return;
 		}
 
-		// move
-		
-	}, 20);
+		// move x & y
+		var xinc = true, yinc = true;
+		if(self.Space.moveToX > self.Space.location.x) {
+			self.Space.setSpacePosition( self.Space.location.x + self.Space.movingSpeed, self.Space.location.y );
+			xinc = true;
+		} else {
+			self.Space.setSpacePosition( self.Space.location.x - self.Space.movingSpeed, self.Space.location.y );
+			xinc = false;
+		}
+		if(self.Space.moveToY > self.Space.location.y) {
+			self.Space.setSpacePosition( self.Space.location.x, self.Space.location.y + self.Space.movingSpeed );
+			yinc = true;
+		} else {
+			self.Space.setSpacePosition( self.Space.location.x, self.Space.location.y - self.Space.movingSpeed );
+			yinc = false;
+		}
 
-	self.Space.setSpacePosition(x, y);
+		// adjust x & y
+		if(xinc == true && self.Space.location.x > self.Space.moveToX) { self.Space.location.x = self.Space.moveToX; }
+		if(xinc == false && self.Space.location.x < self.Space.moveToX) { self.Space.location.x = self.Space.moveToX; }
+		if(yinc == true && self.Space.location.y > self.Space.moveToY) { self.Space.location.y = self.Space.moveToY; }
+		if(yinc == false && self.Space.location.y < self.Space.moveToY) { self.Space.location.y = self.Space.moveToY; }
+	}, 20);
 };
 
 self.Space.setSpacePosition = function(x, y) {
@@ -344,7 +362,7 @@ self.Space.travelGo = function(dir) {
 self.Space.updateServerLocation = function() {
 	if(!GameEngine.connected)
 		return;
-	
+
 	GameEngine.socket.emit('spaceupdt', {
 		x: GameEngine.Space.location.x,
 		y: GameEngine.Space.location.y
