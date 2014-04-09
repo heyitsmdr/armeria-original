@@ -342,6 +342,9 @@ self.Space.travelGo = function(dir) {
 };
 
 self.Space.updateServerLocation = function() {
+	if(!GameEngine.connected)
+		return;
+	
 	GameEngine.socket.emit('spaceupdt', {
 		x: GameEngine.Space.location.x,
 		y: GameEngine.Space.location.y
