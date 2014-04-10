@@ -52,8 +52,8 @@ apt-get install -y npm
 # install build-essentials (for building npm packages)
 apt-get install -y build-essential
 
-# install java (needed for node-minify)
-apt-get install -y openjdk-7-jre-headless
+# install mongodb (needed for local db)
+apt-get install -y mongodb
 
 # install npm packages (windows-safe)
 mkdir /tmp/armeria
