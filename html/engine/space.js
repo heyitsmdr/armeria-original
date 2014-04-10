@@ -275,9 +275,6 @@ self.Space.setSpacePosition = function(x, y) {
 	self.Space.layers.fogLayer.position.y = -self.Space.location.y * 0.75;
 	self.Space.layers.starsLayer.position.x = -self.Space.location.x * 1;
 	self.Space.layers.starsLayer.position.y = -self.Space.location.y * 1;
-
-	// post-move check
-	self.Space.postMoveCheck();
 };
 
 self.Space.travelStop = function() {
