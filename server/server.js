@@ -19,10 +19,11 @@ var Library       = require('./classes/library').Library;
 var API           = require('./classes/api').API;
 
 LIVE  = ((process.argv.indexOf('--live')>-1) ? true : false);
+REMOTEDB  = ((process.argv.indexOf('--remotedb')>-1) ? true : false);
 
 DB = false;
 // connect to db
-if(LIVE) {
+if(!REMOTEDB) {
     DB = mongojs('gameserver', ['characters', 'items', 'library', 'mobs', 'maps', 'libraryInstances']);
 } else {
     DB = mongojs('armeriaserv:p0pc0rn@client.playarmeria.com/gameserver', ['characters', 'items', 'library', 'mobs', 'maps', 'libraryInstances']);

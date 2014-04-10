@@ -1,0 +1,11 @@
+#!/bin/sh
+
+echo "dumping data from live server.."
+mongodump --host client.playarmeria.com --username armeriaserv --password p0pc0rn --db gameserver --out /tmp/liveserverdump
+
+echo "restoring from dump.."
+mongorestore --drop /tmp/liveserverdump
+
+echo "*         *"
+echo "** Done! **"
+echo "*         *"
