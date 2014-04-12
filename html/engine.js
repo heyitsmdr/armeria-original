@@ -411,6 +411,9 @@ var GameEngine = new function () {
         this.socket.on('disconnect', function () {
             GameEngine.connected = false;
             GameEngine.connecting = false;
+            // in space?
+            if($('#game').data('inspace') === 'true')
+                GameEngine.Space.toggleSpace();
             GameEngine.parseInput("The connection has been lost!");
         });
         this.socket.on('reconnect_failed', function () {
@@ -554,6 +557,22 @@ var GameEngine = new function () {
         this.socket.on('showintro', function() {
             
         });
+        this.socket.on('sector', function(d) {
+            if(d.view == 'space' && $('#game').data('inspace') !== 'true') {
+                // set props
+                GameEngine.Space.properties = d.sector;
+                // toggle space (and init sector)
+                GameEngine.Space.toggleSpace();
+                // set location
+                GameEngine.Space.setSpacePosition(d.x, d.y);
+            } else if(d.view == 'land' && $('#game').data('inspace') === 'true') {
+                // toggle space
+                GameEngine.Space.toggleSpace();
+            }
+        });
+        this.socket.on('spacemv', function(d) {
+            GameEngine.Space.moveTo(d.x, d.y);
+        });
     };
 
     this.parseLinks = function (text) {
@@ -647,6 +666,9 @@ var GameEngine = new function () {
             } else if (command.toLowerCase() === '/clearcache') {
                 GameEngine.toolTipCache = [];
                 this.parseInput('Your cache has been cleared.');
+            } else if (command.toLowerCase() === '/space') {
+                GameEngine.Space.toggleSpace();
+                this.parseInput('Space has been toggled.');
             } else if (command.toLowerCase() === '/ping') {
                 this.pingMs = 0;
                 this.socket.emit('ping');

@@ -147,3 +147,5 @@ and lastly, you can access this debug session using this url:
 OR (if you're using ngrok):
 
     http://armeria-debug.ngrok.com/debug?port=5858
+
+![Codeship](https://www.codeship.io/projects/180b9a40-a310-0131-1be7-329feabca2fa/status)

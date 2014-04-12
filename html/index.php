@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Armeria: Social MUD</title>
+        <title>Armeria Universe</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
 
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -39,8 +39,8 @@
         <link rel="stylesheet" type="text/css" href="libraries/gritter/css/jquery.gritter.css">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,800,700,600' rel='stylesheet' type='text/css'>
         <!-- jQuery & jQueryUI -->
-        <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+        <script src="libraries/jquery/jquery-1.10.2.min.js"></script>
+        <script src="libraries/jquery/jquery-ui.1.10.3.min.js"></script>
         <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-darkness/jquery-ui.min.css">
         <!-- Engine -->
         <? if(file_exists('./engine.min.js')): ?>
@@ -51,10 +51,11 @@
         <script src="engine/editor.js?buildTime=<?=filemtime('./engine/editor.js')?>"></script>
         <script src="engine/minimap.js?buildTime=<?=filemtime('./engine/minimap.js')?>"></script>
         <script src="engine/tileset.js?buildTime=<?=filemtime('./engine/tileset.js')?>"></script>
+        <script src="engine/space.js?buildTime=<?=filemtime('./engine/space.js')?>"></script>
         <? endif; ?>
         <!-- Libraries -->
           <!-- SoundJS (0.5.2) -->
-          <script src="http://code.createjs.com/soundjs-0.5.2.min.js"></script>
+          <script src="libraries/soundjs/soundjs-0.5.2.min.js"></script>
           <!-- jQuery Gritter Notifications -->
           <script type="text/javascript" src="libraries/gritter/js/jquery.gritter.js"></script>
           <!-- jQuery Context Menu -->
@@ -180,6 +181,7 @@
         <div id="minimap-hide"></div>
         <div id="minimap-show"><p>Show Minimap</p></div>
         <div id="right-content">
+            <div class="space-container"><div id="space"></div></div>
             <div id="game"></div>
                 <div id="minimap">
                     <div id="map-canvas" width="256" height="256"></div>

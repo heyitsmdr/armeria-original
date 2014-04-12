@@ -94,6 +94,10 @@ var Player = function(socket) {
         if(what.bars) {
             self.emit('bars', self.character.getBarData());
         }
+        // Update Sector (in Space)
+        if(what.sector) {
+            self.emit('sector', self.character.updateSector());
+        }
     }
     
     self.socket = socket;

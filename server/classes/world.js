@@ -89,6 +89,7 @@ var Map = function(config, fn) {
     
     // no-save
     self.spawnTimer;        // timer
+    self.inSpace = false;   // boolean
 
     // save
     self._id;               // object (ObjectId)
