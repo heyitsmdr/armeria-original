@@ -23,6 +23,9 @@ switch(arg) {
         process.kill(process.pid, 'SIGUSR1');
         require('./server.js');
         break;
+    case 'test':
+        require('./test.js');
+        break;
     case 'status':
         var pid = daemon.status();
         if (pid)

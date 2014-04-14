@@ -12,7 +12,8 @@
     "async": "~0.2.9",
     "newrelic": "~1.2.0",
     "mongojs": "~0.11.1",
-    "memwatch": "~0.2.2"
+    "memwatch": "~0.2.2",
+    "nodeunit": "~0.8.6"
   },
   "engines": {
     "node": ">=0.4.0"
