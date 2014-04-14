@@ -20,6 +20,7 @@ var API           = require('./classes/api').API;
 
 LIVE  = ((process.argv.indexOf('--live')>-1) ? true : false);
 REMOTEDB  = ((process.argv.indexOf('--remotedb')>-1) ? true : false);
+TESTING = ((process.argv.indexOf('--test')>-1) ? true : false);
 
 DB = false;
 // connect to db
@@ -46,6 +47,10 @@ COMBAT     = new Combat();
 ITEMS      = new Items(function(){
     MOBS = new Mobs(function(){
         LIBRARY    = new Library();
+        if(TESTING) {
+            var reporter = require('nodeunit').reporters.default;
+            reporter.run(['test.js']);
+        }
     });
 });
 

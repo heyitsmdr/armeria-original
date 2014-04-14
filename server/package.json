@@ -13,7 +13,8 @@
     "newrelic": "~1.2.0",
     "mongojs": "~0.11.1",
     "memwatch": "~0.2.2",
-    "nodeunit": "~0.8.6"
+    "nodeunit": "~0.8.6",
+    "socket.io-client": "~0.9.16"
   },
   "engines": {
     "node": ">=0.4.0"
