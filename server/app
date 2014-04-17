@@ -23,6 +23,10 @@ switch(arg) {
         process.kill(process.pid, 'SIGUSR1');
         require('./server.js');
         break;
+    case 'test':
+        var reporter = require('nodeunit').reporters.default;
+        reporter.run(['test.js']);
+        break;
     case 'status':
         var pid = daemon.status();
         if (pid)
@@ -40,8 +44,7 @@ switch(arg) {
         console.log('   status    - check status of daemon');
         console.log('   nodaemon  - start the server without using a daemon');
         console.log('   debug     - start the server in debug mode without using a daemon');
-        console.log('   test      - run unit testing (locally)');
+        console.log('   test      - run unit testing');
         console.log('Choices for [flags]:');
         console.log('   --live    - indicate this server is running on the live vps');
-        console.log('   --test    - run unit testing')
 }

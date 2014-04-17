@@ -1,5 +1,3 @@
-// connect to server
-
 var io = false;
 var socket = false;
 
@@ -10,6 +8,7 @@ exports.setUpSocket = function(test) {
 };
 
 exports.connectToServer = function(test) {
+	test.expect(1);
 	socket = io.connect('localhost', { port: 2772 });
 
 	socket.on('connect', function () {
@@ -35,4 +34,11 @@ exports.existingCharacter = {
 		
         test.done();
 	}
+};
+
+exports.closeSocket = function(test) {
+	// close client socket
+	socket.disconnect();
+	
+	test.done();
 };
