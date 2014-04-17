@@ -29,7 +29,7 @@
         
         <!-- LESS -->
         <? if(file_exists('./css/style.min.css')): ?>
-        <link rel="stylesheet/less" type="text/css" href="css/style.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/style.min.css" />
         <? else: ?>
         <link rel="stylesheet/less" type="text/css" href="css/style.less" />
         <script>
