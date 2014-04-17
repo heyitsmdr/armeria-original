@@ -41,7 +41,6 @@
         <? endif; ?>
 
         <link rel="stylesheet" type="text/css" href="libraries/gritter/css/jquery.gritter.css">
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,800,700,600' rel='stylesheet' type='text/css'>
         <!-- jQuery & jQueryUI -->
         <script src="libraries/jquery/jquery-1.10.2.min.js"></script>
         <script src="libraries/jquery/jquery-ui.1.10.3.min.js"></script>
