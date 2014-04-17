@@ -37,7 +37,7 @@
             env: "development"
           };
         </script>
-        <script src="./css/less-1.3.3.min.js" type="text/javascript"></script>
+        <script src="./libraries/less/less-1.3.3.min.js" type="text/javascript"></script>
         <? endif; ?>
 
         <link rel="stylesheet" type="text/css" href="libraries/gritter/css/jquery.gritter.css">
