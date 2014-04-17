@@ -512,6 +512,7 @@ var GameEngine = new function () {
                 listData += "</p></li></span>";
             });
             $('#carrying').html(listData);
+            $('#inventory-tab p').html('Carrying (' + data.length + ')');
         });
         this.socket.on('eq', function(data) {
             var listData = "";
@@ -524,6 +525,7 @@ var GameEngine = new function () {
                 index++;
             });
             $('#equipped').html(listData);
+            $('#equipment-tab p').html('Equipped (' + data.length + ')');
         });
         this.socket.on('bars', function(data) {
             // set bar labels

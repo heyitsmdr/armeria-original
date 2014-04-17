@@ -28,6 +28,9 @@
         <link id="cssReset" rel="stylesheet" type="text/css" href="css/reset.css">
         
         <!-- LESS -->
+        <? if(file_exists('./css/style.min.css')): ?>
+        <link rel="stylesheet/less" type="text/css" href="css/style.min.css" />
+        <? else: ?>
         <link rel="stylesheet/less" type="text/css" href="css/style.less" />
         <script>
           less = {
@@ -35,6 +38,7 @@
           };
         </script>
         <script src="./css/less-1.3.3.min.js" type="text/javascript"></script>
+        <? endif; ?>
 
         <link rel="stylesheet" type="text/css" href="libraries/gritter/css/jquery.gritter.css">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,800,700,600' rel='stylesheet' type='text/css'>

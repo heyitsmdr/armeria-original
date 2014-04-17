@@ -76,10 +76,10 @@ HIPCHAT = new hipchatter('G9AuMaMlZQxzPaE1mo3sMsNoOpPt9GiutxRfP4ZW');
 // var port = parseInt(fs.readFileSync('./port').toString('utf8'));
 var port = 2772;
 console.log('server listening on ' + port);
-var io = require('socket.io').listen(port);
+GAME_SERVER = require('socket.io').listen(port);
 
 // listen for remote commands
-var server = http.createServer(function(req, res) {
+API_SERVER = http.createServer(function(req, res) {
     /* handle cross browser
     var origin = (req.headers.origin || "*");
     console.log(req.method.toUpperCase());
@@ -126,7 +126,7 @@ var server = http.createServer(function(req, res) {
 console.log('api listening on 8888');
 
 // socket.io logging (options: 0 = error, 1 = warn, 2 = info, 3 = debug [default])
-io.set('log level', 1);
+GAME_SERVER.set('log level', 1);
 
 matchcmd = function(cmd, cmdlist) {
     var cmd_real = cmd;
@@ -219,7 +219,7 @@ String.prototype.toProperCase = function () {
     return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 };
 
-io.sockets.on('connection', function(socket){
+GAME_SERVER.sockets.on('connection', function(socket){
     var player = new Player(socket);
     PLAYERS.addPlayer(player);
     console.log('connection established, player added (total: ' + PLAYERS.getPlayerCount() + ')');

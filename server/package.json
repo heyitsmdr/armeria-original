@@ -12,13 +12,16 @@
     "async": "~0.2.9",
     "newrelic": "~1.2.0",
     "mongojs": "~0.11.1",
-    "memwatch": "~0.2.2"
+    "memwatch": "~0.2.2",
+    "nodeunit": "~0.8.6",
+    "socket.io-client": "~0.9.16"
   },
   "engines": {
     "node": ">=0.4.0"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
-    "grunt-contrib-uglify": "~0.2.7"
+    "grunt-contrib-uglify": "~0.2.7",
+    "grunt-contrib-less": "~0.11.0"
   }
 }
