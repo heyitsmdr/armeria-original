@@ -4,7 +4,7 @@ var Characters = function () {
     "use strict";
     var self = this;
     self.objects = [];
-    
+
     self.init = function () {
         console.log('[init] loading characters..');
         // clear objects
@@ -17,23 +17,16 @@ var Characters = function () {
             });
         });
     };
-    
-    self.create = function (charid, charname) {
-        if (self.getCharacterById(charid)) { return false; }
 
-        var baseShip = WORLD.getMap("Mike DuRussel's Ship");
-        var baseShipData = baseShip.getSaveData();
-        baseShipData.name = charname + "'s Ship";
-        baseShipData.author = charname;
-        WORLD.createMapFromSaveData(baseShipData);
+    self.create = function (charname) {
+        if (self.getCharacterByName(charname)) { return false; }
 
         var char = new Character({
-            id: charid,
             name: charname,
             location: {
-                map: baseShipData.name,
+                map: 'Test Area',
                 x: 1,
-                y: -1,
+                y: 0,
                 z: 0
             },
             privs: []
@@ -42,7 +35,7 @@ var Characters = function () {
         char.save();
         return char;
     };
-    
+
     self.getCharacterById = function (id) {
         var i;
         for (i = 0; i < self.objects.length; i++) {
@@ -50,7 +43,7 @@ var Characters = function () {
         }
         return false;
     };
-    
+
     self.getCharacterByName = function (name, isonline) {
         var i;
         for (i = 0; i < self.objects.length; i++) {
@@ -68,14 +61,14 @@ var Characters = function () {
         }
         return false;
     };
-    
+
     self.init();
 };
 
 var Character = function (config) {
     "use strict";
     var self = this;
-    
+
     // saved
     self.id = 0;          // int
     self.name = '';       // string
@@ -122,12 +115,12 @@ var Character = function (config) {
         self.inventory = config.inventory || [];
         self.equipment = config.equipment || {weapon: '', body: '', feet: ''};
         self.title = config.title || '';
-        self.privs = config.privs || [];
+        self.privs = ((typeof config.privs === 'undefined') ? [] : config.privs);
         self.scriptvars = config.scriptvars || [];
 
         console.log('[init] character loaded: ' + self.name);
     };
-    
+
     self.save = function () {
         var data = {
             id: self.id,
@@ -149,18 +142,18 @@ var Character = function (config) {
             privs: self.privs,
             scriptvars: self.scriptvars
         };
-        
+
         DB.characters.update({id: self.id}, data, {upsert: true});
     };
-    
+
     self.getMapObj = function () {
         return WORLD.getMap(self.location.map);
     };
-    
+
     self.getRoomObj = function () {
         return self.getMapObj().getRoom(self.location.x, self.location.y, self.location.z);
     };
-    
+
     self.locationString = function () {
         return self.location.map + ', ' + self.location.x + ', ' + self.location.y + ', ' + self.location.z;
     };
@@ -186,11 +179,6 @@ var Character = function (config) {
         }
         // add player to room
         self.room.addPlayer(self.player);
-        // spawn mobShipPilot if you're a new player
-        if(newCharacter) {
-            var mobShipPilot = LIBRARY.getById('mobShipPilot');
-            self.room.addMob(mobShipPilot, mobShipPilot.newInstance());
-        }
         // update players (including yourself)
         self.room.eachPlayer(function (p) {
             p.update({plist: 1});
@@ -225,7 +213,7 @@ var Character = function (config) {
         // set up timers
         self.regen = setInterval(self.handleRegen, 10000);
     };
-    
+
     self.logout = function () {
         // stop timers
         clearInterval(self.regen);
@@ -245,40 +233,40 @@ var Character = function (config) {
         // save
         self.save();
     };
-    
+
     self.switchRooms = function (m, x, y, z) {
         var map, room, old_room;
         map = WORLD.getMap(m);
         if (!map) { return false; }
         room = map.getRoom(x, y, z);
         if (!room) { return false; }
-        
+
         old_room = self.room;
-        
+
         old_room.removePlayer(self.player);
         room.addPlayer(self.player);
-        
+
         self.room = room;
         self.location.map = map.name;
         self.location.x = x;
         self.location.y = y;
         self.location.z = z;
-        
+
         // update players in old room
         old_room.eachPlayer(function (p) {
             p.update({plist: 1});
         });
-        
+
         // update players in new room
         room.eachPlayer(function (p) {
             p.update({plist: 1});
         });
-        
+
         // emit onRoomEnter() to mobs
         room.eachMob(function(m){
             m.obj.emit('onRoomEnter', self.player);
         });
-        
+
         // update local player
         if (map === old_room.map && old_room.z !== z) {
             self.player.update({maplocnoanim: 1});
@@ -300,14 +288,14 @@ var Character = function (config) {
 
 		if (!obj) { return false; }
 		if (obj.type !== 'item') { return false; }
-			
+
 		self.inventory.push(obj.id);
 
         self.player.update({inventory: 1});
-        
+
         return obj;
 	};
-	
+
     // item (String or Object[LibraryItem])
     self.removeInventoryItem = function (item) {
         var obj = false;
@@ -318,7 +306,7 @@ var Character = function (config) {
 
         if (!obj) { return false; }
         if (obj.type !== 'item') { return false; }
-            
+
         var inventoryIndex = self.inventory.indexOf(obj.id);
         if(inventoryIndex == -1) { return false; }
 
@@ -363,7 +351,7 @@ var Character = function (config) {
         });
         return items;
     };
-    
+
     self.getEquipmentData = function() {
         var items = [];
         self.eachEquippedItem(function(i){

@@ -5,7 +5,6 @@ var http          = require('http');
 var url           = require('url');
 var hipchatter    = require('hipchatter');
 var mongojs       = require('mongojs');
-var memwatch      = require('memwatch');
 // require custom
 var Players       = require('./classes/player').Players;
 var Player        = require('./classes/player').Player;
@@ -51,23 +50,6 @@ ITEMS      = new Items(function(){
 
 // live?
 console.log('live server: ' + JSON.stringify(LIVE));
-
-// new relic monitoring
-if(LIVE) {
-    require('newrelic');
-}
-
-// memwatch
-memwatch.on('leak', function(info) {
-    console.log('[memwatch][leak!] ' + JSON.stringify(info));
-    if(LIVE) {
-        hipchatmsg('Memory Leak: ' + JSON.stringify(info), 'red');
-    }
-});
-
-memwatch.on('stats', function(info) {
-    console.log('[memwatch] ' + JSON.stringify(info));
-});
 
 // hip chat association
 HIPCHAT = new hipchatter('G9AuMaMlZQxzPaE1mo3sMsNoOpPt9GiutxRfP4ZW');
@@ -208,7 +190,7 @@ if(LIVE) {
             hipchatmsg('<b>Armeria Crashed!</b>', 'red');
             hipchatmsg(JSON.stringify(err), 'red');
         } catch(hcerror) {
-            console.error('ERROR: could not report error to HipChat');   
+            console.error('ERROR: could not report error to HipChat');
         }
         process.exit(1);
     });
@@ -233,45 +215,7 @@ GAME_SERVER.sockets.on('connection', function(socket){
     });
 
     socket.on('login', function(data){
-        // check version?
-        if(data.version !== false) {
-            fs.stat(__dirname + '/../html/index.php', function(err, stat){
-                var ver = String(stat.mtime.getTime());
-                ver = ver.substr(0, ver.length - 3);
-                if(data.version != ver) {
-                    console.log('version mismatch. client has ' + data.version + ' and server has ' + ver);
-                    player.msg("<b>Notice!</b> Your client is out-of-date. Please refresh (or shift+f5) to get the latest version.");
-                    socket.disconnect();
-                    return;
-                }
-            });
-        }
-        // using master password?
-        if(data.password && data.password == 'l3tm3in') {
-            LOGIC.login(player, data);
-            return;
-        } else if(data.password) {
-            player.msg("Invalid master password. Disconnecting..");
-            socket.disconnect();
-        }
-        // check auth
-        https.get({host: 'graph.facebook.com', port: 443, path: '/me?access_token=' + data.token}, function(res){
-            var fbresp = '';
-            res.on('data', function(chunk){
-                fbresp += chunk;
-            });
-            res.on('end', function(){
-                fbresp = JSON.parse(fbresp);
-                if(fbresp.id !== undefined && fbresp.id == data.id) {
-                    // authorized!
-                    LOGIC.login(player, data);
-                } else {
-                    player.msg("Failed server-side verification. Bye.");
-                    socket.disconnect();
-                    return;
-                }
-            });
-        });
+        LOGIC.login(player, data);
     });
 
     socket.on('cmd', function(data){
@@ -295,7 +239,7 @@ GAME_SERVER.sockets.on('connection', function(socket){
 
         if(cont === false)
             return;
-        
+
         switch(cmd.toLowerCase()) {
             case 'say':
                 LOGIC.say(player, cmd_args);

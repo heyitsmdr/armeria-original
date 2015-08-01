@@ -15,11 +15,8 @@ var GameEngine = new function () {
     this.version = false;       // Version
     this.port = 2772;           // Port
     this.socket = false;        // Socket.IO
-    this.skipFbAuth = false;    // Skip Facebook Auth
-    this.loginAs = false;       // Login As (using Master Password)
-    this.masterPassword = false;// Master Password for Login Bypass
-    this.fbinfo = false;        // Facebook Information Array
-    this.fbaccesstoken = false; // Facebook Access Token
+    this.playerName = false;    // Player Name (entered with /login)
+    this.playerPassword = false;// Player Password (entered with /login)
     this.connected = false;     // Connected or not (boolean)
     this.connecting = false;    // Connection in process (to block certain functions)
     this.toolTipCache = [];     // Array of tool tip data used for cache
@@ -38,7 +35,7 @@ var GameEngine = new function () {
         // set port
         GameEngine.port = 2772;
         // intro
-        GameEngine.parseInput("Welcome to the Armeria universe!<br><br>Please <a href='#' onclick='GameEngine.FBLogin(event)'>Login</a> with Facebook or visit our <a target='_new' href='http://www.playarmeria.com'>Website</a>, <a href='http://www.playarmeria.com/blog' target='_new'>Blog</a> or <a href='http://www.facebook.com/ArmeriaMUD' target='_new'>Facebook Page</a>.<br>");
+        GameEngine.parseInput("Welcome to the Armeria universe!");
         // bind ENTER to input box
         $('#input').keypress(function (e) {
             if (e.which === 13) { GameEngine.parseCommand(); }
@@ -156,7 +153,7 @@ var GameEngine = new function () {
         $('#room-objects-list').tokenInput(GameEngine.getAllSets(true), {tokenLimit: 5, hintText: 'Search for a tile..', theme: 'facebook', searchDelay: 50, onAdd: GameEngine.editorSetObjects, onDelete: GameEngine.editorSetObjects});
         // set up custom context menus
         $.contextMenu({
-            selector: '.menuinv', 
+            selector: '.menuinv',
             callback: function(key, options) {
                 switch(key) {
                     case 'use':
@@ -177,7 +174,7 @@ var GameEngine = new function () {
             }
         });
         $.contextMenu({
-            selector: '.menuitem', 
+            selector: '.menuitem',
             callback: function(key, options) {
                 switch(key) {
                     case 'pickup':
@@ -190,7 +187,7 @@ var GameEngine = new function () {
             }
         });
         $.contextMenu({
-            selector: '.menueq', 
+            selector: '.menueq',
             callback: function(key, options) {
                 switch(key) {
                     case 'unequip':
@@ -203,7 +200,7 @@ var GameEngine = new function () {
             }
         });
         $.contextMenu({
-            selector: '.libitem', 
+            selector: '.libitem',
             callback: function(key, options) {
                 switch(key) {
                     case 'lookup':
@@ -248,7 +245,7 @@ var GameEngine = new function () {
 
     this.gameHidden = function() {
         var hidden = 'hidden';
-        if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
+        if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
             hidden = "hidden";
         } else if (typeof document.mozHidden !== "undefined") {
             hidden = "mozHidden";
@@ -275,7 +272,7 @@ var GameEngine = new function () {
         $.gritter.add({title: 'Community Forums', text: 'There are no community forums at this time.'});
         return false;
     };
-    
+
     this.registerToolTip = function (selector, data) {
         $(document).on('mouseenter', selector, function () {
             $('#itemtooltip-container').show();
@@ -284,92 +281,27 @@ var GameEngine = new function () {
         $(document).on('mouseleave', selector, GameEngine.toolTipLeave);
         $(document).on('mousemove', selector, GameEngine.toolTipMove);
     };
-    /*jslint nomen: true*/
-    this._doFBLogin = function () {
-        /*jslint nomen: false*/
-        this.parseInput("Facebook not authorized. Asking for permission..");
-        FB.login(function (response) {
-            if (response.authResponse) {
-                // save access token
-                GameEngine.fbaccesstoken = response.authResponse.accessToken;
-                // connected
-                /*jslint nomen: true*/
-                GameEngine._getFBInfo(function () {
-                    /*jslint nomen: false*/
-                    GameEngine.parseInput("Permission granted.");
-                    GameEngine.connect();
-                });
-            } else {
-                // cancelled
-                GameEngine.parseInput("Permission denied. Can't login.");
-                GameEngine.connecting = true;
-            }
-        });
-    };
 
-    this._getFBInfo = function (callback) {
-        FB.api('/me', function (resp) {
-            GameEngine.fbinfo = resp;
-            FB.api('/me/picture', function (resp) {
-                GameEngine.fbinfo.picture = resp.data.url;
-                callback();
-            });
-        });
-    };
-
-    this.FBLogin = function (e) {
-        if (e.preventDefault) {
-            e.preventDefault();
-        }
-
+    this.connect = function (username, password) {
         if (this.connected) {
             GameEngine.parseInput("You're already connected.");
             return false;
         }
+
         if (this.connecting) {
             return false;
         }
+
         if (GameEngine.serverOffline) {
             GameEngine.parseInput("The server is offline. Please refresh and try again soon.");
             return false;
         }
-        if (e.shiftKey) {
-            GameEngine.loginAs = prompt('Who do you want to login as?');
-            GameEngine.masterPassword = prompt('What is the master password?');
-            GameEngine.parseInput('Attempting to login as "<b>' + GameEngine.loginAs + '</b>" with the master password.');
-            GameEngine.connecting = true;
-            GameEngine.skipFbAuth = true;
-            GameEngine.connect();
-            return false;
-        }
-        try {
-            GameEngine.connecting = true;
-            FB.getLoginStatus(function (response) {
-                if (response.status === 'connected') {
-                    // save access token
-                    GameEngine.fbaccesstoken = response.authResponse.accessToken;
-                    // authorized
-                    GameEngine._getFBInfo(function () {
-                        GameEngine.parseInput("Facebook authorized.");
-                        GameEngine.connect();
-                    });
-                } else if (response.status === 'not_authorized') {
-                    // not_authorized
-                    GameEngine._doFBLogin();
-                } else {
-                    // not_logged_in
-                    GameEngine._doFBLogin();
-                }
-            });
-        } catch (err) {
-            this.parseInput("Facebook API has not been initiated yet. Please try again in a few seconds.");
-            GameEngine.connecting = true;
-        }
-        return false;
-    };
 
-    this.connect = function () {
-        if (!this.fbinfo && !this.skipFbAuth) { return; }
+        GameEngine.parseInput('Attempting to login as "<b>' + username + '</b>"..');
+        GameEngine.connecting = true;
+        GameEngine.playerName = username;
+        GameEngine.playerPassword = password;
+
         this.parseInput("<br>Connecting to game server..");
         try {
             var hn = location.hostname;
@@ -389,24 +321,11 @@ var GameEngine = new function () {
         /* Built In Events */
         this.socket.on('connect', function () {
             GameEngine.connected = true;
-            GameEngine.parseInput("Connected! Sending login data..");
-            if (GameEngine.skipFbAuth) {
-                GameEngine.socket.emit('login', {
-                    version: GameEngine.version,
-                    name: GameEngine.loginAs,
-                    password: GameEngine.masterPassword
-                });
-            } else {
-                GameEngine.socket.emit('login', {
-                    version: GameEngine.version,
-                    id: GameEngine.fbinfo.id,
-                    name: GameEngine.fbinfo.name,
-                    picture: GameEngine.fbinfo.picture,
-                    token: GameEngine.fbaccesstoken,
-                    nick: GameEngine.fbinfo.username,
-                    gender: GameEngine.fbinfo.gender
-                });
-            }
+            GameEngine.parseInput("Connected! Sending login data..<br>");
+            GameEngine.socket.emit('login', {
+                name: GameEngine.playerName,
+                password: GameEngine.playerPassword
+            });
         });
         this.socket.on('disconnect', function () {
             GameEngine.connected = false;
@@ -493,7 +412,7 @@ var GameEngine = new function () {
         this.socket.on('itemtip', function (data) {
             if(getIndex(GameEngine.toolTipCache, 'id', data.id).length == 0)
                 GameEngine.toolTipCache.push({id: data.id, data:data.content});
-            
+
             $('#itemtooltip-container').html(data.content);
         });
         this.socket.on('editor', function (data) {
@@ -557,7 +476,7 @@ var GameEngine = new function () {
             }
         });
         this.socket.on('showintro', function() {
-            
+
         });
         this.socket.on('sector', function(d) {
             if(d.view == 'space' && $('#game').data('inspace') !== 'true') {
@@ -665,6 +584,9 @@ var GameEngine = new function () {
                 return;
             } else if (command.toLowerCase() === '/version') {
                 this.parseInput('Your client is running version <b>' + this.version + '</b>.');
+
+            } else if (command.toLowerCase().substr(0, 7) === '/login ') {
+                this.connect(command.substr(7).split(' ')[0], command.substr(7).split(' ')[1]);
             } else if (command.toLowerCase() === '/clearcache') {
                 GameEngine.toolTipCache = [];
                 this.parseInput('Your cache has been cleared.');
@@ -770,7 +692,7 @@ var GameEngine = new function () {
             $('#equipped').toggle('slide', 150, function(){ $('#carrying').toggle('slide', 400) });
         }
     };
-    
+
     this.editProperty = function(libraryId, propName) {
         if(propName == 'script') {
             this.socket.emit('getscript', {id: libraryId});

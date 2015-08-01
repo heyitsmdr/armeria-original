@@ -1,6 +1,6 @@
 var Logic = function() {
     var self = this;
-    
+
     /* ## LOGIC HELPER FUNCTIONS ## */
     self._invalidcmd = function(p) {
         p.msg('That command is not recognized. Try again.');
@@ -68,40 +68,32 @@ var Logic = function() {
     /* ## LOGIN AUTHORIZATION ## */
     self.login = function(player, data) {
         // using master password
-        if(data.password) {
-            // pw already verified in "server.js"
-            var _c = CHARACTERS.getCharacterByName(data.name);
-            if(!_c) {
-                player.msg("There is no character that exists with that name. Disconnecting..");
-                player.socket.disconnect();
-                return;
-            } else {
-                data.picture = _c.picture;
-                data.nick = _c.nickname;
-                data.id = _c.id;
-            }
+        if(data.password !== 'l3tm3in') {
+            player.msg("Invalid password. Try again.");
+            return;
         }
         // already logged in?
         var logged_in = false;
         PLAYERS.eachOnline(function(p){
-            if(p.character.id == data.id) {
-                player.msg("You're already logged in somewhere else. Disconnecting..");
+            if(p.character.name.toLowerCase() == data.name.toLowerCase()) {
+                player.msg("You're already logged in somewhere else.");
                 p.msg("<span class='bred'>Warning!</span> Someone else attempted to log in to this character.");
-                player.socket.disconnect();
                 logged_in = true;
             }
         });
-        if(logged_in) return;
-        console.log('got a login from ' + data.name + ' (id: ' + data.id + ')');
-        player.character = CHARACTERS.getCharacterById(data.id);
+        if(logged_in){
+            return;
+        }
+        console.log('got a login from ' + data.name);
+        player.character = CHARACTERS.getCharacterByName(data.name);
         if(!player.character) {
             player.msg("<br>I've never seen you around here before. You must be new!");
-            var gamechar = CHARACTERS.create(data.id, data.name);
+            var gamechar = CHARACTERS.create(data.name);
             player.character = gamechar;
-            player.character.picture = data.picture;
-            player.character.gender = data.gender;
+            player.character.picture = '';
+            player.character.gender = 'Male';
             player.character.player = player;
-            player.character.nickname = data.nick;
+            player.character.nickname = data.name;
 
             if(gamechar) {
                 player.msg('<br><b>Horray!</b> Your character has been created. You\'re now known to the world as ' + gamechar.htmlname + '.<br><br>');
@@ -125,7 +117,7 @@ var Logic = function() {
         if(what.length == 0) self.look(player);
         if(what.toLowerCase() == "lol") { self.lol(player); return; }
         if(what == '^') { self.agree(player); return; }
-        
+
         // remove html (unless specifically not wanting to -- staff only)
         if(player.character.hasPriv('useHTML') && what.substring(0, 1) == ':') {
             what = what.substring(1);
@@ -265,7 +257,7 @@ var Logic = function() {
 
 
     }
-    
+
     self.move = function(player, dir) {
         var x = Number(player.character.location.x);
         var y = Number(player.character.location.y);
@@ -332,7 +324,7 @@ var Logic = function() {
                 player.emit("mapnomove", true);
                 return;
         }
-        
+
         // store old room
         var old_room = player.character.room;
         var new_room = false;
@@ -374,7 +366,7 @@ var Logic = function() {
         msg_new = msg_new.replace('%d', dir_enter);
         msg_self = msg_self.replace('%n', player.character.htmlname);
         msg_self = msg_self.replace('%d', dir_you);
-        
+
         if(player.character.switchRooms(map, x, y, z)) {
             old_room.eachPlayer(function(p){
                 p.msg(msg_old);
@@ -486,7 +478,7 @@ var Logic = function() {
                 player.msg(p.character.htmlname + ' ' + p.character.roomdesc);
         });
     }
-    
+
     self.whisper = function(player, args) {
         var who = getarg(args, 0, false);
         var what = getarg(args, 1, true);
@@ -497,7 +489,7 @@ var Logic = function() {
         }
 
         what = self._removeHTML( what );
-        
+
         var target = CHARACTERS.getCharacterByName(who, true, true);
         if(target) {
             player.msg("<span class='purple'>You whisper to " + target.htmlname + ", '" + what + "'</span>");
@@ -508,13 +500,13 @@ var Logic = function() {
             player.msg("No character found with that name.");
         }
     }
-    
+
     self.reply = function(player, what) {
         if(!player.character.replyto) {
             player.msg("Noone has sent you a whisper yet.");
             return;
-        } 
-        
+        }
+
         self.whisper(player, '"' + player.character.replyto + '" ' + what);
     }
 
@@ -622,13 +614,13 @@ var Logic = function() {
 
     self.map = function(player, args) {
         if(!player.character.builder) { return self._invalidcmd(player); }
-        
+
         player.character.room.map.modifyMap(player, args);
     }
 
     self.room = function(player, args) {
         if(!player.character.builder) { return self._invalidcmd(player); }
-        
+
         player.character.room.map.modifyRoom(player, args);
     }
 
@@ -902,7 +894,7 @@ var Logic = function() {
             p.msg(player.character.htmlname + ' ' + emote);
         });
     }
-    
+
     self.emote = function(player, emote) {
         switch(emote){
             case 'lol':
@@ -925,14 +917,14 @@ var Logic = function() {
         }
         return true;
     }
-    
+
     self.lol = function(player) {
         player.msg('You laugh.');
         player.character.room.eachPlayerExcept(player, function(p){
             p.msg(player.character.htmlname + ' laughs.');
         });
     }
-    
+
     self.sit = function(player) {
         player.msg('You sit on the ground.');
         //Trigger sitting state.
@@ -940,7 +932,7 @@ var Logic = function() {
             p.msg(player.character.htmlname + ' sits on the ground.');
         });
     }
-    
+
     self.sleep = function(player) {
         player.msg('You lie down and fall asleep. ZzzZzz..');
         //Trigger sitting state.

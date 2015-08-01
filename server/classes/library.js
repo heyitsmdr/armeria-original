@@ -49,7 +49,7 @@ var Library = function(){
     };
 
     self.save = function() {
-        
+
     };
 
     self.createEntry = function(player, entryType, parentString) {
@@ -72,7 +72,7 @@ var Library = function(){
                         player.msg('Could not add item to database.');
                         return;
                     } else {
-                        self.objects.push(new LibraryEntry(resp[0]));
+                        self.objects.push(new LibraryEntry(resp));
                     }
                 });
                 player.msg('Entry added to database: ' + 'item' + parentString + '-' + uid);
@@ -93,7 +93,7 @@ var Library = function(){
                         player.msg('Could not add mob to database.');
                         return;
                     } else {
-                        self.objects.push(new LibraryEntry(resp[0]));
+                        self.objects.push(new LibraryEntry(resp));
                     }
                 });
                 player.msg('Entry added to database: ' + 'mob' + parentString + '-' + uid);
@@ -281,7 +281,7 @@ var LibraryEntry = function(config) {
             fs.writeFile(script_path + self._id + '.' + uid + '.js', JSON.parse(self.get('script')), function(err) {
                 try {
                     self.gameScript = require(script_path + self._id + '.' + uid + '.js').GameScript;
-                    self.gameScript = new self.gameScript(self); 
+                    self.gameScript = new self.gameScript(self);
                 } catch(e) {
                     self.gameScript = false;
                     console.log('[script] error loading: /data/scripts/' + self._id + '.' + uid + '.js');
@@ -307,14 +307,14 @@ var LibraryEntry = function(config) {
                 return self.overrides[stat];
             else
                 return eval('self.parent.' + stat);
-            
+
         }
     }
 
     self.set = function(prop, val, instanceId) {
         if(val=='true') { val = true; }
         if(val=='false') { val = false; }
-        
+
         if(prop == 'id') {
             self.id = val;
             self.save();
@@ -399,7 +399,7 @@ var LibraryEntry = function(config) {
                 return player.character.scriptvars[x].data;
             }
         }
-        
+
         return false;
     };
     self.launchSpace = function(player, launchMessage) {
@@ -449,7 +449,7 @@ var LibraryEntry = function(config) {
             parent: self.parentText,
             overrides: self.overrides
         };
-        
+
         DB.library.update({_id: self._id}, data, {upsert: true});
     };
 
